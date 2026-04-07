@@ -2,7 +2,6 @@ import { type ReactNode } from "react"
 import { Navigation } from "./Navigation"
 import { Footer } from "./Footer"
 import { GrainOverlay } from "@/components/common/GrainOverlay"
-import { CustomCursor } from "@/components/common/CustomCursor"
 
 interface LayoutProps {
   children: ReactNode
@@ -10,12 +9,18 @@ interface LayoutProps {
 
 export function Layout({ children }: LayoutProps) {
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "var(--graphite-deep)" }}>
-      <GrainOverlay />
-      <CustomCursor />
-      <Navigation />
-      <main>{children}</main>
-      <Footer />
+    <div
+      className="relative min-h-screen overflow-x-clip"
+      style={{ backgroundColor: "var(--graphite-deep)" }}
+    >
+      <div className="pointer-events-none fixed inset-0 z-0" aria-hidden="true" />
+
+      <div className="relative z-10">
+        <GrainOverlay />
+        <Navigation />
+        <main>{children}</main>
+        <Footer />
+      </div>
     </div>
   )
 }

@@ -124,26 +124,29 @@ export function ContactPage() {
       >
         <div className="max-w-7xl mx-auto px-6">
           <ScrollReveal>
-            <SectionLabel label="Diagnostic" />
-            <h1
-              className="font-display font-extrabold mb-6"
-              style={{
-                fontSize: "clamp(2.5rem, 6vw, 5.5rem)",
-                color: "var(--ivory)",
-                letterSpacing: "-0.03em",
-                lineHeight: 1.05,
-              }}
-            >
-              Voir où ça bloque.
-              <br />
-              <span style={{ color: "var(--copper)" }}>Avant d'agir.</span>
-            </h1>
-            <p
-              className="font-editorial italic text-xl max-w-2xl"
-              style={{ color: "var(--ivory-muted)", lineHeight: 1.6 }}
-            >
-              Un premier échange de 30 minutes pour comprendre votre situation, identifier les frictions principales et déterminer si — et comment — on peut intervenir.
-            </p>
+            <div className="system-shell rounded-[0.5rem] px-6 py-8 md:px-8 md:py-9">
+              <SectionLabel label="Diagnostic" />
+              <h1
+                className="font-display font-extrabold mb-6"
+                style={{
+                  fontSize: "clamp(2.5rem, 6vw, 5.5rem)",
+                  color: "var(--ivory)",
+                  letterSpacing: "-0.03em",
+                  lineHeight: 1.05,
+                }}
+              >
+                Voir où ça bloque.
+                <br />
+                <span style={{ color: "var(--copper)" }}>Avant d'agir.</span>
+              </h1>
+              <p
+                className="font-body text-lg max-w-3xl"
+                style={{ color: "var(--ivory-muted)", lineHeight: 1.8 }}
+              >
+                Un premier échange de 30 minutes pour comprendre votre situation, identifier les
+                frictions principales et déterminer si, et comment, on peut intervenir.
+              </p>
+            </div>
           </ScrollReveal>
         </div>
       </section>
@@ -211,13 +214,7 @@ export function ContactPage() {
                     ))}
                   </div>
 
-                  <div
-                    className="mt-10 p-6 border"
-                    style={{
-                      borderColor: "var(--mineral-dark)",
-                      backgroundColor: "var(--graphite-deep)",
-                    }}
-                  >
+                  <div className="system-panel mt-10 rounded-[0.5rem] p-6">
                     <p
                       className="font-mono text-xs tracking-widest mb-3"
                       style={{ color: "var(--copper)" }}
@@ -243,13 +240,7 @@ export function ContactPage() {
                     </ul>
                   </div>
 
-                  <div
-                    className="mt-6 p-6 border"
-                    style={{
-                      borderColor: "var(--mineral-dark)",
-                      backgroundColor: "var(--graphite-deep)",
-                    }}
-                  >
+                  <div className="system-panel mt-6 rounded-[0.5rem] p-6">
                     <p
                       className="font-mono text-xs tracking-widest mb-3"
                       style={{ color: "var(--copper)" }}
@@ -295,11 +286,8 @@ export function ContactPage() {
               <ScrollReveal delay={80}>
                 {submitted ? (
                   <div
-                    className="p-12 border text-center"
-                    style={{
-                      borderColor: "var(--system-success)",
-                      backgroundColor: "rgba(107,143,113,0.06)",
-                    }}
+                    className="system-shell rounded-[0.5rem] p-12 text-center"
+                    style={{ borderColor: "var(--system-success)" }}
                   >
                     <div
                       className="font-mono text-xs tracking-widest mb-4"
@@ -339,13 +327,7 @@ export function ContactPage() {
                       </div>
                     )}
                     <form onSubmit={handleSubmit} noValidate>
-                      <div
-                        className="p-8 border mb-6"
-                        style={{
-                          borderColor: "var(--mineral-dark)",
-                          backgroundColor: "var(--graphite-deep)",
-                        }}
-                      >
+                      <div className="system-shell rounded-[0.5rem] p-8 mb-6">
                       <p
                         className="font-mono text-xs tracking-widest mb-6"
                         style={{ color: "var(--copper)" }}
@@ -406,13 +388,7 @@ export function ContactPage() {
                       </div>
                     </div>
 
-                    <div
-                      className="p-8 border mb-6"
-                      style={{
-                        borderColor: "var(--mineral-dark)",
-                        backgroundColor: "var(--graphite-deep)",
-                      }}
-                    >
+                    <div className="system-shell rounded-[0.5rem] p-8 mb-6">
                       <p
                         className="font-mono text-xs tracking-widest mb-6"
                         style={{ color: "var(--copper)" }}
@@ -498,11 +474,10 @@ export function ContactPage() {
                           !form.message ||
                           !supabase
                         }
-                        className="w-full flex items-center justify-center gap-3 font-mono text-xs tracking-wider uppercase py-5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed btn-copper-glow"
+                        className="system-button-text flex w-full items-center justify-center gap-3 rounded-[0.5rem] py-5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed btn-copper-glow"
                         style={{
                           backgroundColor: "var(--copper)",
                           color: "var(--graphite-deep)",
-                          fontWeight: 600,
                         }}
                       >
                         {loading ? (

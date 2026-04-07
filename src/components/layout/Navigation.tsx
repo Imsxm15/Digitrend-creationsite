@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react"
 import { Link, useLocation } from "react-router-dom"
+import { Menu, X } from "lucide-react"
 import { NAV_ITEMS, NAV_CTA } from "@/data/navigation"
+import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 export function Navigation() {
@@ -27,34 +29,47 @@ export function Navigation() {
     <>
       <header
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
-          scrolled
-            ? "py-3 border-b"
-            : "py-5",
+          "fixed left-0 right-0 top-0 z-50 border-b transition-colors duration-300",
+          scrolled ? "bg-[rgba(15,15,15,0.97)]" : "bg-[rgba(15,15,15,0.94)]",
         )}
         style={{
-          backgroundColor: scrolled ? "rgba(15,15,15,0.96)" : "transparent",
-          borderColor: scrolled ? "var(--mineral-dark)" : "transparent",
-          backdropFilter: scrolled ? "blur(12px)" : "none",
+          borderColor: "var(--mineral-dark)",
+          backdropFilter: "blur(10px)",
         }}
       >
-        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-          <Link to="/" className="flex flex-col leading-none" aria-label="Digitrend Creation — Accueil">
-            <span
-              className="font-display font-bold text-lg logo-wordmark"
-              style={{ color: "var(--ivory)" }}
-            >
-              DIGI<span style={{ color: "var(--copper)" }}>TREND</span>
-            </span>
-            <span
-              className="font-mono text-[9px] logo-sub"
-              style={{ color: "var(--ivory-muted)" }}
-            >
-              CREATION
-            </span>
-          </Link>
+        <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-6 px-4 py-4 md:px-6">
+          <div className="flex items-center gap-5 shrink-0">
+            <Link to="/" className="flex items-center gap-3 leading-none" aria-label="Digitrend Creation — Accueil">
+              <span
+                className="grid size-7 place-items-center border"
+                style={{
+                  borderColor: "var(--copper)",
+                  backgroundColor: "transparent",
+                }}
+              >
+                <span className="flex items-center gap-px font-display text-[0.8rem] font-bold leading-none">
+                  <span style={{ color: "var(--ivory)" }}>D</span>
+                  <span style={{ color: "var(--copper)" }}>T</span>
+                </span>
+              </span>
+              <div className="flex flex-col">
+                <span
+                  className="font-display text-xs font-bold logo-wordmark"
+                  style={{ color: "var(--ivory)", lineHeight: 1 }}
+                >
+                  DIGITREND
+                </span>
+                <span
+                  className="font-mono text-[10px] logo-sub"
+                  style={{ color: "var(--ivory-muted)", lineHeight: 1 }}
+                >
+                  CREATION
+                </span>
+              </div>
+            </Link>
+          </div>
 
-          <nav className="hidden md:flex items-center gap-8" role="navigation">
+          <nav className="hidden flex-1 items-center justify-center gap-8 md:flex" role="navigation">
             {NAV_ITEMS.map((item) => {
               const isActive = location.pathname === item.href
 
@@ -63,7 +78,7 @@ export function Navigation() {
                   key={item.href}
                   to={item.href}
                   className={cn(
-                    "group relative font-mono text-xs tracking-wider uppercase transition-colors duration-200",
+                    "group relative system-nav-text transition-colors duration-200",
                     isActive
                       ? "text-[var(--copper)]"
                       : "text-muted-foreground hover:text-foreground"
@@ -82,69 +97,49 @@ export function Navigation() {
             })}
           </nav>
 
-          <div className="hidden md:flex items-center gap-4">
-            <Link
-              to={NAV_CTA.href}
-              className="font-mono text-xs tracking-wider uppercase px-5 py-2.5 transition-all duration-300 btn-copper-glow"
-              style={{
-                backgroundColor: "var(--copper)",
-                color: "var(--graphite-deep)",
-                fontWeight: 600,
-              }}
+          <div className="hidden shrink-0 md:flex items-center">
+            <Button
+              asChild
+              size="sm"
+              className="system-button-nav h-9 rounded-[4px] border-0 bg-[var(--copper)] px-4 text-[var(--graphite-deep)] shadow-none hover:bg-[var(--copper-light)]"
             >
-              {NAV_CTA.label}
-            </Link>
+              <Link to={NAV_CTA.href}>{NAV_CTA.label}</Link>
+            </Button>
           </div>
 
           <button
-            className="md:hidden flex flex-col gap-1.5 p-2"
+            className="grid size-10 place-items-center md:hidden"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
             aria-expanded={menuOpen}
+            style={{ color: "var(--ivory)" }}
           >
-            <span
-              className={cn(
-                "block h-px w-6 transition-all duration-300 origin-center",
-                menuOpen ? "rotate-45 translate-y-[5px]" : ""
-              )}
-              style={{ backgroundColor: "var(--ivory)" }}
-            />
-            <span
-              className={cn(
-                "block h-px w-6 transition-all duration-300",
-                menuOpen ? "opacity-0 scale-x-0" : ""
-              )}
-              style={{ backgroundColor: "var(--ivory)" }}
-            />
-            <span
-              className={cn(
-                "block h-px w-6 transition-all duration-300 origin-center",
-                menuOpen ? "-rotate-45 -translate-y-[5px]" : ""
-              )}
-              style={{ backgroundColor: "var(--ivory)" }}
-            />
+            {menuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
         </div>
       </header>
 
       <div
         className={cn(
-          "fixed inset-0 z-40 flex flex-col transition-all duration-500 md:hidden",
+          "fixed inset-0 z-40 flex flex-col transition-all duration-300 md:hidden",
           menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         )}
-        style={{ backgroundColor: "var(--graphite-deep)" }}
+        style={{ backgroundColor: "rgba(15,15,15,0.98)", backdropFilter: "blur(14px)" }}
         role="dialog"
         aria-modal="true"
         aria-label="Menu de navigation"
       >
-        <div className="flex-1 flex flex-col justify-center px-8 pt-24 pb-12">
-          <nav className="flex flex-col gap-6">
+        <div className="flex flex-1 flex-col justify-center px-6 pt-24 pb-12">
+          <p className="system-eyebrow mb-8" style={{ color: "var(--copper)" }}>
+            SYSTÈME OPÉRATIF · NAVIGATION
+          </p>
+          <nav className="flex flex-col gap-5">
             {NAV_ITEMS.map((item, i) => (
               <Link
                 key={item.href}
                 to={item.href}
                 className={cn(
-                  "font-display text-4xl font-bold transition-all duration-300",
+                  "system-nav-text text-lg transition-all duration-300",
                   menuOpen ? "translate-x-0 opacity-100" : "translate-x-8 opacity-0"
                 )}
                 style={{
@@ -167,17 +162,13 @@ export function Navigation() {
             )}
             style={{ transitionDelay: menuOpen ? "0.35s" : "0s" }}
           >
-            <Link
-              to={NAV_CTA.href}
-              className="inline-flex font-mono text-xs tracking-wider uppercase px-8 py-4 transition-colors duration-200"
-              style={{
-                backgroundColor: "var(--copper)",
-                color: "var(--graphite-deep)",
-                fontWeight: 600,
-              }}
+            <Button
+              asChild
+              size="sm"
+              className="system-button-nav h-10 rounded-[4px] bg-[var(--copper)] px-4 text-[var(--graphite-deep)] shadow-none hover:bg-[var(--copper-light)]"
             >
-              {NAV_CTA.label} →
-            </Link>
+              <Link to={NAV_CTA.href}>{NAV_CTA.label}</Link>
+            </Button>
           </div>
 
           <div

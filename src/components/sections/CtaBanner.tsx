@@ -19,82 +19,77 @@ export function CtaBanner({
   secondaryHref = "/methode",
 }: CtaBannerProps) {
   return (
-    <section
-      className="py-28 relative overflow-hidden"
-      style={{ backgroundColor: "var(--mineral-dark)" }}
-    >
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(ellipse 60% 70% at 50% 50%, rgba(196,133,60,0.05) 0%, transparent 70%)",
-        }}
-        aria-hidden="true"
-      />
-
-      <div className="relative max-w-4xl mx-auto px-6 text-center">
+    <section className="py-24 md:py-28">
+      <div className="mx-auto max-w-[92rem] px-4 md:px-6">
         <ScrollReveal>
-          <p
-            className="font-mono text-xs tracking-widest mb-6"
-            style={{ color: "var(--copper)" }}
-          >
-            PRÊT À STRUCTURER ?
-          </p>
-          <h2
-            className="font-display font-bold mb-6"
-            style={{
-              fontSize: "clamp(2rem, 4.5vw, 3.8rem)",
-              color: "var(--ivory)",
-              lineHeight: 1.1,
-              letterSpacing: "-0.03em",
-            }}
-          >
-            {title}
-          </h2>
-          <p
-            className="font-body text-base leading-7 mb-10 max-w-xl mx-auto"
-            style={{ color: "var(--ivory-muted)" }}
-          >
-            {subtitle}
-          </p>
-          <div className="flex flex-wrap gap-4 justify-center">
-            <Link
-              to={primaryHref}
-              className="inline-flex items-center gap-2 font-mono text-xs tracking-wider uppercase px-8 py-4 transition-all duration-300 btn-copper-glow"
-              style={{
-                backgroundColor: "var(--copper)",
-                color: "var(--graphite-deep)",
-                fontWeight: 600,
-              }}
-              data-cursor-hover
-            >
-              {primaryLabel}
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </Link>
-            <Link
-              to={secondaryHref}
-              className="inline-flex items-center font-mono text-xs tracking-wider uppercase px-8 py-4 border transition-all duration-300 hover:border-[var(--copper)] hover:text-[var(--copper)]"
-              style={{
-                borderColor: "var(--mineral-warm)",
-                color: "var(--ivory-muted)",
-              }}
-            >
-              {secondaryLabel}
-            </Link>
+          <div className="system-shell system-shell-warm rounded-[0.5rem] px-6 py-7 md:px-8 md:py-8">
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-12 md:items-center md:gap-10">
+              <div className="md:col-span-6">
+                <p className="mb-4 font-mono text-[11px] tracking-[0.18em]" style={{ color: "var(--copper)" }}>
+                  PROCHAINE DÉCISION
+                </p>
+                <h2
+                  className="mb-4 font-display font-bold"
+                  style={{
+                    fontSize: "clamp(2rem, 4vw, 3.4rem)",
+                    color: "var(--ivory)",
+                    lineHeight: 1.04,
+                    letterSpacing: "-0.03em",
+                  }}
+                >
+                  {title}
+                </h2>
+                <p className="font-body text-sm leading-7" style={{ color: "var(--ivory-muted)" }}>
+                  {subtitle}
+                </p>
+              </div>
+
+              <div className="md:col-span-3">
+                <div className="space-y-3">
+                  {[
+                    "Lecture du contexte",
+                    "3 priorités visibles",
+                    "Sans engagement",
+                  ].map((item) => (
+                    <div key={item} className="system-chip" style={{ color: "var(--ivory-muted)" }}>
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="md:col-span-3 md:flex md:flex-col md:items-end">
+                <div className="flex w-full flex-col gap-3 md:max-w-[15rem]">
+                  <Link
+                    to={primaryHref}
+                    className="system-button-text btn-copper-glow inline-flex items-center justify-center gap-2 rounded-[0.5rem] px-8 py-4 transition-all duration-300"
+                    style={{
+                      backgroundColor: "var(--copper)",
+                      color: "var(--graphite-deep)",
+                    }}
+                    data-cursor-hover
+                  >
+                    {primaryLabel}
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                      <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </Link>
+                  <Link
+                    to={secondaryHref}
+                    className="system-button-text inline-flex items-center justify-center rounded-[0.5rem] border px-8 py-4 transition-all duration-300 hover:border-[var(--copper)] hover:text-[var(--copper)]"
+                    style={{
+                      borderColor: "var(--mineral-warm)",
+                      color: "var(--ivory-muted)",
+                    }}
+                  >
+                    {secondaryLabel}
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
         </ScrollReveal>
       </div>
-
-      <div
-        className="absolute bottom-0 left-0 right-0 h-px"
-        style={{
-          background: "linear-gradient(90deg, transparent, var(--mineral-warm), var(--copper), var(--mineral-warm), transparent)",
-          opacity: 0.3,
-        }}
-        aria-hidden="true"
-      />
     </section>
   )
 }

@@ -3,103 +3,120 @@ import { SectionLabel } from "@/components/common/SectionLabel"
 
 const FRICTION_ITEMS = [
   {
-    icon: "⟳",
+    signal: "F01",
     title: "Processus manuels absurdes",
-    description: "Des tâches répétitives qui absorbent des heures précieuses. Des copier-coller entre outils qui ne se parlent pas. De l'énergie gaspillée sur ce qui pourrait être automatisé.",
+    description:
+      "Des tâches répétitives absorbent les équipes, faute d'automatisation utile et de protocole stable.",
+    impact: "Temps perdu",
+    value: "-12h / semaine",
   },
   {
-    icon: "⊕",
+    signal: "F02",
     title: "Outils qui s'accumulent",
-    description: "CRM, analytics, marketing, support — chaque outil fonctionne en silo. Aucune cohérence. Pas de vision d'ensemble. Les données existent mais personne ne les utilise.",
+    description:
+      "CRM, analytics, support et marketing existent chacun de leur côté. Les données sont là, mais la lecture système n'existe pas.",
+    impact: "Vision fragmentée",
+    value: "6 outils, 0 pilotage",
   },
   {
-    icon: "↘",
+    signal: "F03",
     title: "Conversion qui fuit",
-    description: "Du trafic. Des leads. Des prospects. Mais le tunnel est mal calibré, les points de friction inconnus, les décisions prises à l'aveugle. La croissance plafonne.",
+    description:
+      "Le trafic arrive, mais le tunnel casse dans les angles morts: proposition, friction formulaire, routing CRM ou relance.",
+    impact: "Revenu sous-exploité",
+    value: "3 points de rupture",
   },
   {
-    icon: "◈",
+    signal: "F04",
     title: "IA utilisée à l'envers",
-    description: "Des LLM en copier-coller sans process. Des prompts isolés sans système. Aucun outil interne construit autour des cas d'usage réels. L'IA coûte du temps au lieu d'en faire gagner.",
+    description:
+      "Des prompts isolés sans gouvernance, sans flux, sans sortie exploitable. Beaucoup d'énergie, peu d'effet réel.",
+    impact: "Usage non piloté",
+    value: "0 boucle de contrôle",
   },
-]
+] as const
 
 export function FrictionsSection() {
   return (
-    <section
-      className="py-28"
-      style={{ backgroundColor: "var(--graphite-mid)" }}
-    >
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
-          <div className="md:col-span-4 md:sticky md:top-32">
+    <section className="py-24 md:py-28">
+      <div className="mx-auto max-w-[92rem] px-4 md:px-6">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-12 md:gap-10">
+          <div className="md:col-span-4 md:sticky md:top-28 md:self-start">
             <ScrollReveal>
-              <SectionLabel number="01" label="Le problème réel" />
-              <h2
-                className="font-display font-bold mb-6"
-                style={{
-                  fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
-                  color: "var(--ivory)",
-                  lineHeight: 1.1,
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                Votre business n'a pas besoin de plus d'outils.
-              </h2>
-              <p
-                className="font-editorial italic text-lg mb-8"
-                style={{ color: "var(--ivory-muted)", lineHeight: 1.6 }}
-              >
-                Il a besoin d'un système qui tient.
-              </p>
-              <p
-                className="font-body text-sm leading-7"
-                style={{ color: "var(--ivory-muted)" }}
-              >
-                La plupart des problèmes de performance ne viennent pas d'un manque de ressources. Ils viennent de flux mal conçus, d'outils mal connectés et d'une architecture qui n'a jamais été pensée globalement.
-              </p>
+              <div className="system-shell rounded-[0.5rem] px-6 py-7 md:px-7">
+                <SectionLabel number="01" label="Points de rupture" />
+                <h2
+                  className="mb-5 font-display font-bold"
+                  style={{
+                    fontSize: "clamp(1.9rem, 3.3vw, 2.8rem)",
+                    color: "var(--ivory)",
+                    lineHeight: 1.06,
+                    letterSpacing: "-0.03em",
+                  }}
+                >
+                  Le problème n&apos;est presque jamais le manque d&apos;outils.
+                </h2>
+                <p
+                  className="mb-6 font-body text-base leading-8"
+                  style={{ color: "var(--ivory-soft)" }}
+                >
+                  Le problème, c&apos;est un système illisible.
+                </p>
+                <p
+                  className="font-body text-sm leading-7"
+                  style={{ color: "var(--ivory-muted)" }}
+                >
+                  Quand acquisition, opérations, CRM et automatisation ne se parlent plus, la
+                  performance devient une addition d&apos;efforts locaux. Mon rôle commence là :
+                  remettre de la logique, de la priorité et de la traçabilité.
+                </p>
+              </div>
             </ScrollReveal>
           </div>
 
-          <div className="md:col-span-7 md:col-start-6">
-            <div className="flex flex-col gap-6">
-              {FRICTION_ITEMS.map((item, i) => (
-                <ScrollReveal key={item.title} delay={i * 80}>
-                  <div
-                    className="flex gap-6 p-6 border transition-all duration-400 group"
-                    style={{
-                      borderColor: "var(--mineral-dark)",
-                      backgroundColor: "var(--graphite-deep)",
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.borderColor = "var(--bronze)"
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.borderColor = "var(--mineral-dark)"
-                    }}
-                  >
-                    <div
-                      className="font-mono text-xl flex-shrink-0 mt-0.5 w-8 text-center"
-                      style={{ color: "var(--copper)" }}
-                      aria-hidden="true"
-                    >
-                      {item.icon}
+          <div className="md:col-span-8">
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+              {FRICTION_ITEMS.map((item, index) => (
+                <ScrollReveal key={item.signal} delay={index * 80}>
+                  <article className="system-panel system-panel-hover rounded-[0.5rem] px-6 py-6">
+                    <div className="mb-5 flex items-start justify-between gap-4">
+                      <span className="system-chip" style={{ color: "var(--copper)" }}>
+                        {item.signal}
+                      </span>
+                      <span className="system-chip" style={{ color: "var(--steel-light)" }}>
+                        {item.impact}
+                      </span>
                     </div>
-                    <div>
-                      <h3
-                        className="font-display font-semibold text-base mb-2"
-                        style={{ color: "var(--ivory)" }}
-                      >
-                        {item.title}
-                      </h3>
-                      <p
-                        className="font-body text-sm leading-7"
+
+                    <h3
+                      className="mb-3 font-display text-xl font-bold"
+                      style={{ color: "var(--ivory)", letterSpacing: "-0.02em" }}
+                    >
+                      {item.title}
+                    </h3>
+                    <p
+                      className="mb-6 font-body text-sm leading-7"
+                      style={{ color: "var(--ivory-muted)" }}
+                    >
+                      {item.description}
+                    </p>
+
+                    <div className="system-divider-soft mb-4" />
+                    <div className="flex items-center justify-between gap-4">
+                      <span
+                        className="font-mono text-[11px] tracking-[0.16em]"
                         style={{ color: "var(--ivory-muted)" }}
                       >
-                        {item.description}
-                      </p>
+                        SIGNAL OPÉRATIF
+                      </span>
+                      <span
+                        className="font-mono text-sm"
+                        style={{ color: "var(--copper)" }}
+                      >
+                        {item.value}
+                      </span>
                     </div>
-                  </div>
+                  </article>
                 </ScrollReveal>
               ))}
             </div>

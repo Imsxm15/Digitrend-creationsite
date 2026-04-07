@@ -263,28 +263,30 @@ export function CasPage() {
       >
         <div className="mx-auto max-w-7xl px-6">
           <ScrollReveal>
-            <SectionLabel label="Cas & démonstrations" />
-            <h1
-              className="mb-6 font-display font-extrabold"
-              style={{
-                fontSize: "clamp(2.5rem, 6vw, 5.5rem)",
-                color: "var(--ivory)",
-                letterSpacing: "-0.03em",
-                lineHeight: 1.05,
-              }}
-            >
-              La pensée système,
-              <br />
-              <span style={{ color: "var(--copper)" }}>rendue visible.</span>
-            </h1>
-            <p
-              className="max-w-2xl font-editorial text-xl italic"
-              style={{ color: "var(--ivory-muted)", lineHeight: 1.6 }}
-            >
-              Ici, je montre comment un problème business se transforme en architecture lisible,
-              en livrables concrets et en décisions actionnables. Pas des promesses de méthode :
-              des systèmes expliqués.
-            </p>
+            <div className="system-shell rounded-[0.5rem] px-6 py-8 md:px-8 md:py-9">
+              <SectionLabel label="Cas & démonstrations" />
+              <h1
+                className="mb-6 font-display font-extrabold"
+                style={{
+                  fontSize: "clamp(2.5rem, 6vw, 5.5rem)",
+                  color: "var(--ivory)",
+                  letterSpacing: "-0.03em",
+                  lineHeight: 1.05,
+                }}
+              >
+                La pensée système,
+                <br />
+                <span style={{ color: "var(--copper)" }}>rendue visible.</span>
+              </h1>
+              <p
+                className="max-w-3xl font-body text-lg"
+                style={{ color: "var(--ivory-muted)", lineHeight: 1.8 }}
+              >
+                Ici, je montre comment un problème business se transforme en architecture lisible,
+                en livrables concrets et en décisions actionnables. Pas des promesses de méthode :
+                des systèmes expliqués.
+              </p>
+            </div>
           </ScrollReveal>
         </div>
       </section>
@@ -294,13 +296,7 @@ export function CasPage() {
         style={{ backgroundColor: "var(--graphite-mid)" }}
       >
         <div className="mx-auto max-w-7xl px-6">
-          <div
-            className="mb-12 border p-6"
-            style={{
-              borderColor: "var(--bronze)",
-              backgroundColor: "rgba(184,134,78,0.05)",
-            }}
-          >
+          <div className="system-shell system-shell-warm mb-12 rounded-[0.5rem] p-6">
             <p
               className="mb-2 font-mono text-xs tracking-widest"
               style={{ color: "var(--bronze)" }}
@@ -318,13 +314,7 @@ export function CasPage() {
           </div>
 
           <ScrollReveal>
-            <div
-              className="border p-8 md:p-10"
-              style={{
-                borderColor: "var(--bronze)",
-                backgroundColor: "var(--graphite-deep)",
-              }}
-            >
+            <div className="system-shell system-shell-warm rounded-[0.5rem] p-8 md:p-10">
               <div className="grid gap-8 md:grid-cols-12">
                 <div className="md:col-span-5">
                   <span
@@ -340,7 +330,7 @@ export function CasPage() {
                     {FEATURED_CASE.title}
                   </h2>
                   <p
-                    className="mb-4 font-editorial text-base italic"
+                    className="system-interface mb-4"
                     style={{ color: "var(--ivory-muted)" }}
                   >
                     {FEATURED_CASE.subtitle}
@@ -381,11 +371,10 @@ export function CasPage() {
                     <SheetTrigger asChild>
                       <button
                         type="button"
-                        className="btn-copper-glow inline-flex items-center gap-2 px-7 py-4 font-mono text-xs tracking-wider uppercase transition-all duration-300"
+                        className="system-button-text btn-copper-glow inline-flex items-center gap-2 rounded-[0.5rem] px-7 py-4 transition-all duration-300"
                         style={{
                           backgroundColor: "var(--copper)",
                           color: "var(--graphite-deep)",
-                          fontWeight: 600,
                         }}
                       >
                         Explorer le cas
@@ -432,11 +421,10 @@ export function CasPage() {
                       <SheetFooter className="border-t border-[var(--mineral-dark)]">
                         <Link
                           to="/diagnostic"
-                          className="btn-copper-glow inline-flex items-center justify-center gap-2 px-6 py-4 font-mono text-xs tracking-wider uppercase"
+                          className="system-button-text btn-copper-glow inline-flex items-center justify-center gap-2 rounded-[0.5rem] px-6 py-4"
                           style={{
                             backgroundColor: "var(--copper)",
                             color: "var(--graphite-deep)",
-                            fontWeight: 600,
                           }}
                         >
                           Demander un diagnostic similaire
@@ -448,13 +436,7 @@ export function CasPage() {
                 </div>
 
                 <div className="md:col-span-7">
-                  <div
-                    className="mb-6 border p-5"
-                    style={{
-                      borderColor: "var(--mineral-dark)",
-                      backgroundColor: "rgba(26,26,26,0.72)",
-                    }}
-                  >
+                  <div className="system-panel mb-6 rounded-[0.5rem] p-5">
                     <p
                       className="mb-4 font-mono text-xs tracking-widest"
                       style={{ color: "var(--copper)" }}
@@ -466,14 +448,7 @@ export function CasPage() {
 
                   <div className="grid gap-4 md:grid-cols-3">
                     {FEATURED_CASE.beforeAfter.map((metric) => (
-                      <div
-                        key={metric.label}
-                        className="border p-5"
-                        style={{
-                          borderColor: "var(--mineral-dark)",
-                          backgroundColor: "var(--graphite-mid)",
-                        }}
-                      >
+                      <div key={metric.label} className="system-panel rounded-[0.5rem] p-5">
                         <p
                           className="mb-3 font-mono text-[10px] tracking-[0.18em]"
                           style={{ color: "var(--ivory-muted)" }}
@@ -506,13 +481,7 @@ export function CasPage() {
 
               return (
                 <ScrollReveal key={cas.id} delay={i * 80}>
-                  <div
-                    className="flex h-full flex-col border p-8"
-                    style={{
-                      borderColor: "var(--mineral-dark)",
-                      backgroundColor: "var(--graphite-deep)",
-                    }}
-                  >
+                  <div className="system-panel system-panel-hover flex h-full flex-col rounded-[0.5rem] p-8">
                     <div className="mb-6 flex items-start justify-between gap-4">
                       <span
                         className="inline-flex font-mono text-[10px] tracking-[0.2em]"
@@ -530,7 +499,7 @@ export function CasPage() {
                       {cas.title}
                     </h2>
                     <p
-                      className="mb-4 font-editorial text-sm italic"
+                      className="system-interface mb-4"
                       style={{ color: "var(--ivory-muted)" }}
                     >
                       {cas.subtitle}
@@ -564,7 +533,7 @@ export function CasPage() {
                         <SheetTrigger asChild>
                           <button
                             type="button"
-                            className="inline-flex items-center gap-2 font-mono text-xs tracking-wider uppercase transition-colors duration-200"
+                            className="system-interface inline-flex items-center gap-2 transition-colors duration-200"
                             style={{ color: "var(--copper)" }}
                           >
                             Explorer le cas
@@ -611,11 +580,10 @@ export function CasPage() {
                           <SheetFooter className="border-t border-[var(--mineral-dark)]">
                             <Link
                               to="/diagnostic"
-                              className="inline-flex items-center justify-center gap-2 px-6 py-4 font-mono text-xs tracking-wider uppercase"
+                              className="system-button-text inline-flex items-center justify-center gap-2 rounded-[0.5rem] px-6 py-4"
                               style={{
                                 backgroundColor: "var(--copper)",
                                 color: "var(--graphite-deep)",
-                                fontWeight: 600,
                               }}
                             >
                               Parler de votre cas

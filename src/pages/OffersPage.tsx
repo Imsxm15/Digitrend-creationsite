@@ -14,26 +14,29 @@ export function OffersPage() {
       >
         <div className="max-w-7xl mx-auto px-6">
           <ScrollReveal>
-            <SectionLabel label="Services" />
-            <h1
-              className="font-display font-extrabold mb-6"
-              style={{
-                fontSize: "clamp(2.5rem, 6vw, 5.5rem)",
-                color: "var(--ivory)",
-                letterSpacing: "-0.03em",
-                lineHeight: 1.05,
-              }}
-            >
-              Quatre formats.
-              <br />
-              <span style={{ color: "var(--copper)" }}>Un seul cap.</span>
-            </h1>
-            <p
-              className="font-editorial italic text-xl max-w-2xl"
-              style={{ color: "var(--ivory-muted)", lineHeight: 1.6 }}
-            >
-              Chaque offre est pensée pour un stade précis de maturité. Pas de prestation fourre-tout — des interventions calibrées au problème réel.
-            </p>
+            <div className="system-shell rounded-[0.5rem] px-6 py-8 md:px-8 md:py-9">
+              <SectionLabel label="Services" />
+              <h1
+                className="font-display font-extrabold mb-6"
+                style={{
+                  fontSize: "clamp(2.5rem, 6vw, 5.5rem)",
+                  color: "var(--ivory)",
+                  letterSpacing: "-0.03em",
+                  lineHeight: 1.05,
+                }}
+              >
+                Quatre formats.
+                <br />
+                <span style={{ color: "var(--copper)" }}>Un seul cap.</span>
+              </h1>
+              <p
+                className="font-body text-lg max-w-3xl"
+                style={{ color: "var(--ivory-muted)", lineHeight: 1.8 }}
+              >
+                Chaque offre est pensée pour un stade précis de maturité. Pas de prestation
+                fourre-tout, mais des interventions calibrées au problème réel.
+              </p>
+            </div>
           </ScrollReveal>
         </div>
       </section>
@@ -46,13 +49,7 @@ export function OffersPage() {
           <div className="flex flex-col gap-8">
             {OFFERS.map((offer, i) => (
               <ScrollReveal key={offer.id} delay={i * 60}>
-                <div
-                  className="grid grid-cols-1 md:grid-cols-12 gap-8 p-8 md:p-12 border group"
-                  style={{
-                    borderColor: offer.featured ? "var(--bronze)" : "var(--mineral-dark)",
-                    backgroundColor: offer.featured ? "var(--mineral-dark)" : "var(--graphite-mid)",
-                  }}
-                >
+                <div className={`system-panel system-panel-hover grid grid-cols-1 md:grid-cols-12 gap-8 p-8 md:p-12 rounded-[0.5rem] group ${offer.featured ? "system-shell-warm" : ""}`}>
                   {offer.featured && (
                     <div
                       className="md:col-span-12 -mx-8 md:-mx-12 -mt-8 md:-mt-12 h-0.5 mb-8 md:mb-12"
@@ -89,7 +86,7 @@ export function OffersPage() {
                       {offer.title}
                     </h2>
                     <p
-                      className="font-editorial italic text-base mb-6"
+                      className="system-interface mb-6"
                       style={{ color: "var(--ivory-muted)" }}
                     >
                       {offer.subtitle}
@@ -169,11 +166,10 @@ export function OffersPage() {
                     </ul>
                     <Link
                       to={offer.ctaHref}
-                      className="inline-flex items-center gap-2 font-mono text-xs tracking-wider uppercase px-6 py-3.5 transition-all duration-300 btn-copper-glow"
+                      className="system-button-text inline-flex items-center gap-2 rounded-[0.5rem] px-6 py-3.5 transition-all duration-300 btn-copper-glow"
                       style={{
                         backgroundColor: "var(--copper)",
                         color: "var(--graphite-deep)",
-                        fontWeight: 600,
                       }}
                       data-cursor-hover
                     >
@@ -225,13 +221,7 @@ export function OffersPage() {
                   },
                 ].map((item) => (
                   <ScrollReveal key={item.q} delay={60}>
-                    <div
-                      className="p-6 border"
-                      style={{
-                        borderColor: "var(--mineral-dark)",
-                        backgroundColor: "var(--graphite-deep)",
-                      }}
-                    >
+                    <div className="system-panel system-panel-hover rounded-[0.5rem] p-6">
                       <p
                         className="font-display font-semibold text-sm mb-2"
                         style={{ color: "var(--ivory)" }}
@@ -251,13 +241,7 @@ export function OffersPage() {
             </div>
             <div className="md:col-span-5 md:col-start-8">
               <ScrollReveal delay={100}>
-                <div
-                  className="p-8 border sticky top-32"
-                  style={{
-                    borderColor: "var(--bronze)",
-                    backgroundColor: "var(--mineral-dark)",
-                  }}
-                >
+                <div className="system-shell system-shell-warm sticky top-32 rounded-[0.5rem] p-8">
                   <p
                     className="font-mono text-xs tracking-widest mb-4"
                     style={{ color: "var(--copper)" }}
@@ -284,11 +268,10 @@ export function OffersPage() {
                   </p>
                   <Link
                     to="/diagnostic"
-                    className="w-full flex items-center justify-center gap-2 font-mono text-xs tracking-wider uppercase px-6 py-4 transition-all duration-300 btn-copper-glow"
+                    className="system-button-text flex w-full items-center justify-center gap-2 rounded-[0.5rem] px-6 py-4 transition-all duration-300 btn-copper-glow"
                     style={{
                       backgroundColor: "var(--copper)",
                       color: "var(--graphite-deep)",
-                      fontWeight: 600,
                     }}
                     data-cursor-hover
                   >

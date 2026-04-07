@@ -20,38 +20,34 @@ export function LegalPage({ label, title, intro, sections }: LegalPageProps) {
     >
       <div className="max-w-4xl mx-auto px-6">
         <ScrollReveal>
-          <SectionLabel label={label} />
-          <h1
-            className="font-display font-extrabold mb-6"
-            style={{
-              fontSize: "clamp(2.5rem, 6vw, 5rem)",
-              color: "var(--ivory)",
-              letterSpacing: "-0.03em",
-              lineHeight: 1.05,
-            }}
-          >
-            {title}
-          </h1>
-          <p
-            className="font-editorial italic text-xl max-w-2xl"
-            style={{ color: "var(--ivory-muted)", lineHeight: 1.6 }}
-          >
-            {intro}
-          </p>
+          <div className="system-shell rounded-[0.5rem] px-6 py-8 md:px-8 md:py-9">
+            <SectionLabel label={label} />
+            <h1
+              className="system-title-hero mb-6"
+              style={{
+                fontSize: "clamp(2.5rem, 6vw, 5rem)",
+                color: "var(--ivory)",
+              }}
+            >
+              {title}
+            </h1>
+            <p
+              className="system-copy max-w-2xl"
+              style={{ color: "var(--ivory-muted)" }}
+            >
+              {intro}
+            </p>
+          </div>
         </ScrollReveal>
 
         <div className="mt-14 flex flex-col gap-6">
           {sections.map((section, index) => (
             <ScrollReveal key={section.heading} delay={index * 60}>
               <article
-                className="p-8 border"
-                style={{
-                  borderColor: "var(--mineral-dark)",
-                  backgroundColor: "var(--graphite-mid)",
-                }}
+                className="system-panel rounded-[0.5rem] p-8"
               >
                 <h2
-                  className="font-display font-bold text-lg mb-3"
+                  className="system-title-section mb-3 text-lg"
                   style={{ color: "var(--ivory)" }}
                 >
                   {section.heading}
@@ -71,11 +67,10 @@ export function LegalPage({ label, title, intro, sections }: LegalPageProps) {
           <div className="mt-12">
             <Link
               to="/"
-              className="inline-flex items-center font-mono text-xs tracking-wider uppercase px-8 py-4 transition-all duration-300 btn-copper-glow"
+              className="system-button-text inline-flex items-center rounded-[0.5rem] px-8 py-4 transition-all duration-300 btn-copper-glow"
               style={{
                 backgroundColor: "var(--copper)",
                 color: "var(--graphite-deep)",
-                fontWeight: 600,
               }}
             >
               Retour à l'accueil

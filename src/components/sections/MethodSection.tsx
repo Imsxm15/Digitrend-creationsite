@@ -8,186 +8,185 @@ const STEPS = [
     title: "Cartographier",
     phase: "Diagnostic",
     duration: "J1–J2",
-    description: "Avant d'intervenir, comprendre. Je cartographie les flux existants, les outils, les processus et les données pour identifier où le système perd de l'énergie.",
-    detail: "Entretien de cadrage · Audit documentaire · Analyse des outils",
+    description:
+      "Je lis les flux, les outils, les données et les dépendances pour voir où l'énergie se perd vraiment.",
+    detail: "Entretien de cadrage · Audit documentaire · Lecture des outils",
   },
   {
     number: "02",
     title: "Diagnostiquer",
     phase: "Diagnostic",
     duration: "J3–J5",
-    description: "Identifier les frictions réelles par ordre d'impact. Distinguer ce qui est urgent, ce qui est structurant et ce qui peut attendre. Prioriser avec des critères business clairs.",
-    detail: "Matrice de priorisation · Score d'impact · Plan d'action",
+    description:
+      "Je distingue ce qui est urgent de ce qui est structurant avec un ordre de traitement défendable côté business.",
+    detail: "Matrice d'impact · Priorités · Risques de mise en œuvre",
   },
   {
     number: "03",
     title: "Architecturer",
     phase: "Exécution",
     duration: "J6–J10",
-    description: "Concevoir le système cible : flux optimisés, outils connectés, automatisations pertinentes, interfaces utiles. Pas de sur-ingénierie — le bon niveau de complexité pour l'objectif.",
-    detail: "Architecture système · Wireframes · Spécifications techniques",
+    description:
+      "Je conçois le système cible : flux, automatisations, écrans utiles et logique métier connectée.",
+    detail: "Architecture système · Wireframes · Décisions techniques",
   },
   {
     number: "04",
     title: "Déployer",
     phase: "Exécution",
     duration: "J11–J12",
-    description: "Implémenter avec rigueur : configuration des outils, développement des automatisations, mise en place des interfaces, tests de validation. Chaque livrable est fonctionnel.",
-    detail: "Setup · Développement · Tests · Documentation",
+    description:
+      "Je configure, implémente, teste et documente ce qui doit devenir opératif dans le réel.",
+    detail: "Setup · Développement · QA · Documentation",
   },
   {
     number: "05",
     title: "Piloter",
     phase: "Exécution",
     duration: "J13–J14",
-    description: "Un système déployé sans suivi se dégrade. Je mets en place les indicateurs de pilotage, les alertes et la revue régulière pour que les gains perdurent.",
-    detail: "Dashboard · KPI · Revue mensuelle · Ajustements continus",
+    description:
+      "Je mets en place les KPI, les alertes et la revue régulière pour que les gains tiennent dans le temps.",
+    detail: "Dashboard · KPI · Revue mensuelle · Ajustements",
   },
-]
+] as const
 
 export function MethodSection() {
   return (
-    <section
-      className="py-28"
-      style={{ backgroundColor: "var(--mineral-dark)" }}
-    >
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
-          <div className="md:col-span-7">
+    <section className="py-24 md:py-28">
+      <div className="mx-auto max-w-[92rem] px-4 md:px-6">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-12 md:gap-10">
+          <div className="md:col-span-4 md:sticky md:top-28 md:self-start">
             <ScrollReveal>
-              <SectionLabel number="03" label="Méthode" />
-              <h2
-                className="font-display font-bold"
-                style={{
-                  fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
-                  color: "var(--ivory)",
-                  lineHeight: 1.1,
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                Cinq phases. Une logique de système.
-                <br />
-                <span style={{ color: "var(--ivory-muted)" }}>Pas de magie — de la méthode.</span>
-              </h2>
+              <div className="system-shell rounded-[0.5rem] px-6 py-7 md:px-7">
+                <SectionLabel number="03" label="Protocole de livraison" />
+                <h2
+                  className="mb-5 font-display font-bold"
+                  style={{
+                    fontSize: "clamp(1.9rem, 3.3vw, 2.8rem)",
+                    color: "var(--ivory)",
+                    lineHeight: 1.06,
+                    letterSpacing: "-0.03em",
+                  }}
+                >
+                  Cinq phases.
+                  <br />
+                  <span style={{ color: "var(--copper)" }}>Une logique de système.</span>
+                </h2>
+                <p
+                  className="mb-6 font-body text-sm leading-7"
+                  style={{ color: "var(--ivory-muted)" }}
+                >
+                  La méthode n&apos;est pas décorative. Elle sert à décider vite, livrer proprement et
+                  garder un pilotage exploitable après déploiement.
+                </p>
+                <div className="space-y-3">
+                  <div className="system-kpi-row py-0 pb-3">
+                    <span className="font-mono text-[11px] tracking-[0.16em]" style={{ color: "var(--steel-light)" }}>
+                      Diagnostic
+                    </span>
+                    <span className="font-mono text-sm" style={{ color: "var(--copper)" }}>
+                      J1 → J5
+                    </span>
+                  </div>
+                  <div className="system-kpi-row py-0 pb-3">
+                    <span className="font-mono text-[11px] tracking-[0.16em]" style={{ color: "var(--steel-light)" }}>
+                      Exécution
+                    </span>
+                    <span className="font-mono text-sm" style={{ color: "var(--ivory-soft)" }}>
+                      J6 → J14
+                    </span>
+                  </div>
+                </div>
+              </div>
             </ScrollReveal>
           </div>
-        </div>
 
-        <div className="relative">
-          <div
-            className="absolute left-[calc(2rem+0.5px)] top-0 bottom-0 w-px hidden md:block"
-            style={{ backgroundColor: "var(--mineral-warm)" }}
-            aria-hidden="true"
-          />
-
-          <div className="flex flex-col gap-0">
-            {STEPS.map((step, i) => (
-              <ScrollReveal key={step.number} delay={i * 80}>
-                <div className="group relative flex gap-8 pb-12 md:gap-12 last:pb-0">
-                  <div className="flex-shrink-0 relative">
-                    <div
-                      className="flex size-16 items-center justify-center border-2 transition-all duration-400 group-hover:border-[var(--copper)]"
-                      style={{
-                        borderColor:
-                          step.phase === "Diagnostic"
-                            ? "rgba(196,133,60,0.55)"
-                            : "var(--mineral-warm)",
-                        backgroundColor: "var(--mineral-dark)",
-                      }}
-                    >
-                      <span
-                        className="font-mono text-xs tracking-widest"
-                        style={{ color: "var(--copper)" }}
-                      >
-                        {step.number}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex-1 pt-3">
-                    <div className="mb-3 flex flex-wrap items-center gap-3">
-                      <span
-                        className="font-mono text-[10px] tracking-[0.18em] uppercase"
-                        style={{
-                          color:
-                            step.phase === "Diagnostic"
-                              ? "var(--copper)"
-                              : "var(--steel-light)",
-                        }}
-                      >
-                        {step.phase}
-                      </span>
-                      <span
-                        className="font-mono text-[10px] tracking-[0.18em] uppercase"
-                        style={{ color: "var(--ivory-muted)" }}
-                      >
+          <div className="md:col-span-8">
+            <div className="space-y-5">
+              {STEPS.map((step, index) => (
+                <ScrollReveal key={step.number} delay={index * 70}>
+                  <article className="system-panel system-panel-hover rounded-[0.5rem] px-6 py-6 md:px-7">
+                    <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+                      <div className="flex flex-wrap items-center gap-3">
+                        <span className="system-chip" style={{ color: "var(--copper)" }}>
+                          {step.number}
+                        </span>
+                        <span
+                          className="system-chip"
+                          style={{
+                            color: step.phase === "Diagnostic" ? "var(--copper)" : "var(--steel-light)",
+                          }}
+                        >
+                          {step.phase}
+                        </span>
+                      </div>
+                      <span className="system-chip" style={{ color: "var(--ivory-muted)" }}>
                         {step.duration}
                       </span>
                     </div>
-                    <h3
-                      className="font-display font-bold text-xl mb-3"
-                      style={{ color: "var(--ivory)", letterSpacing: "-0.01em" }}
-                    >
-                      {step.title}
-                    </h3>
-                    <p
-                      className="font-body text-sm leading-7 mb-3 max-w-2xl"
-                      style={{ color: "var(--ivory-muted)" }}
-                    >
-                      {step.description}
-                    </p>
-                    <p
-                      className="font-mono text-xs"
-                      style={{ color: "var(--steel)" }}
-                    >
-                      {step.detail}
+
+                    <div className="grid gap-4 md:grid-cols-12 md:gap-6">
+                      <div className="md:col-span-4">
+                        <h3
+                          className="font-display text-2xl font-bold"
+                          style={{ color: "var(--ivory)", letterSpacing: "-0.02em" }}
+                        >
+                          {step.title}
+                        </h3>
+                      </div>
+                      <div className="md:col-span-8">
+                        <p
+                          className="mb-4 font-body text-sm leading-7"
+                          style={{ color: "var(--ivory-muted)" }}
+                        >
+                          {step.description}
+                        </p>
+                        <div className="system-divider-soft mb-4" />
+                        <p
+                          className="font-mono text-[11px] tracking-[0.14em]"
+                          style={{ color: "var(--steel-light)" }}
+                        >
+                          {step.detail}
+                        </p>
+                      </div>
+                    </div>
+                  </article>
+                </ScrollReveal>
+              ))}
+            </div>
+
+            <ScrollReveal delay={180}>
+              <div className="system-shell mt-8 rounded-[0.5rem] px-6 py-6 md:px-7">
+                <p
+                  className="mb-3 font-mono text-[11px] tracking-[0.18em]"
+                  style={{ color: "var(--steel-light)" }}
+                >
+                  EXEMPLE DE PLANNING POUR UNE INTERVENTION DE 14 JOURS
+                </p>
+                <div className="grid gap-6 md:grid-cols-12 md:items-center">
+                  <div className="md:col-span-8">
+                    <p className="font-body text-sm leading-7" style={{ color: "var(--ivory-muted)" }}>
+                      Le point d&apos;entrée varie selon le contexte, mais la logique reste la même :
+                      rendre visible, prioriser, concevoir, déployer et garder le système pilotable.
                     </p>
                   </div>
+                  <div className="md:col-span-4 md:flex md:justify-end">
+                    <Link
+                      to="/methode"
+                      className="system-button-text inline-flex items-center rounded-[0.5rem] border px-7 py-4 transition-all duration-300 hover:border-[var(--copper)] hover:text-[var(--copper)]"
+                      style={{
+                        borderColor: "var(--mineral-warm)",
+                        color: "var(--ivory-muted)",
+                      }}
+                    >
+                      Voir la méthode complète
+                    </Link>
+                  </div>
                 </div>
-              </ScrollReveal>
-            ))}
+              </div>
+            </ScrollReveal>
           </div>
         </div>
-
-        <ScrollReveal delay={200}>
-          <div
-            className="mt-16 flex flex-col gap-4 border-t pt-12"
-            style={{ borderColor: "var(--mineral-warm)" }}
-          >
-            <p
-              className="font-mono text-xs tracking-widest"
-              style={{ color: "var(--steel-light)" }}
-            >
-              EXEMPLE DE PLANNING POUR UNE INTERVENTION DE 14 JOURS · AJUSTÉ SELON LE PÉRIMÈTRE
-            </p>
-            <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
-            <div>
-              <p
-                className="font-editorial italic text-xl mb-2"
-                style={{ color: "var(--ivory-muted)" }}
-              >
-                La méthode s'adapte au contexte.
-              </p>
-              <p
-                className="font-body text-sm"
-                style={{ color: "var(--ivory-muted)" }}
-              >
-                Chaque intervention ne commence pas au même endroit. Parfois on entre par le diagnostic, parfois directement par l'architecture. L'objectif reste le même.
-              </p>
-            </div>
-            <Link
-              to="/methode"
-              className="flex-shrink-0 font-mono text-xs tracking-wider uppercase px-7 py-4 border transition-all duration-300 hover:border-[var(--copper)] hover:text-[var(--copper)] whitespace-nowrap"
-              style={{
-                borderColor: "var(--mineral-warm)",
-                color: "var(--ivory-muted)",
-              }}
-            >
-              Voir la méthode complète
-            </Link>
-            </div>
-          </div>
-        </ScrollReveal>
       </div>
     </section>
   )

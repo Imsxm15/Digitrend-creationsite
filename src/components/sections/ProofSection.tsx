@@ -8,20 +8,23 @@ const METRICS = [
     suffix: "%",
     label: "de temps manuel visé en moins sur les flux prioritaires",
     color: "var(--copper)",
+    progress: 40,
   },
   {
     target: 3,
     suffix: "x",
     label: "plus de clarté attendue sur les priorités qui comptent",
     color: "var(--steel-light)",
+    progress: 74,
   },
   {
     target: 80,
     suffix: "%",
     label: "des frictions critiques rendues visibles dès le cadrage",
     color: "var(--system-success)",
+    progress: 80,
   },
-]
+] as const
 
 const BEFORE_AFTER = [
   {
@@ -40,14 +43,17 @@ const BEFORE_AFTER = [
     before: "Une IA utilisée en mode copier-coller",
     after: "Des agents et outils adaptés aux cas réels",
   },
-]
+] as const
 
 function CountUpValue({ target, start }: { target: number; start: boolean }) {
   const [value, setValue] = useState(0)
+
   useEffect(() => {
     if (!start) return
+
     let startTime: number | null = null
     const duration = 1600
+
     const step = (timestamp: number) => {
       if (!startTime) startTime = timestamp
       const progress = Math.min((timestamp - startTime) / duration, 1)
@@ -55,8 +61,10 @@ function CountUpValue({ target, start }: { target: number; start: boolean }) {
       setValue(Math.floor(eased * target))
       if (progress < 1) requestAnimationFrame(step)
     }
+
     requestAnimationFrame(step)
   }, [start, target])
+
   return <>{value}</>
 }
 
@@ -74,171 +82,128 @@ export function ProofSection() {
       },
       { threshold: 0.3 }
     )
+
     if (sectionRef.current) observer.observe(sectionRef.current)
+
     return () => observer.disconnect()
   }, [])
 
   return (
-    <section
-      className="py-28"
-      style={{ backgroundColor: "var(--graphite-deep)" }}
-      ref={sectionRef}
-    >
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-20">
-          <div className="md:col-span-6">
+    <section className="py-24 md:py-28" ref={sectionRef}>
+      <div className="mx-auto max-w-[92rem] px-4 md:px-6">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-12 md:gap-10">
+          <div className="md:col-span-4">
             <ScrollReveal>
-              <SectionLabel number="04" label="Objectifs d'intervention" />
-              <h2
-                className="font-display font-bold"
-                style={{
-                  fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
-                  color: "var(--ivory)",
-                  lineHeight: 1.1,
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                Ce que mes interventions cherchent à produire.
-              </h2>
-            </ScrollReveal>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
-          {METRICS.map((metric, i) => (
-            <ScrollReveal key={metric.label} delay={i * 100}>
-              <div
-                className="p-8 border"
-                style={{
-                  borderColor: "var(--mineral-dark)",
-                  backgroundColor: "var(--graphite-mid)",
-                }}
-              >
-                <div
-                  className="font-display font-bold mb-3"
+              <div className="system-shell rounded-[0.5rem] px-6 py-7 md:px-7">
+                <SectionLabel number="04" label="Preuves directes" />
+                <h2
+                  className="mb-5 font-display font-bold"
                   style={{
-                    fontSize: "clamp(3rem, 5vw, 4rem)",
-                    color: metric.color,
-                    lineHeight: 1,
+                    fontSize: "clamp(1.9rem, 3.3vw, 2.8rem)",
+                    color: "var(--ivory)",
+                    lineHeight: 1.06,
                     letterSpacing: "-0.03em",
                   }}
                 >
-                  <CountUpValue target={metric.target} start={counting} />
-                  {metric.suffix}
-                </div>
+                  Ce que l&apos;intervention doit produire.
+                </h2>
                 <p
-                  className="font-body text-sm leading-6"
+                  className="font-body text-sm leading-7"
                   style={{ color: "var(--ivory-muted)" }}
                 >
-                  {metric.label}
-                </p>
-                <p
-                  className="mt-3 font-mono text-[11px] tracking-wider"
-                  style={{ color: "var(--ivory-muted)" }}
-                >
-                  OBJECTIF TYPE SELON LE CONTEXTE ET LE PÉRIMÈTRE
+                  Ici, la preuve ne repose pas sur des slogans. Elle repose sur des gains attendus,
+                  des états de système plus lisibles et des sorties exploitables.
                 </p>
               </div>
             </ScrollReveal>
-          ))}
+          </div>
+
+          <div className="md:col-span-8">
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+              {METRICS.map((metric, index) => (
+                <ScrollReveal key={metric.label} delay={index * 70}>
+                  <article className="system-panel system-panel-hover rounded-[0.5rem] px-6 py-6">
+                    <p
+                      className="mb-5 font-mono text-[10px] tracking-[0.18em]"
+                      style={{ color: "var(--steel-light)" }}
+                    >
+                      OBJECTIF TYPE
+                    </p>
+                    <div
+                      className="mb-3 font-display text-[clamp(2.8rem,4vw,3.6rem)] font-bold leading-none"
+                      style={{ color: metric.color, letterSpacing: "-0.04em" }}
+                    >
+                      <CountUpValue target={metric.target} start={counting} />
+                      {metric.suffix}
+                    </div>
+                    <p className="mb-5 font-body text-sm leading-7" style={{ color: "var(--ivory-muted)" }}>
+                      {metric.label}
+                    </p>
+                    <div
+                      className={
+                        metric.color === "var(--steel-light)"
+                          ? "system-progress is-steel"
+                          : metric.color === "var(--system-success)"
+                            ? "system-progress is-success"
+                            : "system-progress"
+                      }
+                    >
+                      <span style={{ width: `${metric.progress}%` }} />
+                    </div>
+                    <p className="mt-4 font-mono text-[10px] tracking-[0.16em]" style={{ color: "var(--ivory-muted)" }}>
+                      SELON LE CONTEXTE ET LE PÉRIMÈTRE
+                    </p>
+                  </article>
+                </ScrollReveal>
+              ))}
+            </div>
+
+            <ScrollReveal delay={160}>
+              <div className="system-shell mt-6 rounded-[0.5rem] px-6 py-6 md:px-7">
+                <p className="mb-6 font-mono text-[11px] tracking-[0.18em]" style={{ color: "var(--copper)" }}>
+                  AVANT → APRÈS
+                </p>
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                  <div className="system-panel rounded-[0.5rem] px-5 py-5">
+                    <p className="mb-5 font-mono text-[10px] tracking-[0.18em]" style={{ color: "var(--system-error)" }}>
+                      QUAND LE SYSTÈME FUIT
+                    </p>
+                    <ul className="space-y-4">
+                      {BEFORE_AFTER.map((item) => (
+                        <li key={item.before} className="flex items-start gap-3">
+                          <span className="mt-1 font-mono text-xs" style={{ color: "var(--system-error)" }}>
+                            ✗
+                          </span>
+                          <span className="font-body text-sm leading-7" style={{ color: "var(--ivory-muted)" }}>
+                            {item.before}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="system-panel rounded-[0.5rem] px-5 py-5">
+                    <p className="mb-5 font-mono text-[10px] tracking-[0.18em]" style={{ color: "var(--system-success)" }}>
+                      QUAND LE SYSTÈME DEVIENT LISIBLE
+                    </p>
+                    <ul className="space-y-4">
+                      {BEFORE_AFTER.map((item) => (
+                        <li key={item.after} className="flex items-start gap-3">
+                          <span className="mt-1 font-mono text-xs" style={{ color: "var(--system-success)" }}>
+                            ✓
+                          </span>
+                          <span className="font-body text-sm leading-7" style={{ color: "var(--ivory-soft)" }}>
+                            {item.after}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
         </div>
-
-        <ScrollReveal>
-          <div
-            className="border p-8 md:p-12"
-            style={{ borderColor: "var(--mineral-dark)", backgroundColor: "var(--graphite-mid)" }}
-          >
-            <p
-              className="font-mono text-xs tracking-widest mb-8"
-              style={{ color: "var(--copper)" }}
-            >
-              AVANT → APRÈS
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <p
-                  className="font-mono text-xs tracking-widest mb-6 uppercase"
-                  style={{ color: "var(--system-error)" }}
-                >
-                  Quand le système fuit
-                </p>
-                <ul className="flex flex-col gap-5">
-                  {BEFORE_AFTER.map((item) => (
-                    <li key={item.before} className="flex items-start gap-3">
-                      <span
-                        className="flex-shrink-0 font-mono text-xs mt-0.5"
-                        style={{ color: "var(--system-error)" }}
-                        aria-hidden="true"
-                      >
-                        ✗
-                      </span>
-                      <span
-                        className="font-body text-sm"
-                        style={{ color: "var(--ivory-muted)" }}
-                      >
-                        {item.before}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <p
-                  className="font-mono text-xs tracking-widest mb-6 uppercase"
-                  style={{ color: "var(--system-success)" }}
-                >
-                  Quand le système devient lisible
-                </p>
-                <ul className="flex flex-col gap-5">
-                  {BEFORE_AFTER.map((item) => (
-                    <li key={item.after} className="flex items-start gap-3">
-                      <span
-                        className="flex-shrink-0 font-mono text-xs mt-0.5"
-                        style={{ color: "var(--system-success)" }}
-                        aria-hidden="true"
-                      >
-                        ✓
-                      </span>
-                      <span
-                        className="font-body text-sm"
-                        style={{ color: "var(--ivory-soft)" }}
-                      >
-                        {item.after}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </ScrollReveal>
-
-        <ScrollReveal delay={100}>
-          <div className="mt-12 flex justify-center">
-            <div className="max-w-2xl text-center">
-              <p
-                className="mb-4 font-mono text-xs tracking-widest"
-                style={{ color: "var(--copper)" }}
-              >
-                MA CONVICTION
-              </p>
-              <h3
-                className="mb-4 font-display text-2xl font-bold"
-                style={{ color: "var(--ivory)", letterSpacing: "-0.02em" }}
-              >
-                La clarté opérationnelle est un actif.
-              </h3>
-              <p
-                className="font-body text-sm leading-7"
-                style={{ color: "var(--ivory-muted)" }}
-              >
-                Tant que les flux restent flous, les équipes compensent avec du temps, de l&apos;énergie
-                et des décisions prises à l&apos;instinct. Mon rôle consiste à rendre le système lisible,
-                mesurable et exploitable avant de lui demander plus de performance.
-              </p>
-            </div>
-          </div>
-        </ScrollReveal>
       </div>
     </section>
   )

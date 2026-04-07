@@ -48,26 +48,29 @@ export function MethodPage() {
       >
         <div className="max-w-7xl mx-auto px-6">
           <ScrollReveal>
-            <SectionLabel label="Méthode" />
-            <h1
-              className="font-display font-extrabold mb-6"
-              style={{
-                fontSize: "clamp(2.5rem, 6vw, 5.5rem)",
-                color: "var(--ivory)",
-                letterSpacing: "-0.03em",
-                lineHeight: 1.05,
-              }}
-            >
-              Comment on travaille.
-              <br />
-              <span style={{ color: "var(--copper)" }}>Et pourquoi ça compte.</span>
-            </h1>
-            <p
-              className="font-editorial italic text-xl max-w-2xl"
-              style={{ color: "var(--ivory-muted)", lineHeight: 1.6 }}
-            >
-              Une approche n'est pas une méthodologie rigide. C'est un ensemble de principes qui guident chaque décision — de la première analyse au dernier livrable.
-            </p>
+            <div className="system-shell rounded-[0.5rem] px-6 py-8 md:px-8 md:py-9">
+              <SectionLabel label="Méthode" />
+              <h1
+                className="font-display font-extrabold mb-6"
+                style={{
+                  fontSize: "clamp(2.5rem, 6vw, 5.5rem)",
+                  color: "var(--ivory)",
+                  letterSpacing: "-0.03em",
+                  lineHeight: 1.05,
+                }}
+              >
+                Comment on travaille.
+                <br />
+                <span style={{ color: "var(--copper)" }}>Et pourquoi ça compte.</span>
+              </h1>
+              <p
+                className="font-body text-lg max-w-3xl"
+                style={{ color: "var(--ivory-muted)", lineHeight: 1.8 }}
+              >
+                Une approche n&apos;est pas une méthode plaquée. C&apos;est un protocole de lecture,
+                de décision, d&apos;exécution et de transmission qui garde le système exploitable.
+              </p>
+            </div>
           </ScrollReveal>
         </div>
       </section>
@@ -105,13 +108,7 @@ export function MethodPage() {
               { phase: "05", title: "Transmission", detail: "Livrer un système autonome et former les utilisateurs." },
             ].map((step, i) => (
               <ScrollReveal key={step.phase} delay={i * 60}>
-                <div
-                  className="p-6 border h-full"
-                  style={{
-                    borderColor: "var(--mineral-dark)",
-                    backgroundColor: "var(--graphite-deep)",
-                  }}
-                >
+                <div className="system-panel system-panel-hover rounded-[0.5rem] p-6 h-full">
                   <span
                     className="font-mono text-xs tracking-widest block mb-3"
                     style={{ color: "var(--copper)" }}
@@ -155,13 +152,7 @@ export function MethodPage() {
           <div className="flex flex-col gap-6">
             {PRINCIPLES.map((p, i) => (
               <ScrollReveal key={p.number} delay={i * 70}>
-                <div
-                  className="grid grid-cols-1 md:grid-cols-12 gap-6 p-8 border"
-                  style={{
-                    borderColor: "var(--mineral-dark)",
-                    backgroundColor: "var(--graphite-mid)",
-                  }}
-                >
+                <div className="system-panel system-panel-hover grid grid-cols-1 md:grid-cols-12 gap-6 p-8 rounded-[0.5rem]">
                   <div className="md:col-span-1">
                     <span
                       className="font-display font-bold text-2xl"
@@ -215,13 +206,7 @@ export function MethodPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {TOOLS.map((tool, i) => (
               <ScrollReveal key={tool.category} delay={i * 60}>
-                <div
-                  className="p-6 border"
-                  style={{
-                    borderColor: "var(--mineral-warm)",
-                    backgroundColor: "var(--graphite-mid)",
-                  }}
-                >
+                <div className="system-panel system-panel-hover rounded-[0.5rem] p-6">
                   <p
                     className="font-mono text-xs tracking-widest mb-4"
                     style={{ color: "var(--copper)" }}

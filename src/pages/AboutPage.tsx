@@ -52,26 +52,29 @@ export function AboutPage() {
       >
         <div className="max-w-7xl mx-auto px-6">
           <ScrollReveal>
-            <SectionLabel label="À propos" />
-            <h1
-              className="font-display font-extrabold mb-6"
-              style={{
-                fontSize: "clamp(2.5rem, 6vw, 5.5rem)",
-                color: "var(--ivory)",
-                letterSpacing: "-0.03em",
-                lineHeight: 1.05,
-              }}
-            >
-              Samuel Huys.
-              <br />
-              <span style={{ color: "var(--copper)" }}>Digitrend Creation.</span>
-            </h1>
-            <p
-              className="font-editorial italic text-xl max-w-2xl"
-              style={{ color: "var(--ivory-muted)", lineHeight: 1.6 }}
-            >
-              Architecte opérationnel, designer de systèmes business, constructeur d'outils. Le fil conducteur : relier stratégie et exécution jusqu'au résultat concret.
-            </p>
+            <div className="system-shell rounded-[0.5rem] px-6 py-8 md:px-8 md:py-9">
+              <SectionLabel label="À propos" />
+              <h1
+                className="font-display font-extrabold mb-6"
+                style={{
+                  fontSize: "clamp(2.5rem, 6vw, 5.5rem)",
+                  color: "var(--ivory)",
+                  letterSpacing: "-0.03em",
+                  lineHeight: 1.05,
+                }}
+              >
+                Samuel Huys.
+                <br />
+                <span style={{ color: "var(--copper)" }}>Digitrend Creation.</span>
+              </h1>
+              <p
+                className="font-body text-lg max-w-3xl"
+                style={{ color: "var(--ivory-muted)", lineHeight: 1.8 }}
+              >
+                Architecte opérationnel, designer de systèmes business, constructeur d&apos;outils.
+                Le fil conducteur : relier stratégie, système et exécution jusqu&apos;au résultat concret.
+              </p>
+            </div>
           </ScrollReveal>
         </div>
       </section>
@@ -115,13 +118,7 @@ export function AboutPage() {
 
             <div className="md:col-span-5 md:col-start-8">
               <ScrollReveal delay={80}>
-                <div
-                  className="p-8 border"
-                  style={{
-                    borderColor: "var(--mineral-dark)",
-                    backgroundColor: "var(--graphite-deep)",
-                  }}
-                >
+                <div className="system-shell rounded-[0.5rem] p-8">
                   <p
                     className="font-mono text-xs tracking-widest mb-6"
                     style={{ color: "var(--copper)" }}
@@ -173,13 +170,7 @@ export function AboutPage() {
           <div className="flex flex-col gap-6">
             {TRAJECTORY.map((t, i) => (
               <ScrollReveal key={t.period} delay={i * 70}>
-                <div
-                  className="grid grid-cols-1 md:grid-cols-12 gap-6 p-8 border"
-                  style={{
-                    borderColor: i === 0 ? "var(--bronze)" : "var(--mineral-dark)",
-                    backgroundColor: i === 0 ? "var(--mineral-dark)" : "var(--graphite-mid)",
-                  }}
-                >
+                <div className={`system-panel system-panel-hover grid grid-cols-1 md:grid-cols-12 gap-6 p-8 rounded-[0.5rem] ${i === 0 ? "system-shell-warm" : ""}`}>
                   <div className="md:col-span-2">
                     <span
                       className="font-mono text-xs tracking-widest"
@@ -217,7 +208,7 @@ export function AboutPage() {
       >
         <div className="max-w-7xl mx-auto px-6">
           <ScrollReveal>
-            <div className="max-w-3xl">
+            <div className="system-shell rounded-[0.5rem] px-6 py-7 md:px-8 md:py-8 max-w-4xl">
               <p
                 className="font-mono text-xs tracking-widest mb-6"
                 style={{ color: "var(--copper)" }}
@@ -226,10 +217,10 @@ export function AboutPage() {
               </p>
               <blockquote>
                 <p
-                  className="font-editorial italic leading-9"
+                  className="font-body leading-9"
                   style={{
                     fontSize: "clamp(1.3rem, 2.5vw, 1.8rem)",
-                    color: "var(--ivory-muted)",
+                    color: "var(--ivory-soft)",
                   }}
                 >
                   "La performance digitale n'est pas une question de budget ou d'outil. C'est une question de clarté systémique. Quand chaque flux a une logique, quand chaque outil a un rôle précis, quand chaque donnée est exploitable — les résultats suivent."
