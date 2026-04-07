@@ -1,0 +1,2 @@
+-- Intentionally empty.
+-- This project currently relies on schema migrations only.
