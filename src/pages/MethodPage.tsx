@@ -12,12 +12,12 @@ const PRINCIPLES = [
   {
     number: "II",
     title: "L'impact comme boussole",
-    description: "Pas de perfectionnisme gratuit. Pas d'optimisation pour l'optimisation. Chaque choix de conception et d'implementation est evalue a l'aune de son impact mesurable sur le business.",
+    description: "Pas de perfectionnisme gratuit. Pas d'optimisation pour l'optimisation. Chaque choix de conception et d'implémentation est évalué à l'aune de son impact mesurable sur le business.",
   },
   {
     number: "III",
-    title: "La preuve plutot que la promesse",
-    description: "Nous ne vendons pas du potentiel. Nous livrons des systèmes fonctionnels avec des livrables précis, documentes et testes. La credibilite se construit sur ce qui est reellement livre.",
+    title: "La preuve plutôt que la promesse",
+    description: "Nous ne vendons pas du potentiel. Nous livrons des systèmes fonctionnels avec des livrables précis, documentés et testés. La crédibilité se construit sur ce qui est réellement livré.",
   },
   {
     number: "IV",
@@ -27,13 +27,13 @@ const PRINCIPLES = [
   {
     number: "V",
     title: "La documentation comme fondation",
-    description: "Un système non documente est un système fragile. Chaque automatisation, chaque architecture, chaque outil deploye est accompagne d'une documentation claire pour le faire vivre.",
+    description: "Un système non documenté est un système fragile. Chaque automatisation, chaque architecture, chaque outil déployé est accompagné d'une documentation claire pour le faire vivre.",
   },
 ]
 
 const TOOLS = [
   { category: "Automation", items: ["Make (Integromat)", "Zapier", "n8n", "Airtable"] },
-  { category: "IA appliquee", items: ["OpenAI API", "Claude API", "LangChain", "Perplexity"] },
+  { category: "IA appliquée", items: ["OpenAI API", "Claude API", "LangChain", "Perplexity"] },
   { category: "Interfaces", items: ["React / TypeScript", "Next.js", "Webflow", "Framer"] },
   { category: "Data & Analytics", items: ["Google Analytics 4", "Metabase", "Looker Studio", "Segment"] },
   { category: "CRM & Marketing", items: ["HubSpot", "Brevo", "ActiveCampaign", "Lemlist"] },
@@ -51,7 +51,7 @@ export function MethodPage() {
         <div className="max-w-7xl mx-auto px-6">
           <ScrollReveal>
             <div className="system-shell rounded-[0.5rem] px-6 py-8 md:px-8 md:py-9">
-              <SectionLabel label="Methode" />
+              <SectionLabel label="Méthode" />
               <h1
                 className="font-display font-extrabold mb-6 text-ivory tracking-[-0.03em] leading-[1.05]"
                 style={{ fontSize: "clamp(2.5rem, 6vw, 5.5rem)" }}
@@ -78,7 +78,7 @@ export function MethodPage() {
                   Le processus type
                 </h2>
                 <p className="font-body text-sm leading-7 text-ivory-muted">
-                  Chaque mission suit une progression logique, meme si le point d'entree varie. L'objectif constant : comprendre avant d'agir, concevoir avant de déployer, mesurer avant de valider.
+                  Chaque mission suit une progression logique, même si le point d'entrée varie. L'objectif constant : comprendre avant d'agir, concevoir avant de déployer, mesurer avant de valider.
                 </p>
               </ScrollReveal>
             </div>
@@ -86,10 +86,10 @@ export function MethodPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             {[
-              { phase: "01", title: "Ecoute", detail: "Comprendre le contexte, les contraintes et l'objectif business réel." },
+              { phase: "01", title: "Écoute", detail: "Comprendre le contexte, les contraintes et l'objectif business réel." },
               { phase: "02", title: "Analyse", detail: "Cartographier les flux, les outils, les données et les blocages." },
-              { phase: "03", title: "Design", detail: "Concevoir l'architecture cible et les solutions a déployer." },
-              { phase: "04", title: "Execution", detail: "Implementer avec rigueur, tester et documenter." },
+              { phase: "03", title: "Design", detail: "Concevoir l'architecture cible et les solutions à déployer." },
+              { phase: "04", title: "Exécution", detail: "Implémenter avec rigueur, tester et documenter." },
               { phase: "05", title: "Transmission", detail: "Livrer un système autonome et former les utilisateurs." },
             ].map((step, i) => (
               <ScrollReveal key={step.phase} delay={i * 60}>
@@ -152,7 +152,7 @@ export function MethodPage() {
               Outillage de référence
             </h2>
             <p className="font-body text-sm leading-7 mb-12 max-w-2xl text-ivory-muted">
-              Le bon outil depend du problème. Voici les categories et outils couramment utilises dans nos interventions. Aucun dogmatisme — nous choisissons en fonction du contexte client.
+              Le bon outil dépend du problème. Voici les catégories et outils couramment utilisés dans nos interventions. Aucun dogmatisme, nous choisissons en fonction du contexte client.
             </p>
           </ScrollReveal>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -182,7 +182,7 @@ export function MethodPage() {
       <CtaBanner
         title="La méthode, c'est bien. L'appliquer, c'est mieux."
         subtitle="Discutons de votre situation spécifique. 30 minutes pour identifier si et comment nous pouvons avancer avec vous."
-        primaryLabel="Demarrer un diagnostic"
+        primaryLabel="Démarrer un diagnostic"
         primaryHref="/diagnostic"
         secondaryLabel="Voir les services"
         secondaryHref="/services"

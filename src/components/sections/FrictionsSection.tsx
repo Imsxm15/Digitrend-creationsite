@@ -6,15 +6,15 @@ const FRICTION_ITEMS = [
     signal: "F01",
     title: "Processus manuels absurdes",
     description:
-      "Des tâches répétitives absorbent les équipes, faute d\'automatisation utile et de protocole stable.",
+      "Des tâches répétitives absorbent les équipes, faute d'automatisation utile et de protocole stable.",
     impact: "Temps perdu",
     value: "-12h / semaine",
   },
   {
     signal: "F02",
-    title: "Outils qui s\'accumulent",
+    title: "Outils qui s'accumulent",
     description:
-      "CRM, analytics, support et marketing existent chacun de leur côté. Les données sont là, mais la lecture système n\'existe pas.",
+      "CRM, analytics, support et marketing existent chacun de leur côté. Les données sont là, mais la lecture système n'existe pas.",
     impact: "Vision fragmentée",
     value: "6 outils, 0 pilotage",
   },
@@ -28,9 +28,9 @@ const FRICTION_ITEMS = [
   },
   {
     signal: "F04",
-    title: "IA utilisée à l\'envers",
+    title: "IA utilisée à l'envers",
     description:
-      "Des prompts isolés sans gouvernance, sans flux, sans sortie exploitable. Beaucoup d\'énergie, peu d\'effet réel.",
+      "Des prompts isolés sans gouvernance, sans flux, sans sortie exploitable. Beaucoup d'énergie, peu d'effet réel.",
     impact: "Usage non piloté",
     value: "0 boucle de contrôle",
   },

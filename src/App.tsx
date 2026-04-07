@@ -1,9 +1,10 @@
-import { lazy, Suspense } from "react"
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { lazy, Suspense, useEffect } from "react"
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom"
 import { HelmetProvider } from "react-helmet-async"
 import { Layout } from "@/components/layout/Layout"
 import { PageSkeleton } from "@/components/common/PageSkeleton"
 import { ErrorBoundary } from "@/components/common/ErrorBoundary"
+import { preloadPrimaryRoutes } from "@/lib/routePreload"
 
 const HomePage = lazy(() => import("@/pages/HomePage"))
 const OffersPage = lazy(() => import("@/pages/OffersPage"))
@@ -15,27 +16,50 @@ const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"))
 const MentionsLegalesPage = lazy(() => import("@/pages/MentionsLegalesPage"))
 const ConfidentialitePage = lazy(() => import("@/pages/ConfidentialitePage"))
 
+function AppContent() {
+  const location = useLocation()
+
+  useEffect(() => {
+    const preloadTimer = window.setTimeout(() => {
+      preloadPrimaryRoutes()
+    }, 450)
+
+    return () => window.clearTimeout(preloadTimer)
+  }, [])
+
+  const skeletonVariant =
+    location.pathname.startsWith("/diagnostic")
+      ? "diagnostic"
+      : location.pathname.startsWith("/services")
+        ? "services"
+        : "default"
+
+  return (
+    <Layout>
+      <Suspense fallback={<PageSkeleton variant={skeletonVariant} />}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/services" element={<OffersPage />} />
+          <Route path="/services/:id" element={<OffersPage />} />
+          <Route path="/methode" element={<MethodPage />} />
+          <Route path="/a-propos" element={<AboutPage />} />
+          <Route path="/diagnostic" element={<ContactPage />} />
+          <Route path="/cas" element={<CasPage />} />
+          <Route path="/mentions-legales" element={<MentionsLegalesPage />} />
+          <Route path="/confidentialite" element={<ConfidentialitePage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Suspense>
+    </Layout>
+  )
+}
+
 export function App() {
   return (
     <BrowserRouter>
       <ErrorBoundary>
         <HelmetProvider>
-          <Layout>
-          <Suspense fallback={<PageSkeleton />}>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/services" element={<OffersPage />} />
-              <Route path="/services/:id" element={<OffersPage />} />
-              <Route path="/methode" element={<MethodPage />} />
-              <Route path="/a-propos" element={<AboutPage />} />
-              <Route path="/diagnostic" element={<ContactPage />} />
-              <Route path="/cas" element={<CasPage />} />
-              <Route path="/mentions-legales" element={<MentionsLegalesPage />} />
-              <Route path="/confidentialite" element={<ConfidentialitePage />} />
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
-          </Suspense>
-          </Layout>
+          <AppContent />
         </HelmetProvider>
       </ErrorBoundary>
     </BrowserRouter>

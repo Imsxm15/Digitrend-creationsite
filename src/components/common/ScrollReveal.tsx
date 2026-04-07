@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ReactNode } from "react"
+import { useEffect, useRef, useState, type ReactNode } from "react"
 import { cn } from "@/lib/utils"
 
 interface ScrollRevealProps {
@@ -15,27 +15,41 @@ export function ScrollReveal({
   direction = "up",
 }: ScrollRevealProps) {
   const ref = useRef<HTMLDivElement>(null)
+  const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
     const el = ref.current
     if (!el) return
+    let revealTimer: number | null = null
 
-    const initial =
-      direction === "up"
-        ? "opacity: 0; transform: translateY(28px);"
-        : "opacity: 0;"
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      revealTimer = window.setTimeout(() => {
+        setIsVisible(true)
+      }, 0)
+      return () => {
+        if (revealTimer) {
+          window.clearTimeout(revealTimer)
+        }
+      }
+    }
 
-    el.setAttribute("style", initial)
+    if (el.getBoundingClientRect().top < window.innerHeight * 0.92) {
+      revealTimer = window.setTimeout(() => {
+        setIsVisible(true)
+      }, delay)
+      return () => {
+        if (revealTimer) {
+          window.clearTimeout(revealTimer)
+        }
+      }
+    }
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setTimeout(() => {
-              el.style.transition =
-                "opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1)"
-              el.style.opacity = "1"
-              el.style.transform = "translateY(0)"
+            revealTimer = window.setTimeout(() => {
+              setIsVisible(true)
             }, delay)
             observer.unobserve(el)
           }
@@ -45,11 +59,25 @@ export function ScrollReveal({
     )
 
     observer.observe(el)
-    return () => observer.disconnect()
+    return () => {
+      observer.disconnect()
+      if (revealTimer) {
+        window.clearTimeout(revealTimer)
+      }
+    }
   }, [delay, direction])
 
   return (
-    <div ref={ref} className={cn(className)}>
+    <div
+      ref={ref}
+      className={cn(
+        "transition-all duration-700 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)]",
+        isVisible ? "translate-y-0 opacity-100" : "opacity-0",
+        direction === "up" && !isVisible && "translate-y-7",
+        className
+      )}
+      style={delay > 0 ? { transitionDelay: `${delay}ms` } : undefined}
+    >
       {children}
     </div>
   )

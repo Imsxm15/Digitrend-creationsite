@@ -458,6 +458,13 @@ html { scroll-behavior: smooth; }
   gap: 1rem;
 }
 
+.skeleton-panel {
+  border: 1px solid var(--mineral-dark);
+  border-radius: 0.5rem;
+  background: linear-gradient(180deg, rgba(36, 36, 36, 0.96), rgba(26, 26, 26, 0.98));
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
 .skeleton-bar {
   height: 1rem;
   border-radius: 0.25rem;

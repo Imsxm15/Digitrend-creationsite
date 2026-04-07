@@ -1,18 +1,38 @@
-import { PageMeta } from "@/components/common/PageMeta"
 import { Link, useParams } from "react-router-dom"
-import { OFFERS, type Offer } from "@/data/offers"
+import { PageMeta } from "@/components/common/PageMeta"
 import { ScrollReveal } from "@/components/common/ScrollReveal"
 import { SectionLabel } from "@/components/common/SectionLabel"
 import { CtaBanner } from "@/components/sections/CtaBanner"
-import { Badge } from "@/components/ui/badge"
+import { OffersOverview } from "@/components/sections/OffersOverview"
+import { FEATURED_OFFER, OFFERS, type Offer } from "@/data/offers"
+
+const CHOICE_GUIDANCE = [
+  {
+    question: "Je ne sais pas exactement où est le problème.",
+    answer:
+      "Commencez par le Diagnostic Frictions. L'objectif est de rendre le problème lisible avant de parler d'implémentation.",
+  },
+  {
+    question: "J'ai du trafic, mais le revenu ne suit pas.",
+    answer:
+      "Architecture Revenue devient le bon format dès que le tunnel, le CRM et le pilotage doivent enfin fonctionner ensemble.",
+  },
+  {
+    question: "Je veux automatiser ou structurer un usage IA.",
+    answer:
+      "AI Product Ops sert à cadrer un outil utile, avec garde-fous, sortie exploitable et documentation minimale.",
+  },
+  {
+    question: "J'ai surtout besoin d'un cap régulier.",
+    answer:
+      "Le Pilotage Fractionnel convient quand la difficulté est moins technique que dans la continuité de décision et de mise en ordre.",
+  },
+] as const
 
 function OfferDetailView({ offer }: { offer: Offer }) {
   return (
     <>
-      <PageMeta
-        title={offer.title}
-        description={offer.subtitle}
-      />
+      <PageMeta title={offer.title} description={offer.subtitle} />
       <section className="bg-graphite-deep px-4 pb-20 pt-40 md:px-6 md:pb-24">
         <div className="mx-auto max-w-5xl">
           <ScrollReveal>
@@ -23,12 +43,9 @@ function OfferDetailView({ offer }: { offer: Offer }) {
             >
               {offer.title}
             </h1>
-            <p className="system-copy mt-4 max-w-3xl text-ivory-muted">
-              {offer.subtitle}
-            </p>
+            <p className="system-copy mt-4 max-w-3xl text-ivory-muted">{offer.subtitle}</p>
           </ScrollReveal>
 
-          {/* Format, duration, budget */}
           <ScrollReveal delay={80}>
             <div className="mt-10 grid gap-4 sm:grid-cols-3">
               <div className="system-panel rounded-lg px-5 py-4">
@@ -36,7 +53,7 @@ function OfferDetailView({ offer }: { offer: Offer }) {
                 <p className="font-body text-sm text-ivory">{offer.format}</p>
               </div>
               <div className="system-panel rounded-lg px-5 py-4">
-                <p className="system-eyebrow mb-1 text-copper">DUREE</p>
+                <p className="system-eyebrow mb-1 text-copper">DURÉE</p>
                 <p className="font-body text-sm text-ivory">{offer.duration}</p>
               </div>
               <div className="system-panel rounded-lg px-5 py-4">
@@ -48,7 +65,6 @@ function OfferDetailView({ offer }: { offer: Offer }) {
         </div>
       </section>
 
-      {/* Problem section */}
       <section className="bg-graphite-mid px-4 py-20 md:px-6 md:py-24">
         <div className="mx-auto max-w-5xl">
           <ScrollReveal>
@@ -56,21 +72,20 @@ function OfferDetailView({ offer }: { offer: Offer }) {
               className="system-title-section text-ivory"
               style={{ fontSize: "clamp(1.6rem, 3vw, 2.2rem)" }}
             >
-              {`Le probl\u00e8me que nous r\u00e9solvons`}
+              Le problème que nous résolvons
             </h2>
-            <p className="system-copy mt-4 max-w-3xl text-ivory-muted">
-              {offer.problem}
-            </p>
+            <p className="system-copy mt-4 max-w-3xl text-ivory-muted">{offer.problem}</p>
           </ScrollReveal>
 
           <ScrollReveal delay={80}>
-            <h3 className="system-eyebrow mb-4 mt-10 text-copper">
-              {`SYMPT\u00d4MES FR\u00c9QUENTS`}
-            </h3>
+            <h3 className="system-eyebrow mb-4 mt-10 text-copper">SYMPTÔMES FRÉQUENTS</h3>
             <ul className="space-y-3">
-              {offer.symptoms.map((symptom, i) => (
-                <li key={i} className="flex items-start gap-3">
-                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-copper" aria-hidden="true" />
+              {offer.symptoms.map((symptom, index) => (
+                <li key={`${offer.id}-${index}`} className="flex items-start gap-3">
+                  <span
+                    className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-copper"
+                    aria-hidden="true"
+                  />
                   <span className="font-body text-sm text-ivory-muted">{symptom}</span>
                 </li>
               ))}
@@ -81,7 +96,6 @@ function OfferDetailView({ offer }: { offer: Offer }) {
 
       <div className="section-divider" />
 
-      {/* Deliverables section */}
       <section className="bg-graphite-deep px-4 py-20 md:px-6 md:py-24">
         <div className="mx-auto max-w-5xl">
           <ScrollReveal>
@@ -94,11 +108,13 @@ function OfferDetailView({ offer }: { offer: Offer }) {
           </ScrollReveal>
 
           <div className="mt-8 grid gap-4 md:grid-cols-2">
-            {offer.deliverables.map((item, i) => (
-              <ScrollReveal key={i} delay={i * 60}>
+            {offer.deliverables.map((item, index) => (
+              <ScrollReveal key={`${offer.id}-deliverable-${index}`} delay={index * 60}>
                 <div className="system-panel rounded-lg px-5 py-4">
                   <div className="flex items-start gap-3">
-                    <span className="font-mono text-xs text-copper">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="font-mono text-xs text-copper">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
                     <p className="font-body text-sm text-ivory">{item}</p>
                   </div>
                 </div>
@@ -108,7 +124,6 @@ function OfferDetailView({ offer }: { offer: Offer }) {
         </div>
       </section>
 
-      {/* Description + CTA */}
       <section className="bg-graphite-mid px-4 py-20 md:px-6 md:py-24">
         <div className="mx-auto max-w-5xl">
           <ScrollReveal>
@@ -116,18 +131,16 @@ function OfferDetailView({ offer }: { offer: Offer }) {
               className="system-title-section text-ivory"
               style={{ fontSize: "clamp(1.6rem, 3vw, 2.2rem)" }}
             >
-              Comment \u00e7a se passe
+              Comment ça se passe
             </h2>
-            <p className="system-copy mt-4 max-w-3xl text-ivory-muted">
-              {offer.description}
-            </p>
+            <p className="system-copy mt-4 max-w-3xl text-ivory-muted">{offer.description}</p>
           </ScrollReveal>
         </div>
       </section>
 
       <CtaBanner
-        title={`Pr\u00eat \u00e0 avancer\u00a0?`}
-        subtitle="Prenez 5 minutes pour d\u00e9crire votre situation. Nous vous r\u00e9pondons sous 24h avec des premi\u00e8res pistes concr\u00e8tes."
+        title="Prêt à avancer ?"
+        subtitle="Prenez 5 minutes pour décrire votre situation. Nous vous répondons sous 24h avec des premières pistes concrètes."
         primaryLabel="Lancer un diagnostic"
         primaryHref="/diagnostic"
         secondaryLabel="Voir tous les services"
@@ -141,21 +154,20 @@ export function OffersPage() {
   const { id } = useParams()
 
   if (id) {
-    const offer = OFFERS.find(o => o.id === id)
+    const offer = OFFERS.find((currentOffer) => currentOffer.id === id)
     if (!offer) {
       return (
         <>
           <PageMeta title="Service introuvable" description="Ce service n'existe pas." />
           <section className="bg-graphite-deep px-4 pb-20 pt-40 md:px-6 md:pb-24">
             <div className="mx-auto max-w-5xl text-center">
-              <h1 className="system-title-hero text-ivory mb-6">Service introuvable</h1>
-              <p className="system-copy text-ivory-muted mb-8">
-                {"Ce service n\u2019existe pas ou a \u00e9t\u00e9 retir\u00e9."}
+              <h1 className="system-title-hero mb-6 text-ivory">Service introuvable</h1>
+              <p className="system-copy mb-8 text-ivory-muted">
+                Ce service n'existe pas ou a été retiré.
               </p>
               <Link
                 to="/services"
-                className="system-button-text inline-flex items-center gap-2 rounded-[0.5rem] px-6 py-3.5 transition-all duration-300 btn-copper-glow bg-copper text-graphite-deep"
-                data-cursor-hover
+                className="system-button-text btn-copper-glow inline-flex items-center gap-2 rounded-[0.5rem] bg-copper px-6 py-3.5 text-graphite-deep transition-all duration-300"
               >
                 Voir tous les services
               </Link>
@@ -164,6 +176,7 @@ export function OffersPage() {
         </>
       )
     }
+
     return <OfferDetailView offer={offer} />
   }
 
@@ -173,190 +186,126 @@ export function OffersPage() {
         title="Services"
         description="Quatre formats d'intervention pour structurer, automatiser et optimiser vos opérations digitales."
       />
-      <section className="pt-40 pb-20 bg-graphite-deep">
-        <div className="max-w-7xl mx-auto px-6">
-          <ScrollReveal>
-            <div className="system-shell rounded-[0.5rem] px-6 py-8 md:px-8 md:py-9">
-              <SectionLabel label="Services" />
-              <h1
-                className="font-display font-extrabold mb-6 text-ivory tracking-[-0.03em] leading-[1.05]"
-                style={{ fontSize: "clamp(2.5rem, 6vw, 5.5rem)" }}
-              >
-                Quatre formats.
-                <br />
-                <span className="text-copper">Un seul cap.</span>
-              </h1>
-              <p className="font-body text-lg max-w-3xl text-ivory-muted leading-[1.8]">
-                {"Chaque offre est pensée pour un stade précis de maturité. Pas de prestation fourre-tout, mais des interventions calibrées au problème réel."}
-              </p>
+
+      <section className="bg-graphite-deep pb-14 pt-36 md:pb-16">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
+            <div className="lg:col-span-7">
+              <ScrollReveal>
+                <div className="system-shell rounded-[0.5rem] px-6 py-7 md:px-8 md:py-8">
+                  <SectionLabel label="Services" />
+                  <h1
+                    className="mb-5 font-display font-extrabold text-ivory tracking-[-0.03em] leading-[1.04]"
+                    style={{ fontSize: "clamp(2.4rem, 5.8vw, 4.9rem)" }}
+                  >
+                    Des formats clairs.
+                    <br />
+                    <span className="text-copper">Pour décider plus vite.</span>
+                  </h1>
+                  <p className="max-w-3xl font-body text-base leading-8 text-ivory-muted md:text-lg">
+                    Chaque offre correspond à un niveau de maturité précis. Le but n'est pas de
+                    vendre plus grand que nécessaire, mais de vous orienter vers le bon niveau
+                    d'intervention.
+                  </p>
+                </div>
+              </ScrollReveal>
             </div>
-          </ScrollReveal>
-        </div>
-      </section>
 
-      <section className="py-20 bg-graphite-deep">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col gap-8">
-            {OFFERS.map((offer, i) => (
-              <ScrollReveal key={offer.id} delay={i * 60}>
-                <div className={`system-panel grid grid-cols-1 md:grid-cols-12 gap-8 p-8 md:p-12 rounded-[0.5rem] group ${offer.featured ? "system-shell-warm" : ""}`}>
-                  {offer.featured && (
-                    <div
-                      className="md:col-span-12 -mx-8 md:-mx-12 -mt-8 md:-mt-12 h-0.5 mb-8 md:mb-12 bg-copper"
-                      aria-hidden="true"
-                    />
-                  )}
-
-                  <div className="md:col-span-4">
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="font-mono text-xs tracking-widest text-copper">
-                        {offer.number}
-                      </span>
-                      {offer.tag && (
-                        <span className="font-mono text-xs tracking-widest px-2.5 py-1 bg-copper/15 text-copper border border-copper/25">
-                          {offer.tag}
-                        </span>
-                      )}
-                    </div>
-                    <h2 className="font-display font-bold text-2xl mb-2 text-ivory tracking-[-0.02em]">
-                      {offer.title}
-                    </h2>
-                    <p className="system-interface mb-6 text-ivory-muted">
-                      {offer.subtitle}
-                    </p>
-                    <div className="flex flex-col gap-2">
-                      <p className="font-mono text-xs text-steel-light">
-                        {offer.format}
-                      </p>
-                      <p className="font-mono text-xs text-copper">
-                        {offer.duration}
-                      </p>
-                      <Badge className="w-fit border-none bg-steel/15 font-mono text-xs tracking-[0.16em] text-steel-light">
-                        {offer.budgetSignal}
-                      </Badge>
-                    </div>
+            <div className="lg:col-span-5">
+              <ScrollReveal delay={90}>
+                <div className="system-shell system-shell-warm rounded-[0.5rem] p-6">
+                  <p className="mb-3 font-mono text-xs tracking-widest text-copper">
+                    OFFRE SIGNATURE
+                  </p>
+                  <h2 className="font-display text-2xl font-bold tracking-[-0.02em] text-ivory">
+                    {FEATURED_OFFER.title}
+                  </h2>
+                  <p className="mt-3 font-body text-sm leading-7 text-ivory-muted">
+                    {FEATURED_OFFER.subtitle}
+                  </p>
+                  <div className="my-5 system-divider-soft" />
+                  <p className="font-body text-sm leading-7 text-ivory-soft">
+                    À activer quand acquisition, conversion, CRM et reporting doivent enfin être
+                    pensés comme un seul système.
+                  </p>
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    <span className="system-chip text-steel-light">{FEATURED_OFFER.duration}</span>
+                    <span className="system-chip text-copper">{FEATURED_OFFER.budgetSignal}</span>
                   </div>
-
-                  <div className="md:col-span-4">
-                    <p className="font-mono text-xs tracking-widest mb-4 text-ivory-muted">
-                      {"CE QUE ÇA RÈGLE"}
-                    </p>
-                    <ul className="flex flex-col gap-3">
-                      {offer.symptoms.slice(0, 4).map((symptom) => (
-                        <li key={symptom} className="flex items-start gap-2">
-                          <span
-                            className="flex-shrink-0 font-mono text-xs mt-1 text-copper"
-                            aria-hidden="true"
-                          >
-                            {"·"}
-                          </span>
-                          <span className="font-body text-sm text-ivory-muted">
-                            {symptom}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="md:col-span-4">
-                    <p className="font-mono text-xs tracking-widest mb-4 text-ivory-muted">
-                      CE QUE VOUS RECEVEZ
-                    </p>
-                    <ul className="flex flex-col gap-3 mb-8">
-                      {offer.deliverables.slice(0, 4).map((del) => (
-                        <li key={del} className="flex items-start gap-2">
-                          <span
-                            className="flex-shrink-0 font-mono text-xs mt-1 text-system-success"
-                            aria-hidden="true"
-                          >
-                            {"\✓"}
-                          </span>
-                          <span className="font-body text-sm text-ivory-muted">
-                            {del}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
+                  <div className="mt-6 flex flex-wrap gap-3">
                     <Link
-                      to={offer.ctaHref}
-                      className="system-button-text inline-flex items-center gap-2 rounded-[0.5rem] px-6 py-3.5 transition-all duration-300 btn-copper-glow bg-copper text-graphite-deep"
-                      data-cursor-hover
+                      to={FEATURED_OFFER.ctaHref}
+                      className="system-button-text btn-copper-glow inline-flex items-center rounded-[0.5rem] bg-copper px-5 py-3 text-graphite-deep transition-all duration-300"
                     >
-                      {offer.cta}
-                      <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                        <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
+                      Explorer l'offre signature
+                    </Link>
+                    <Link
+                      to="/diagnostic"
+                      className="system-button-text inline-flex items-center rounded-[0.5rem] border border-mineral-warm px-5 py-3 text-ivory-muted transition-colors duration-200 hover:border-copper hover:text-copper"
+                    >
+                      Commencer par un diagnostic
                     </Link>
                   </div>
                 </div>
               </ScrollReveal>
-            ))}
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="py-20 bg-graphite-mid">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
-            <div className="md:col-span-6">
+      <OffersOverview />
+
+      <section className="bg-graphite-mid py-16 md:py-20">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="grid gap-8 lg:grid-cols-12">
+            <div className="lg:col-span-7">
               <ScrollReveal>
-                <h2 className="font-display font-bold text-2xl mb-6 text-ivory tracking-[-0.02em]">
-                  {"Comment choisir la bonne offre\ ?"}
+                <h2 className="font-display text-2xl font-bold tracking-[-0.02em] text-ivory">
+                  Comment choisir la bonne offre ?
                 </h2>
+                <p className="mt-4 max-w-2xl font-body text-sm leading-7 text-ivory-muted">
+                  Quand le doute porte sur le niveau de profondeur, il vaut mieux commencer par un
+                  cadrage. Quand le besoin est déjà lisible, le bon format se dégage plus vite.
+                </p>
               </ScrollReveal>
-              <div className="flex flex-col gap-6">
-                {[
-                  {
-                    q: "Je ne sais pas exactement où est le problème.",
-                    a: "Commencez par le Diagnostic Frictions. C\'est conçu pour ça.",
-                  },
-                  {
-                    q: "J\'ai du trafic mais la conversion ne suit pas.",
-                    a: "L\'Architecture Revenue est faite pour vous.",
-                  },
-                  {
-                    q: "Je veux automatiser ou créer des outils IA internes.",
-                    a: "AI Product Ops est le bon format.",
-                  },
-                  {
-                    q: "J\'ai besoin d\'un regard régulier sur mes priorités.",
-                    a: "Le Pilotage Fractionnel est la bonne structure.",
-                  },
-                ].map((item) => (
-                  <ScrollReveal key={item.q} delay={60}>
+
+              <div className="mt-8 grid gap-4 md:grid-cols-2">
+                {CHOICE_GUIDANCE.map((item, index) => (
+                  <ScrollReveal key={item.question} delay={index * 60}>
                     <div className="system-panel rounded-[0.5rem] p-6">
-                      <p className="font-display font-semibold text-sm mb-2 text-ivory">
-                        {item.q}
+                      <p className="mb-2 font-display text-base font-semibold text-ivory">
+                        {item.question}
                       </p>
-                      <p className="font-body text-sm text-ivory-muted">
-                        {item.a}
+                      <p className="font-body text-sm leading-7 text-ivory-muted">
+                        {item.answer}
                       </p>
                     </div>
                   </ScrollReveal>
                 ))}
               </div>
             </div>
-            <div className="md:col-span-5 md:col-start-8">
+
+            <div className="lg:col-span-5">
               <ScrollReveal delay={100}>
-                <div className="system-shell system-shell-warm sticky top-32 rounded-[0.5rem] p-8">
-                  <p className="font-mono text-xs tracking-widest mb-4 text-copper">
-                    {"POINT DE DÉPART"}
+                <div className="system-shell rounded-[0.5rem] p-6 lg:sticky lg:top-32">
+                  <p className="mb-3 font-mono text-xs tracking-widest text-copper">
+                    POINT DE DÉPART CONSEILLÉ
                   </p>
-                  <h3 className="font-display font-bold text-xl mb-4 text-ivory">
-                    Toujours par un diagnostic.
+                  <h3 className="font-display text-xl font-bold text-ivory">
+                    Commencer par un diagnostic reste le meilleur filtre.
                   </h3>
-                  <p className="font-body text-sm leading-7 mb-6 text-ivory-muted">
-                    {"Quelle que soit votre situation, nous commençons par comprendre avant d\'agir. Un échange de 30\ minutes permet d\'identifier si, comment et avec quelle priorité nous pouvons intervenir."}
+                  <p className="mt-4 font-body text-sm leading-7 text-ivory-muted">
+                    Un premier échange permet de distinguer ce qui relève d'une correction ciblée,
+                    d'une architecture plus large ou d'un non-sujet à laisser de côté.
                   </p>
-                  <p className="font-mono text-xs mb-6 text-ivory-muted">
-                    {"Gratuit · Sans engagement · Réponse sous 24h"}
+                  <p className="mt-5 font-mono text-xs text-ivory-muted">
+                    Gratuit · Sans engagement · Réponse sous 24h ouvrées
                   </p>
                   <Link
                     to="/diagnostic"
-                    className="system-button-text flex w-full items-center justify-center gap-2 rounded-[0.5rem] px-6 py-4 transition-all duration-300 btn-copper-glow bg-copper text-graphite-deep"
-                    data-cursor-hover
+                    className="system-button-text btn-copper-glow mt-6 inline-flex w-full items-center justify-center rounded-[0.5rem] bg-copper px-6 py-4 text-graphite-deep transition-all duration-300"
                   >
-                    Prendre rendez-vous
+                    Décrire votre situation
                   </Link>
                 </div>
               </ScrollReveal>
@@ -366,12 +315,12 @@ export function OffersPage() {
       </section>
 
       <CtaBanner
-        title={"Pas encore convaincu\ ?"}
-        subtitle={"Regardez comment nous travaillons. La méthode est transparente, les livrables sont précis, les engagements sont tenus."}
-        primaryLabel={"Voir la méthode"}
-        primaryHref="/methode"
-        secondaryLabel="Poser une question"
-        secondaryHref="/diagnostic"
+        title="Besoin d'un regard plus concret sur votre situation ?"
+        subtitle="Le bon format apparaît plus vite quand les frictions, le niveau d'urgence et la profondeur du chantier sont rendus explicites."
+        primaryLabel="Demander un diagnostic"
+        primaryHref="/diagnostic"
+        secondaryLabel="Voir la méthode"
+        secondaryHref="/methode"
       />
     </>
   )

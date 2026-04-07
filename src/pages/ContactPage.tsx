@@ -1,10 +1,19 @@
+import { type ChangeEvent, type FocusEvent, type FormEvent, useMemo, useRef, useState } from "react"
+import {
+  ArrowUpRight,
+  CheckCircle,
+  Clock3,
+  FileText,
+  Globe,
+  ShieldCheck,
+} from "lucide-react"
 import { PageMeta } from "@/components/common/PageMeta"
-import { useState } from "react"
-import { ArrowUpRight, Globe, CheckCircle } from "lucide-react"
 import { ScrollReveal } from "@/components/common/ScrollReveal"
 import { SectionLabel } from "@/components/common/SectionLabel"
-import { isSupabaseConfigured, supabase } from "@/lib/supabase"
-import { trackEvent } from "@/lib/analytics"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
 import {
   Select,
   SelectContent,
@@ -13,13 +22,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { trackEvent } from "@/lib/analytics"
+import { cn } from "@/lib/utils"
+import { isSupabaseConfigured, supabase } from "@/lib/supabase"
 import { PUBLIC_PROFILE } from "@/data/profile"
 
 const DIAGNOSTIC_QUESTIONS = [
   {
     id: "context",
     label: "Votre contexte",
-    type: "select",
     options: [
       "Startup / Scale-up (< 50 personnes)",
       "PME établie (50–250 personnes)",
@@ -31,7 +42,6 @@ const DIAGNOSTIC_QUESTIONS = [
   {
     id: "friction",
     label: "Principale friction identifiée",
-    type: "select",
     options: [
       "Processus manuels trop chronophages",
       "Conversion faible malgré le trafic",
@@ -41,24 +51,116 @@ const DIAGNOSTIC_QUESTIONS = [
       "Je ne sais pas encore exactement",
     ],
   },
-]
+] as const
 
-type FormErrors = Partial<Record<"name" | "email" | "message", string>>
+const TRUST_MARKERS = [
+  {
+    icon: Clock3,
+    eyebrow: "Réponse",
+    value: "24h",
+    detail: "ouvrées, avec un premier retour structuré.",
+  },
+  {
+    icon: FileText,
+    eyebrow: "Restitution",
+    value: "1 synthèse",
+    detail: "avec priorités, angles morts et prochaine étape.",
+  },
+  {
+    icon: ShieldCheck,
+    eyebrow: "Cadre",
+    value: "Sans engagement",
+    detail: "si le sujet n'appelle pas d'intervention, nous vous le disons.",
+  },
+] as const
 
-function validateForm(form: { name: string; email: string; message: string }): FormErrors {
-  const errors: FormErrors = {}
-  if (!form.name.trim()) errors.name = "Merci d'indiquer votre nom."
-  if (!form.email.trim()) {
-    errors.email = "Merci d'indiquer votre email."
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-    errors.email = "L'adresse email semble invalide."
+const PROCESS_STEPS = [
+  {
+    number: "01",
+    title: "Vous posez le contexte",
+    detail: "Nom, email et situation actuelle. L'objectif est de comprendre le problème réel, pas de faire remplir un dossier.",
+  },
+  {
+    number: "02",
+    title: "Nous revenons avec un premier tri",
+    detail: "Sous 24 heures ouvrées, avec une réponse claire : angle de lecture, niveau d'urgence et pertinence d'un échange.",
+  },
+  {
+    number: "03",
+    title: "Nous échangeons 30 minutes",
+    detail: "Un appel cadré pour clarifier les frictions, les flux concernés et la bonne profondeur d'intervention.",
+  },
+  {
+    number: "04",
+    title: "Vous repartez avec une suite lisible",
+    detail: "Les priorités émergent, les quick wins sont nommés et la prochaine décision devient plus simple.",
+  },
+] as const
+
+const REQUIRED_FIELDS = ["name", "email", "message"] as const
+
+type RequiredField = (typeof REQUIRED_FIELDS)[number]
+
+type FormState = {
+  name: string
+  email: string
+  company: string
+  context: string
+  friction: string
+  message: string
+  website: string
+}
+
+type FormErrors = Partial<Record<RequiredField, string>>
+
+function validateField(field: RequiredField, value: string) {
+  if (field === "name" && !value.trim()) {
+    return "Merci d'indiquer votre nom."
   }
-  if (!form.message.trim()) errors.message = "Merci de décrire votre situation."
-  return errors
+
+  if (field === "email") {
+    if (!value.trim()) {
+      return "Merci d'indiquer votre email."
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      return "L'adresse email semble invalide."
+    }
+  }
+
+  if (field === "message" && !value.trim()) {
+    return "Merci de décrire votre situation."
+  }
+
+  return undefined
+}
+
+function validateForm(form: FormState): FormErrors {
+  return REQUIRED_FIELDS.reduce<FormErrors>((acc, field) => {
+    const fieldError = validateField(field, form[field])
+    if (fieldError) {
+      acc[field] = fieldError
+    }
+    return acc
+  }, {})
+}
+
+function nextFieldErrors(
+  previous: FormErrors,
+  field: RequiredField,
+  message?: string
+) {
+  const next = { ...previous }
+  if (message) {
+    next[field] = message
+  } else {
+    delete next[field]
+  }
+  return next
 }
 
 export function ContactPage() {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<FormState>({
     name: "",
     email: "",
     company: "",
@@ -72,44 +174,112 @@ export function ContactPage() {
   const [error, setError] = useState<string | null>(null)
   const [errors, setErrors] = useState<FormErrors>({})
 
+  const nameRef = useRef<HTMLInputElement>(null)
+  const emailRef = useRef<HTMLInputElement>(null)
+  const messageRef = useRef<HTMLTextAreaElement>(null)
+
+  const errorSummary = useMemo(
+    () =>
+      REQUIRED_FIELDS.filter((field) => errors[field]).map((field) => ({
+        field,
+        label:
+          field === "name"
+            ? "Nom / Prénom"
+            : field === "email"
+              ? "Email"
+              : "Description de la situation",
+        message: errors[field]!,
+      })),
+    [errors]
+  )
+
+  const fieldClassName =
+    "h-12 rounded-[0.5rem] border-mineral-dark bg-graphite-light px-4 text-sm text-ivory placeholder:text-ivory-muted/70 shadow-none focus-visible:border-copper focus-visible:ring-[3px] focus-visible:ring-copper/20"
+  const textareaClassName =
+    "min-h-[148px] rounded-[0.5rem] border-mineral-dark bg-graphite-light px-4 py-3 text-sm leading-7 text-ivory placeholder:text-ivory-muted/70 shadow-none focus-visible:border-copper focus-visible:ring-[3px] focus-visible:ring-copper/20"
+  const labelClassName =
+    "mb-2 block font-mono text-[0.72rem] uppercase tracking-[0.18em] text-ivory-muted"
+  const hintClassName = "mt-2 font-body text-xs leading-6 text-ivory-muted/70"
+
+  const focusField = (field: RequiredField) => {
+    const target =
+      field === "name"
+        ? nameRef.current
+        : field === "email"
+          ? emailRef.current
+          : messageRef.current
+
+    if (!target) return
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+
+    target.focus({ preventScroll: true })
+    target.scrollIntoView({
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+      block: "center",
+    })
+  }
+
+  const focusFirstInvalidField = (validationErrors: FormErrors) => {
+    const firstInvalidField = REQUIRED_FIELDS.find((field) => validationErrors[field])
+    if (!firstInvalidField) return
+
+    window.requestAnimationFrame(() => {
+      focusField(firstInvalidField)
+    })
+  }
+
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    const { name, value } = e.target
-    setForm((prev) => ({ ...prev, [name]: value }))
-    // Clear field error on change
-    if (errors[name as keyof FormErrors]) {
-      setErrors((prev) => {
-        const next = { ...prev }
-        delete next[name as keyof FormErrors]
-        return next
-      })
+    const { name, value } = event.target
+
+    setForm((previous) => ({ ...previous, [name]: value }))
+
+    if (REQUIRED_FIELDS.includes(name as RequiredField)) {
+      const field = name as RequiredField
+      if (errors[field]) {
+        setErrors((previous) => nextFieldErrors(previous, field, validateField(field, value)))
+      }
     }
   }
 
-  const handleSelectChange = (key: "context" | "friction", value: string) => {
-    setForm((prev) => ({ ...prev, [key]: value }))
-  }
+  const handleBlur = (
+    event: FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = event.target
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    const validationErrors = validateForm(form)
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors)
+    if (!REQUIRED_FIELDS.includes(name as RequiredField)) {
       return
     }
 
-    // Honeypot anti-spam: if the hidden field is filled, silently fake success
+    const field = name as RequiredField
+    setErrors((previous) => nextFieldErrors(previous, field, validateField(field, value)))
+  }
+
+  const handleSelectChange = (key: "context" | "friction", value: string) => {
+    setForm((previous) => ({ ...previous, [key]: value }))
+  }
+
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault()
+
+    const validationErrors = validateForm(form)
+
+    if (Object.keys(validationErrors).length > 0) {
+      setError(null)
+      setErrors(validationErrors)
+      focusFirstInvalidField(validationErrors)
+      return
+    }
+
     if (form.website) {
       setSubmitted(true)
       return
     }
 
     if (!supabase) {
-      setError(
-        "Le formulaire n'est pas encore actif. Contactez-nous directement par email."
-      )
+      setError("Le formulaire n'est pas encore actif. Contactez-nous directement par email.")
       return
     }
 
@@ -117,31 +287,25 @@ export function ContactPage() {
     setError(null)
     setErrors({})
 
-    const { error: supabaseError } = await supabase
-      .from("diagnostic_requests")
-      .insert({
-        name: form.name,
-        email: form.email,
-        company: form.company,
-        context: form.context,
-        friction: form.friction,
-        message: form.message,
-      })
+    const { error: supabaseError } = await supabase.from("diagnostic_requests").insert({
+      name: form.name,
+      email: form.email,
+      company: form.company,
+      context: form.context,
+      friction: form.friction,
+      message: form.message,
+    })
 
     setIsSubmitting(false)
 
     if (supabaseError) {
       setError("Une erreur est survenue. Merci de réessayer ou de nous contacter directement.")
-    } else {
-      trackEvent("diagnostic_submit")
-      setSubmitted(true)
+      return
     }
+
+    trackEvent("diagnostic_submit")
+    setSubmitted(true)
   }
-
-  const inputClasses =
-    "w-full bg-graphite-light border border-mineral-dark text-ivory font-body text-sm px-4 py-3 transition-colors duration-200 focus:border-copper focus:ring-1 focus:ring-copper focus:outline-none"
-
-  const labelClasses = "block mb-2 font-mono text-xs tracking-widest uppercase text-ivory-muted"
 
   return (
     <>
@@ -149,230 +313,337 @@ export function ContactPage() {
         title="Diagnostic"
         description="Demandez un diagnostic gratuit de vos opérations digitales. Réponse sous 24h, sans engagement."
       />
-      <section className="pt-40 pb-20 bg-graphite-deep">
-        <div className="max-w-7xl mx-auto px-6">
-          <ScrollReveal>
-            <div className="system-shell rounded-[0.5rem] px-6 py-8 md:px-8 md:py-9">
-              <SectionLabel label="Diagnostic" />
-              <h1
-                className="font-display font-extrabold mb-6 text-ivory"
-                style={{
-                  fontSize: "clamp(2.5rem, 6vw, 5.5rem)",
-                  letterSpacing: "-0.03em",
-                  lineHeight: 1.05,
-                }}
-              >
-                Voir où ça bloque.
-                <br />
-                <span className="text-copper">Avant d'agir.</span>
-              </h1>
-              <p className="font-body text-lg max-w-3xl text-ivory-muted leading-relaxed">
-                Un premier échange de 30 minutes pour comprendre votre situation, identifier les
-                frictions principales et déterminer si, et comment, nous pouvons intervenir.
-              </p>
-            </div>
-          </ScrollReveal>
-        </div>
-      </section>
 
-      <section className="py-20 bg-graphite-mid">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
-            <div className="md:col-span-4">
+      <section className="bg-graphite-deep pb-16 pt-36 md:pb-20">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="grid gap-8 lg:grid-cols-12 lg:items-start">
+            <div className="lg:col-span-5">
               <ScrollReveal>
-                <div className="md:sticky md:top-32">
-                  <p className="font-mono text-xs tracking-widest mb-6 text-copper">
-                    COMMENT ÇA FONCTIONNE
+                <div className="system-shell rounded-[0.5rem] px-6 py-7 md:px-8 md:py-8">
+                  <SectionLabel label="Diagnostic" />
+                  <h1
+                    className="mb-5 font-display font-extrabold text-ivory tracking-[-0.03em] leading-[1.04]"
+                    style={{ fontSize: "clamp(2.4rem, 5.2vw, 4.7rem)" }}
+                  >
+                    Voir où ça bloque.
+                    <br />
+                    <span className="text-copper">En repartir avec une suite claire.</span>
+                  </h1>
+                  <p className="max-w-2xl font-body text-base leading-8 text-ivory-muted md:text-lg">
+                    Un premier échange de 30 minutes pour qualifier les frictions, comprendre le
+                    contexte et décider si le sujet mérite un vrai chantier.
                   </p>
-                  <div className="flex flex-col gap-8">
-                    {[
-                      {
-                        number: "01",
-                        title: "Vous remplissez le formulaire",
-                        detail: "5 minutes. Quelques informations sur votre contexte et ce qui vous préoccupe.",
-                      },
-                      {
-                        number: "02",
-                        title: "Nous vous répondons sous 24h",
-                        detail: "Un premier regard sur votre situation et, si c'est pertinent, une proposition de créneau.",
-                      },
-                      {
-                        number: "03",
-                        title: "On échange 30 minutes",
-                        detail: "Un appel structuré pour creuser les frictions, les priorités et ce qui fait sens.",
-                      },
-                      {
-                        number: "04",
-                        title: "Vous recevez un récapitulatif",
-                        detail: "Un document court avec les 3 priorités identifiées et une proposition d'intervention si pertinente.",
-                      },
-                    ].map((step) => (
-                      <div key={step.number} className="flex gap-4">
-                        <span className="font-mono text-xs tracking-widest flex-shrink-0 text-copper">
-                          {step.number}
-                        </span>
-                        <div>
-                          <p className="font-display font-semibold text-sm mb-1 text-ivory">
-                            {step.title}
-                          </p>
-                          <p className="font-body text-xs leading-6 text-ivory-muted">
-                            {step.detail}
+                </div>
+              </ScrollReveal>
+
+              <ScrollReveal delay={80}>
+                <div className="mt-6 grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+                  {TRUST_MARKERS.map((marker) => {
+                    const Icon = marker.icon
+
+                    return (
+                      <div key={marker.eyebrow} className="system-panel rounded-[0.5rem] p-5">
+                        <div className="mb-4 flex items-center gap-3">
+                          <span className="grid size-9 place-items-center rounded-[0.5rem] border border-copper/25 bg-copper/10 text-copper">
+                            <Icon className="size-4" />
+                          </span>
+                          <p className="font-mono text-[0.72rem] uppercase tracking-[0.18em] text-ivory-muted">
+                            {marker.eyebrow}
                           </p>
                         </div>
+                        <p className="font-display text-2xl font-bold tracking-[-0.03em] text-ivory">
+                          {marker.value}
+                        </p>
+                        <p className="mt-2 font-body text-sm leading-7 text-ivory-muted">
+                          {marker.detail}
+                        </p>
                       </div>
-                    ))}
-                  </div>
+                    )
+                  })}
+                </div>
+              </ScrollReveal>
 
-                  <div className="system-panel mt-10 rounded-[0.5rem] p-6">
-                    <p className="font-mono text-xs tracking-widest mb-3 text-copper">
-                      CONDITIONS
-                    </p>
-                    <ul className="flex flex-col gap-2">
-                      {[
-                        "Gratuit et sans engagement",
-                        "Réponse sous 24 heures ouvrées",
-                        "Confidentialité garantie",
-                        "Pas de démarche commerciale agressive",
-                      ].map((cond) => (
-                        <li
-                          key={cond}
-                          className="flex items-start gap-2 font-body text-xs text-ivory-muted"
-                        >
-                          <span className="text-system-success">&#10003;</span>
-                          {cond}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="system-panel mt-6 rounded-[0.5rem] p-6">
-                    <p className="font-mono text-xs tracking-widest mb-3 text-copper">
-                      VALIDATION EXTERNE
-                    </p>
-                    <p className="font-body text-xs leading-6 mb-4 text-ivory-muted">
-                      Avant de demander un diagnostic, vous pouvez aussi consulter le site personnel et le
-                      profil expert publics de Samuel.
-                    </p>
-                    <div className="flex flex-col gap-3">
-                      <a
-                        href={PUBLIC_PROFILE.portfolioUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider transition-colors duration-200 text-ivory-muted hover:text-copper"
-                      >
-                        <Globe className="size-3.5" />
-                        Site personnel
-                        <ArrowUpRight className="size-3.5" />
-                      </a>
-                      <a
-                        href={PUBLIC_PROFILE.linkedinUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider transition-colors duration-200 text-ivory-muted hover:text-copper"
-                      >
-                        LinkedIn
-                        <ArrowUpRight className="size-3.5" />
-                      </a>
-                    </div>
+              <ScrollReveal delay={140}>
+                <div className="system-panel mt-6 rounded-[0.5rem] p-6">
+                  <p className="mb-3 font-mono text-xs tracking-widest text-copper">
+                    VALIDATION EXTERNE
+                  </p>
+                  <p className="mb-4 font-body text-sm leading-7 text-ivory-muted">
+                    Avant de demander un diagnostic, vous pouvez consulter les références publiques
+                    de Samuel et la présence en ligne associée au studio.
+                  </p>
+                  <div className="flex flex-col gap-3">
+                    <a
+                      href={PUBLIC_PROFILE.portfolioUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-ivory-muted transition-colors duration-200 hover:text-copper"
+                    >
+                      <Globe className="size-3.5" />
+                      Site personnel
+                      <ArrowUpRight className="size-3.5" />
+                    </a>
+                    <a
+                      href={PUBLIC_PROFILE.linkedinUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-ivory-muted transition-colors duration-200 hover:text-copper"
+                    >
+                      LinkedIn
+                      <ArrowUpRight className="size-3.5" />
+                    </a>
                   </div>
                 </div>
               </ScrollReveal>
             </div>
 
-            <div className="md:col-span-7 md:col-start-6">
-              <ScrollReveal delay={80}>
+            <div className="lg:col-span-7">
+              <ScrollReveal delay={60}>
                 {submitted ? (
-                  <div className="system-shell rounded-[0.5rem] p-12 text-center border border-system-success">
-                    <div className="flex justify-center mb-6">
-                      <div className="w-16 h-16 rounded-full bg-system-success/10 flex items-center justify-center">
+                  <div className="system-shell rounded-[0.5rem] border border-system-success p-10 text-center md:p-12">
+                    <div className="mb-6 flex justify-center">
+                      <div className="flex size-16 items-center justify-center rounded-full bg-system-success/10">
                         <CheckCircle className="size-8 text-system-success" />
                       </div>
                     </div>
-                    <div className="font-mono text-xs tracking-widest mb-4 text-system-success">
+                    <div className="mb-4 font-mono text-xs tracking-widest text-system-success">
                       DEMANDE RECUE
                     </div>
-                    <h2 className="font-display font-bold text-2xl mb-4 text-ivory">
+                    <h2 className="mb-4 font-display text-2xl font-bold text-ivory">
                       Merci pour votre message.
                     </h2>
-                    <p className="font-body text-sm leading-7 text-ivory-muted max-w-md mx-auto">
-                      Nous prenons connaissance de votre situation et nous vous répondons dans les 24 heures ouvrées avec un premier regard structuré.
+                    <p className="mx-auto max-w-md font-body text-sm leading-7 text-ivory-muted">
+                      Nous prenons connaissance de votre situation et nous revenons sous 24 heures
+                      ouvrées avec un premier retour structuré.
                     </p>
                   </div>
                 ) : (
                   <>
                     {!isSupabaseConfigured && (
-                      <div className="p-4 border border-bronze bg-bronze/5 rounded-[0.5rem] mb-6">
+                      <div className="mb-6 rounded-[0.5rem] border border-bronze bg-bronze/5 p-4">
                         <p className="font-body text-sm text-ivory-muted">
-                          Le formulaire n'est pas encore actif. Contactez-nous directement par email.
+                          Le formulaire n'est pas encore actif. Contactez-nous directement par
+                          email.
                         </p>
                       </div>
                     )}
+
                     <form onSubmit={handleSubmit} noValidate>
-                      <div className="system-shell rounded-[0.5rem] p-8 mb-6">
-                        <p className="font-mono text-xs tracking-widest mb-6 text-copper">
-                          VOS COORDONNEES
-                        </p>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                          <div>
-                            <label htmlFor="name" className={labelClasses}>
-                              Nom / Prénom *
-                            </label>
-                            <input
-                              id="name"
-                              name="name"
-                              type="text"
-                              required
-                              value={form.name}
-                              onChange={handleChange}
-                              className={inputClasses}
-                              placeholder="Votre nom complet"
-                              aria-describedby={errors.name ? "name-error" : undefined}
-                              aria-invalid={!!errors.name}
-                            />
-                            {errors.name && (
-                              <p id="name-error" className="mt-1.5 font-body text-xs text-system-error" role="alert">
-                                {errors.name}
-                              </p>
-                            )}
+                      <div className="system-shell rounded-[0.5rem] p-6 md:p-8">
+                        <div className="mb-6 flex flex-col gap-4 border-b border-mineral-dark/80 pb-6 lg:flex-row lg:items-start lg:justify-between">
+                          <div className="max-w-2xl">
+                            <p className="mb-3 font-mono text-xs tracking-widest text-copper">
+                              DÉMARRER LE DIAGNOSTIC
+                            </p>
+                            <h2 className="font-display text-2xl font-bold tracking-[-0.02em] text-ivory">
+                              Décrivez le contexte. Nous revenons avec une première lecture utile.
+                            </h2>
                           </div>
-                          <div>
-                            <label htmlFor="email" className={labelClasses}>
-                              Email *
-                            </label>
-                            <input
-                              id="email"
-                              name="email"
-                              type="email"
-                              required
-                              value={form.email}
-                              onChange={handleChange}
-                              className={inputClasses}
-                              placeholder="contact@exemple.com"
-                              aria-describedby={errors.email ? "email-error" : undefined}
-                              aria-invalid={!!errors.email}
-                            />
-                            {errors.email && (
-                              <p id="email-error" className="mt-1.5 font-body text-xs text-system-error" role="alert">
-                                {errors.email}
-                              </p>
-                            )}
-                          </div>
-                          <div className="md:col-span-2">
-                            <label htmlFor="company" className={labelClasses}>
-                              Entreprise / Projet
-                            </label>
-                            <input
-                              id="company"
-                              name="company"
-                              type="text"
-                              value={form.company}
-                              onChange={handleChange}
-                              className={inputClasses}
-                              placeholder="Nom de votre société ou projet"
-                            />
+                          <div className="rounded-[0.5rem] border border-copper/20 bg-copper/6 px-4 py-3 lg:max-w-xs">
+                            <p className="font-mono text-[0.72rem] uppercase tracking-[0.18em] text-copper">
+                              Ce que vous obtenez
+                            </p>
+                            <p className="mt-2 font-body text-xs leading-6 text-ivory-muted">
+                              Un tri clair entre correction rapide, chantier structurant ou sujet à
+                              ne pas poursuivre.
+                            </p>
                           </div>
                         </div>
-                        {/* Honeypot anti-spam field */}
+
+                        {errorSummary.length > 0 && (
+                          <div
+                            className="mb-6 rounded-[0.5rem] border border-system-error/60 bg-system-error/8 p-4"
+                            role="alert"
+                            aria-live="assertive"
+                          >
+                            <p className="font-mono text-xs tracking-widest text-system-error">
+                              CORRIGER AVANT ENVOI
+                            </p>
+                            <p className="mt-2 font-body text-sm leading-7 text-ivory-soft">
+                              Merci de corriger les champs suivants avant d'envoyer votre demande.
+                            </p>
+                            <div className="mt-4 flex flex-wrap gap-2">
+                              {errorSummary.map((entry) => (
+                                <button
+                                  key={entry.field}
+                                  type="button"
+                                  onClick={() => focusField(entry.field)}
+                                  className="rounded-[0.5rem] border border-system-error/40 px-3 py-2 text-left font-mono text-[0.72rem] uppercase tracking-[0.16em] text-system-error transition-colors duration-200 hover:border-system-error hover:bg-system-error/10"
+                                >
+                                  {entry.label}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {error && (
+                          <div
+                            className="mb-6 rounded-[0.5rem] border border-system-error bg-system-error/5 p-4 font-body text-sm text-system-error"
+                            role="alert"
+                          >
+                            {error}
+                          </div>
+                        )}
+
+                        <div className="grid gap-6 xl:grid-cols-[0.92fr_1.08fr]">
+                          <div className="space-y-5">
+                            <div>
+                              <Label htmlFor="name" className={labelClassName}>
+                                Nom / Prénom *
+                              </Label>
+                              <Input
+                                ref={nameRef}
+                                id="name"
+                                name="name"
+                                type="text"
+                                required
+                                value={form.name}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                className={fieldClassName}
+                                placeholder="Votre nom complet"
+                                aria-describedby={errors.name ? "name-error" : undefined}
+                                aria-invalid={!!errors.name}
+                              />
+                              {errors.name && (
+                                <p
+                                  id="name-error"
+                                  className="mt-2 font-body text-xs text-system-error"
+                                  role="alert"
+                                >
+                                  {errors.name}
+                                </p>
+                              )}
+                            </div>
+
+                            <div>
+                              <Label htmlFor="email" className={labelClassName}>
+                                Email *
+                              </Label>
+                              <Input
+                                ref={emailRef}
+                                id="email"
+                                name="email"
+                                type="email"
+                                required
+                                value={form.email}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                className={fieldClassName}
+                                placeholder="contact@exemple.com"
+                                aria-describedby={errors.email ? "email-error" : undefined}
+                                aria-invalid={!!errors.email}
+                              />
+                              {errors.email && (
+                                <p
+                                  id="email-error"
+                                  className="mt-2 font-body text-xs text-system-error"
+                                  role="alert"
+                                >
+                                  {errors.email}
+                                </p>
+                              )}
+                            </div>
+
+                            <div>
+                              <Label htmlFor="company" className={labelClassName}>
+                                Entreprise / Projet
+                              </Label>
+                              <Input
+                                id="company"
+                                name="company"
+                                type="text"
+                                value={form.company}
+                                onChange={handleChange}
+                                className={fieldClassName}
+                                placeholder="Nom de votre société ou projet"
+                              />
+                              <p className={hintClassName}>
+                                Facultatif, mais utile pour cadrer plus vite le niveau d'enjeu.
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="space-y-5">
+                            {DIAGNOSTIC_QUESTIONS.map((question) => (
+                              <div key={question.id}>
+                                <Label
+                                  htmlFor={`${question.id}-trigger`}
+                                  className={labelClassName}
+                                >
+                                  {question.label}
+                                </Label>
+                                <Select
+                                  value={form[question.id as "context" | "friction"]}
+                                  onValueChange={(value) =>
+                                    handleSelectChange(
+                                      question.id as "context" | "friction",
+                                      value
+                                    )
+                                  }
+                                >
+                                  <SelectTrigger
+                                    id={`${question.id}-trigger`}
+                                    className="h-12 w-full rounded-[0.5rem] border-mineral-dark bg-graphite-light px-4 text-left text-sm text-ivory shadow-none data-[placeholder]:text-ivory-muted/70 focus:border-copper focus:ring-[3px] focus:ring-copper/20"
+                                  >
+                                    <SelectValue placeholder="Sélectionner..." />
+                                  </SelectTrigger>
+                                  <SelectContent className="border-mineral-dark bg-graphite-light text-ivory">
+                                    <SelectGroup>
+                                      {question.options.map((option) => (
+                                        <SelectItem
+                                          key={option}
+                                          value={option}
+                                          className="text-sm text-ivory-muted focus:bg-mineral-dark focus:text-ivory"
+                                        >
+                                          {option}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectGroup>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            ))}
+
+                            <div>
+                              <Label htmlFor="message" className={labelClassName}>
+                                Décrivez votre situation *
+                              </Label>
+                              <Textarea
+                                ref={messageRef}
+                                id="message"
+                                name="message"
+                                required
+                                rows={5}
+                                value={form.message}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                className={textareaClassName}
+                                placeholder="Quel est votre principal défi en ce moment ? Qu'est-ce qui vous coûte du temps, du revenu ou de la clarté ?"
+                                aria-describedby={cn(
+                                  "message-hint",
+                                  errors.message && "message-error"
+                                )}
+                                aria-invalid={!!errors.message}
+                              />
+                              <p id="message-hint" className={hintClassName}>
+                                Quelques phrases suffisent. Le but est de comprendre la nature du
+                                blocage, pas d'avoir un brief exhaustif.
+                              </p>
+                              {errors.message && (
+                                <p
+                                  id="message-error"
+                                  className="mt-2 font-body text-xs text-system-error"
+                                  role="alert"
+                                >
+                                  {errors.message}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
                         <div
                           aria-hidden="true"
                           style={{
@@ -383,8 +654,8 @@ export function ContactPage() {
                             pointerEvents: "none",
                           }}
                         >
-                          <label htmlFor="website">Ne pas remplir ce champ</label>
-                          <input
+                          <Label htmlFor="website">Ne pas remplir ce champ</Label>
+                          <Input
                             id="website"
                             name="website"
                             type="text"
@@ -394,108 +665,91 @@ export function ContactPage() {
                             autoComplete="off"
                           />
                         </div>
-                      </div>
 
-                      <div className="system-shell rounded-[0.5rem] p-8 mb-6">
-                        <p className="font-mono text-xs tracking-widest mb-6 text-copper">
-                          VOTRE SITUATION
-                        </p>
-                        <div className="flex flex-col gap-5">
-                          {DIAGNOSTIC_QUESTIONS.map((q) => (
-                            <div key={q.id}>
-                              <label htmlFor={`${q.id}-trigger`} className={labelClasses}>
-                                {q.label}
-                              </label>
-                              <Select
-                                value={form[q.id as "context" | "friction"]}
-                                onValueChange={(value) =>
-                                  handleSelectChange(q.id as "context" | "friction", value)
-                                }
-                              >
-                                <SelectTrigger
-                                  id={`${q.id}-trigger`}
-                                  className="w-full rounded-none border-mineral-dark bg-graphite-light px-4 py-6 text-left text-sm text-ivory data-[placeholder]:text-ivory-muted focus:border-copper focus:ring-1 focus:ring-copper"
+                        <div className="mt-8 flex flex-col gap-4 border-t border-mineral-dark/80 pt-6 md:flex-row md:items-center md:justify-between">
+                          <p className="font-body text-sm leading-7 text-ivory-muted">
+                            Gratuit, sans engagement et sans relance commerciale agressive.
+                          </p>
+                          <Button
+                            type="submit"
+                            disabled={isSubmitting}
+                            size="lg"
+                            className="system-button-text h-12 rounded-[0.5rem] bg-copper px-6 text-graphite-deep shadow-none hover:bg-copper-light"
+                          >
+                            {isSubmitting ? (
+                              <>
+                                <span className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                                Envoi en cours...
+                              </>
+                            ) : (
+                              <>
+                                Envoyer ma demande
+                                <svg
+                                  width="14"
+                                  height="14"
+                                  viewBox="0 0 14 14"
+                                  fill="none"
+                                  aria-hidden="true"
                                 >
-                                  <SelectValue placeholder="Sélectionner..." />
-                                </SelectTrigger>
-                                <SelectContent className="border-mineral-dark bg-graphite-light text-ivory">
-                                  <SelectGroup>
-                                    {q.options.map((opt) => (
-                                      <SelectItem
-                                        key={opt}
-                                        value={opt}
-                                        className="text-sm text-ivory-muted focus:bg-mineral-dark focus:text-ivory"
-                                      >
-                                        {opt}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectGroup>
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          ))}
-                          <div>
-                            <label htmlFor="message" className={labelClasses}>
-                              Décrivez votre situation *
-                            </label>
-                            <textarea
-                              id="message"
-                              name="message"
-                              required
-                              rows={5}
-                              value={form.message}
-                              onChange={handleChange}
-                              className={`${inputClasses} resize-y leading-relaxed`}
-                              placeholder="Quel est votre principal défi en ce moment ? Qu'est-ce qui ne fonctionne pas comme vous le souhaiteriez ?"
-                              aria-describedby={errors.message ? "message-error" : "message-hint"}
-                              aria-invalid={!!errors.message}
-                            />
-                            <p id="message-hint" className="mt-1.5 font-body text-xs text-ivory-muted/60">
-                              Décrivez librement votre situation en quelques phrases.
-                            </p>
-                            {errors.message && (
-                              <p id="message-error" className="mt-1 font-body text-xs text-system-error" role="alert">
-                                {errors.message}
-                              </p>
+                                  <path
+                                    d="M2 7h10M7 2l5 5-5 5"
+                                    stroke="currentColor"
+                                    strokeWidth="1.5"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  />
+                                </svg>
+                              </>
                             )}
-                          </div>
+                          </Button>
                         </div>
                       </div>
-
-                      {error && (
-                        <div
-                          className="font-body text-sm mb-4 p-4 border rounded-[0.5rem] border-system-error bg-system-error/5 text-system-error"
-                          role="alert"
-                        >
-                          {error}
-                        </div>
-                      )}
-                      <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="system-button-text flex w-full items-center justify-center gap-3 rounded-[0.5rem] py-5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed btn-copper-glow bg-copper text-graphite-deep"
-                      >
-                        {isSubmitting ? (
-                          <>
-                            <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                            Envoi en cours...
-                          </>
-                        ) : (
-                          <>
-                            Envoyer ma demande
-                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                              <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
-                          </>
-                        )}
-                      </button>
-                      <p className="text-center font-mono text-xs mt-4 text-ivory-muted">
-                        Gratuit · Sans engagement · Réponse sous 24h ouvrées
-                      </p>
                     </form>
                   </>
                 )}
               </ScrollReveal>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-graphite-mid py-16 md:py-20">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="grid gap-8 lg:grid-cols-12">
+            <div className="lg:col-span-4">
+              <ScrollReveal>
+                <p className="mb-4 font-mono text-xs tracking-widest text-copper">
+                  COMMENT ÇA SE PASSE
+                </p>
+                <h2 className="font-display text-2xl font-bold tracking-[-0.02em] text-ivory">
+                  Un parcours court, puis une décision plus claire.
+                </h2>
+                <p className="mt-4 font-body text-sm leading-7 text-ivory-muted">
+                  L'objectif n'est pas de vendre à tout prix. L'objectif est de qualifier le sujet
+                  assez tôt pour savoir s'il faut corriger, cadrer plus profondément ou ne pas
+                  intervenir.
+                </p>
+              </ScrollReveal>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2 lg:col-span-8">
+              {PROCESS_STEPS.map((step, index) => (
+                <ScrollReveal key={step.number} delay={index * 70}>
+                  <div className="system-panel rounded-[0.5rem] p-6">
+                    <div className="mb-4 flex items-center gap-3">
+                      <span className="font-mono text-xs tracking-widest text-copper">
+                        {step.number}
+                      </span>
+                      <p className="font-display text-base font-semibold text-ivory">
+                        {step.title}
+                      </p>
+                    </div>
+                    <p className="font-body text-sm leading-7 text-ivory-muted">
+                      {step.detail}
+                    </p>
+                  </div>
+                </ScrollReveal>
+              ))}
             </div>
           </div>
         </div>

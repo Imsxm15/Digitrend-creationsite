@@ -1,14 +1,18 @@
-import { useState, useEffect } from "react"
+import { useEffect, useId, useRef, useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { Menu, X } from "lucide-react"
 import { NAV_ITEMS, NAV_CTA } from "@/data/navigation"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { preloadDiagnosticRoute, preloadRouteFromPath } from "@/lib/routePreload"
 
 export function Navigation() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const location = useLocation()
+  const menuId = useId()
+  const menuButtonRef = useRef<HTMLButtonElement>(null)
+  const firstMenuLinkRef = useRef<HTMLAnchorElement>(null)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30)
@@ -17,13 +21,34 @@ export function Navigation() {
   }, [])
 
   useEffect(() => {
-    setMenuOpen(false)
-  }, [location])
-
-  useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : ""
     return () => { document.body.style.overflow = "" }
   }, [menuOpen])
+
+  useEffect(() => {
+    if (!menuOpen) return
+
+    firstMenuLinkRef.current?.focus()
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMenuOpen(false)
+        menuButtonRef.current?.focus()
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [menuOpen])
+
+  const closeMenu = () => {
+    setMenuOpen(false)
+    menuButtonRef.current?.focus()
+  }
+
+  const handleMenuNavigation = () => {
+    setMenuOpen(false)
+  }
 
   return (
     <>
@@ -98,79 +123,92 @@ export function Navigation() {
           </div>
 
           <button
+            ref={menuButtonRef}
             className="grid size-10 place-items-center text-ivory md:hidden"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
             aria-expanded={menuOpen}
+            aria-controls={menuOpen ? menuId : undefined}
           >
             {menuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
         </div>
       </header>
 
-      <div
-        className={cn(
-          "fixed inset-0 z-40 flex flex-col transition-all duration-300 md:hidden",
-          menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        )}
-        style={{ backgroundColor: "rgba(15,15,15,0.98)", backdropFilter: "blur(14px)" }}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Menu de navigation"
-      >
-        <div className="flex flex-1 flex-col justify-center px-6 pt-24 pb-12">
-          <p className="system-eyebrow mb-8 text-copper">
-            SYSTEME OPERATIF . NAVIGATION
-          </p>
-          <nav className="flex flex-col gap-5">
-            {NAV_ITEMS.map((item, i) => (
-              <Link
-                key={item.href}
-                to={item.href}
-                aria-current={location.pathname === item.href ? "page" : undefined}
-                className={cn(
-                  "system-nav-text text-lg transition-all duration-300",
-                  menuOpen ? "translate-x-0 opacity-100" : "translate-x-8 opacity-0",
-                  location.pathname === item.href ? "text-copper" : "text-ivory"
-                )}
-                style={{
-                  transitionDelay: menuOpen ? `${i * 0.07}s` : "0s",
-                }}
+      {menuOpen && (
+        <div className="fixed inset-0 z-40 md:hidden">
+          <button
+            type="button"
+            className="absolute inset-0 bg-[rgba(15,15,15,0.82)] backdrop-blur-[10px]"
+            aria-label="Fermer le menu"
+            onClick={closeMenu}
+          />
+          <div
+            id={menuId}
+            className="relative ml-auto flex h-full w-full max-w-sm flex-col border-l border-mineral-dark bg-[rgba(15,15,15,0.98)] px-6 pb-12 pt-24 shadow-2xl"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menu de navigation"
+          >
+            <div className="flex items-center justify-between gap-4">
+              <p className="system-eyebrow text-copper">
+                SYSTEME OPERATIF . NAVIGATION
+              </p>
+              <button
+                type="button"
+                className="grid size-10 place-items-center rounded-[4px] border border-mineral-dark text-ivory transition-colors duration-200 hover:border-copper hover:text-copper"
+                onClick={closeMenu}
+                aria-label="Fermer le menu"
               >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+                <X className="size-4" />
+              </button>
+            </div>
 
-          <div
-            className={cn(
-              "mt-12 transition-all duration-500",
-              menuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            )}
-            style={{ transitionDelay: menuOpen ? "0.35s" : "0s" }}
-          >
-            <Button
-              asChild
-              size="sm"
-              className="system-button-nav h-10 rounded-[4px] bg-copper px-4 text-graphite-deep shadow-none hover:bg-copper-light"
-            >
-              <Link to={NAV_CTA.href}>{NAV_CTA.label}</Link>
-            </Button>
-          </div>
+            <nav className="mt-10 flex flex-col gap-5">
+              {NAV_ITEMS.map((item, index) => (
+                <Link
+                  key={item.href}
+                  ref={index === 0 ? firstMenuLinkRef : undefined}
+                  to={item.href}
+                  aria-current={location.pathname === item.href ? "page" : undefined}
+                  onClick={handleMenuNavigation}
+                  onMouseEnter={() => preloadRouteFromPath(item.href)}
+                  className={cn(
+                    "system-nav-text rounded-[4px] border border-transparent px-3 py-3 text-base transition-colors duration-200",
+                    location.pathname === item.href
+                      ? "border-copper/30 bg-copper/10 text-copper"
+                      : "text-ivory hover:border-mineral-dark hover:text-copper"
+                  )}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
 
-          <div
-            className={cn(
-              "mt-auto pt-8 transition-all duration-500",
-              menuOpen ? "opacity-100" : "opacity-0"
-            )}
-            style={{ transitionDelay: menuOpen ? "0.45s" : "0s" }}
-          >
-            <p className="font-mono text-xs tracking-widest text-ivory-muted">
-              SYSTEMES . STRATEGIE . SIGNAL
-            </p>
+            <div className="mt-10">
+              <Button
+                asChild
+                size="sm"
+                className="system-button-nav h-11 w-full rounded-[4px] bg-copper px-4 text-graphite-deep shadow-none hover:bg-copper-light"
+              >
+                <Link
+                  to={NAV_CTA.href}
+                  onClick={handleMenuNavigation}
+                  onMouseEnter={preloadDiagnosticRoute}
+                >
+                  {NAV_CTA.label}
+                </Link>
+              </Button>
+            </div>
+
+            <div className="mt-auto pt-8">
+              <p className="font-mono text-xs tracking-widest text-ivory-muted">
+                SYSTEMES . STRATEGIE . SIGNAL
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   )
 }
