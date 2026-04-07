@@ -7,28 +7,31 @@ const METRICS = [
     target: 40,
     suffix: "%",
     label: "de temps manuel visé en moins sur les flux prioritaires",
-    color: "var(--copper)",
+    colorClass: "text-copper",
+    progressClass: "system-progress",
     progress: 40,
   },
   {
     target: 3,
     suffix: "x",
     label: "plus de clarté attendue sur les priorités qui comptent",
-    color: "var(--steel-light)",
+    colorClass: "text-steel-light",
+    progressClass: "system-progress is-steel",
     progress: 74,
   },
   {
     target: 80,
     suffix: "%",
     label: "des frictions critiques rendues visibles dès le cadrage",
-    color: "var(--system-success)",
+    colorClass: "text-system-success",
+    progressClass: "system-progress is-success",
     progress: 80,
   },
 ] as const
 
 const BEFORE_AFTER = [
   {
-    before: "Des outils qui s'accumulent sans cohérence",
+    before: "Des outils qui s\'accumulent sans cohérence",
     after: "Un système connecté et lisible",
   },
   {
@@ -90,120 +93,102 @@ export function ProofSection() {
 
   return (
     <section className="py-24 md:py-28" ref={sectionRef}>
-      <div className="mx-auto max-w-[92rem] px-4 md:px-6">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-12 md:gap-10">
-          <div className="md:col-span-4">
-            <ScrollReveal>
-              <div className="system-shell rounded-[0.5rem] px-6 py-7 md:px-7">
-                <SectionLabel number="04" label="Preuves directes" />
-                <h2
-                  className="mb-5 font-display font-bold"
-                  style={{
-                    fontSize: "clamp(1.9rem, 3.3vw, 2.8rem)",
-                    color: "var(--ivory)",
-                    lineHeight: 1.06,
-                    letterSpacing: "-0.03em",
-                  }}
-                >
-                  Ce que l&apos;intervention doit produire.
-                </h2>
-                <p
-                  className="font-body text-sm leading-7"
-                  style={{ color: "var(--ivory-muted)" }}
-                >
-                  Ici, la preuve ne repose pas sur des slogans. Elle repose sur des gains attendus,
-                  des états de système plus lisibles et des sorties exploitables.
-                </p>
-              </div>
-            </ScrollReveal>
+      <div className="mx-auto max-w-5xl px-4 md:px-6">
+        {/* Centered header */}
+        <ScrollReveal>
+          <div className="mx-auto mb-12 max-w-3xl text-center">
+            <SectionLabel number="04" label="Preuves directes" />
+            <h2
+              className="mb-5 font-display font-bold text-ivory"
+              style={{
+                fontSize: "clamp(1.9rem, 3.3vw, 2.8rem)",
+                lineHeight: 1.06,
+                letterSpacing: "-0.03em",
+              }}
+            >
+              Ce que l&apos;intervention doit produire.
+            </h2>
+            <p className="font-body text-sm leading-7 text-ivory-muted">
+              Ici, la preuve ne repose pas sur des slogans. Elle repose sur des gains attendus,
+              des états de système plus lisibles et des sorties exploitables.
+            </p>
           </div>
+        </ScrollReveal>
 
-          <div className="md:col-span-8">
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-              {METRICS.map((metric, index) => (
-                <ScrollReveal key={metric.label} delay={index * 70}>
-                  <article className="system-panel system-panel-hover rounded-[0.5rem] px-6 py-6">
-                    <p
-                      className="mb-5 font-mono text-[10px] tracking-[0.18em]"
-                      style={{ color: "var(--steel-light)" }}
-                    >
-                      OBJECTIF TYPE
-                    </p>
-                    <div
-                      className="mb-3 font-display text-[clamp(2.8rem,4vw,3.6rem)] font-bold leading-none"
-                      style={{ color: metric.color, letterSpacing: "-0.04em" }}
-                    >
-                      <CountUpValue target={metric.target} start={counting} />
-                      {metric.suffix}
-                    </div>
-                    <p className="mb-5 font-body text-sm leading-7" style={{ color: "var(--ivory-muted)" }}>
-                      {metric.label}
-                    </p>
-                    <div
-                      className={
-                        metric.color === "var(--steel-light)"
-                          ? "system-progress is-steel"
-                          : metric.color === "var(--system-success)"
-                            ? "system-progress is-success"
-                            : "system-progress"
-                      }
-                    >
-                      <span style={{ width: `${metric.progress}%` }} />
-                    </div>
-                    <p className="mt-4 font-mono text-[10px] tracking-[0.16em]" style={{ color: "var(--ivory-muted)" }}>
-                      SELON LE CONTEXTE ET LE PÉRIMÈTRE
-                    </p>
-                  </article>
-                </ScrollReveal>
-              ))}
-            </div>
-
-            <ScrollReveal delay={160}>
-              <div className="system-shell mt-6 rounded-[0.5rem] px-6 py-6 md:px-7">
-                <p className="mb-6 font-mono text-[11px] tracking-[0.18em]" style={{ color: "var(--copper)" }}>
-                  AVANT → APRÈS
+        {/* 3-column metrics grid */}
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+          {METRICS.map((metric, index) => (
+            <ScrollReveal key={metric.label} delay={index * 70}>
+              <article className="system-panel rounded-[0.5rem] px-6 py-6">
+                <p className="mb-5 font-mono text-xs tracking-[0.18em] text-steel-light">
+                  OBJECTIF TYPE
                 </p>
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  <div className="system-panel rounded-[0.5rem] px-5 py-5">
-                    <p className="mb-5 font-mono text-[10px] tracking-[0.18em]" style={{ color: "var(--system-error)" }}>
-                      QUAND LE SYSTÈME FUIT
-                    </p>
-                    <ul className="space-y-4">
-                      {BEFORE_AFTER.map((item) => (
-                        <li key={item.before} className="flex items-start gap-3">
-                          <span className="mt-1 font-mono text-xs" style={{ color: "var(--system-error)" }}>
-                            ✗
-                          </span>
-                          <span className="font-body text-sm leading-7" style={{ color: "var(--ivory-muted)" }}>
-                            {item.before}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="system-panel rounded-[0.5rem] px-5 py-5">
-                    <p className="mb-5 font-mono text-[10px] tracking-[0.18em]" style={{ color: "var(--system-success)" }}>
-                      QUAND LE SYSTÈME DEVIENT LISIBLE
-                    </p>
-                    <ul className="space-y-4">
-                      {BEFORE_AFTER.map((item) => (
-                        <li key={item.after} className="flex items-start gap-3">
-                          <span className="mt-1 font-mono text-xs" style={{ color: "var(--system-success)" }}>
-                            ✓
-                          </span>
-                          <span className="font-body text-sm leading-7" style={{ color: "var(--ivory-soft)" }}>
-                            {item.after}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                <div
+                  className={`mb-3 font-display font-bold leading-none ${metric.colorClass}`}
+                  style={{ fontSize: "clamp(2.8rem,4vw,3.6rem)", letterSpacing: "-0.04em" }}
+                >
+                  <CountUpValue target={metric.target} start={counting} />
+                  {metric.suffix}
                 </div>
-              </div>
+                <p className="mb-5 font-body text-sm leading-7 text-ivory-muted">
+                  {metric.label}
+                </p>
+                <div className={metric.progressClass}>
+                  <span style={{ width: `${metric.progress}%` }} />
+                </div>
+                <p className="mt-4 font-mono text-xs tracking-[0.16em] text-ivory-muted">
+                  SELON LE CONTEXTE ET LE PÉRIMÈTRE
+                </p>
+              </article>
             </ScrollReveal>
-          </div>
+          ))}
         </div>
+
+        {/* Before / After */}
+        <ScrollReveal delay={160}>
+          <div className="system-shell mt-8 rounded-[0.5rem] px-6 py-6 md:px-7">
+            <p className="mb-6 font-mono text-xs tracking-[0.18em] text-copper">
+              AVANT &rarr; APRÈS
+            </p>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div className="system-panel rounded-[0.5rem] px-5 py-5">
+                <p className="mb-5 font-mono text-xs tracking-[0.18em] text-system-error">
+                  QUAND LE SYSTÈME FUIT
+                </p>
+                <ul className="space-y-4">
+                  {BEFORE_AFTER.map((item) => (
+                    <li key={item.before} className="flex items-start gap-3">
+                      <span className="mt-1 font-mono text-xs text-system-error">
+                        &#10007;
+                      </span>
+                      <span className="font-body text-sm leading-7 text-ivory-muted">
+                        {item.before}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="system-panel rounded-[0.5rem] px-5 py-5">
+                <p className="mb-5 font-mono text-xs tracking-[0.18em] text-system-success">
+                  QUAND LE SYSTÈME DEVIENT LISIBLE
+                </p>
+                <ul className="space-y-4">
+                  {BEFORE_AFTER.map((item) => (
+                    <li key={item.after} className="flex items-start gap-3">
+                      <span className="mt-1 font-mono text-xs text-system-success">
+                        &#10003;
+                      </span>
+                      <span className="font-body text-sm leading-7 text-ivory-soft">
+                        {item.after}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </ScrollReveal>
       </div>
     </section>
   )

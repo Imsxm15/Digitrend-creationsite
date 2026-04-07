@@ -1,8 +1,10 @@
+import { PageMeta } from "@/components/common/PageMeta"
 import { useState } from "react"
-import { ArrowUpRight, Globe } from "lucide-react"
+import { ArrowUpRight, Globe, CheckCircle } from "lucide-react"
 import { ScrollReveal } from "@/components/common/ScrollReveal"
 import { SectionLabel } from "@/components/common/SectionLabel"
 import { isSupabaseConfigured, supabase } from "@/lib/supabase"
+import { trackEvent } from "@/lib/analytics"
 import {
   Select,
   SelectContent,
@@ -41,6 +43,20 @@ const DIAGNOSTIC_QUESTIONS = [
   },
 ]
 
+type FormErrors = Partial<Record<"name" | "email" | "message", string>>
+
+function validateForm(form: { name: string; email: string; message: string }): FormErrors {
+  const errors: FormErrors = {}
+  if (!form.name.trim()) errors.name = "Merci d'indiquer votre nom."
+  if (!form.email.trim()) {
+    errors.email = "Merci d'indiquer votre email."
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+    errors.email = "L'adresse email semble invalide."
+  }
+  if (!form.message.trim()) errors.message = "Merci de décrire votre situation."
+  return errors
+}
+
 export function ContactPage() {
   const [form, setForm] = useState({
     name: "",
@@ -49,15 +65,26 @@ export function ContactPage() {
     context: "",
     friction: "",
     message: "",
+    website: "",
   })
   const [submitted, setSubmitted] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [errors, setErrors] = useState<FormErrors>({})
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+    const { name, value } = e.target
+    setForm((prev) => ({ ...prev, [name]: value }))
+    // Clear field error on change
+    if (errors[name as keyof FormErrors]) {
+      setErrors((prev) => {
+        const next = { ...prev }
+        delete next[name as keyof FormErrors]
+        return next
+      })
+    }
   }
 
   const handleSelectChange = (key: "context" | "friction", value: string) => {
@@ -66,14 +93,29 @@ export function ContactPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    const validationErrors = validateForm(form)
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors)
+      return
+    }
+
+    // Honeypot anti-spam: if the hidden field is filled, silently fake success
+    if (form.website) {
+      setSubmitted(true)
+      return
+    }
+
     if (!supabase) {
       setError(
-        "Le formulaire n'est pas encore connecté. Renseigne les variables Supabase pour activer l'envoi."
+        "Le formulaire n'est pas encore actif. Contactez-nous directement par email."
       )
       return
     }
-    setLoading(true)
+
+    setIsSubmitting(true)
     setError(null)
+    setErrors({})
 
     const { error: supabaseError } = await supabase
       .from("diagnostic_requests")
@@ -86,84 +128,60 @@ export function ContactPage() {
         message: form.message,
       })
 
-    setLoading(false)
+    setIsSubmitting(false)
 
     if (supabaseError) {
-      setError("Une erreur est survenue. Merci de réessayer ou de me contacter directement.")
+      setError("Une erreur est survenue. Merci de réessayer ou de nous contacter directement.")
     } else {
+      trackEvent("diagnostic_submit")
       setSubmitted(true)
     }
   }
 
-  const inputStyle = {
-    backgroundColor: "var(--graphite-light)",
-    border: "1px solid var(--mineral-dark)",
-    color: "var(--ivory)",
-    fontFamily: "'DM Sans', sans-serif",
-    fontSize: "14px",
-    padding: "12px 16px",
-    width: "100%",
-    transition: "border-color 0.2s ease",
-  }
+  const inputClasses =
+    "w-full bg-graphite-light border border-mineral-dark text-ivory font-body text-sm px-4 py-3 transition-colors duration-200 focus:border-copper focus:ring-1 focus:ring-copper focus:outline-none"
 
-  const labelStyle = {
-    fontFamily: "'JetBrains Mono', monospace",
-    fontSize: "11px",
-    letterSpacing: "0.1em",
-    textTransform: "uppercase" as const,
-    color: "var(--ivory-muted)",
-    display: "block",
-    marginBottom: "8px",
-  }
+  const labelClasses = "block mb-2 font-mono text-xs tracking-widest uppercase text-ivory-muted"
 
   return (
     <>
-      <section
-        className="pt-40 pb-20"
-        style={{ backgroundColor: "var(--graphite-deep)" }}
-      >
+      <PageMeta
+        title="Diagnostic"
+        description="Demandez un diagnostic gratuit de vos opérations digitales. Réponse sous 24h, sans engagement."
+      />
+      <section className="pt-40 pb-20 bg-graphite-deep">
         <div className="max-w-7xl mx-auto px-6">
           <ScrollReveal>
             <div className="system-shell rounded-[0.5rem] px-6 py-8 md:px-8 md:py-9">
               <SectionLabel label="Diagnostic" />
               <h1
-                className="font-display font-extrabold mb-6"
+                className="font-display font-extrabold mb-6 text-ivory"
                 style={{
                   fontSize: "clamp(2.5rem, 6vw, 5.5rem)",
-                  color: "var(--ivory)",
                   letterSpacing: "-0.03em",
                   lineHeight: 1.05,
                 }}
               >
                 Voir où ça bloque.
                 <br />
-                <span style={{ color: "var(--copper)" }}>Avant d'agir.</span>
+                <span className="text-copper">Avant d'agir.</span>
               </h1>
-              <p
-                className="font-body text-lg max-w-3xl"
-                style={{ color: "var(--ivory-muted)", lineHeight: 1.8 }}
-              >
+              <p className="font-body text-lg max-w-3xl text-ivory-muted leading-relaxed">
                 Un premier échange de 30 minutes pour comprendre votre situation, identifier les
-                frictions principales et déterminer si, et comment, on peut intervenir.
+                frictions principales et déterminer si, et comment, nous pouvons intervenir.
               </p>
             </div>
           </ScrollReveal>
         </div>
       </section>
 
-      <section
-        className="py-20"
-        style={{ backgroundColor: "var(--graphite-mid)" }}
-      >
+      <section className="py-20 bg-graphite-mid">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
             <div className="md:col-span-4">
               <ScrollReveal>
                 <div className="md:sticky md:top-32">
-                  <p
-                    className="font-mono text-xs tracking-widest mb-6"
-                    style={{ color: "var(--copper)" }}
-                  >
+                  <p className="font-mono text-xs tracking-widest mb-6 text-copper">
                     COMMENT ÇA FONCTIONNE
                   </p>
                   <div className="flex flex-col gap-8">
@@ -175,7 +193,7 @@ export function ContactPage() {
                       },
                       {
                         number: "02",
-                        title: "Je vous réponds sous 24h",
+                        title: "Nous vous répondons sous 24h",
                         detail: "Un premier regard sur votre situation et, si c'est pertinent, une proposition de créneau.",
                       },
                       {
@@ -190,23 +208,14 @@ export function ContactPage() {
                       },
                     ].map((step) => (
                       <div key={step.number} className="flex gap-4">
-                        <span
-                          className="font-mono text-xs tracking-widest flex-shrink-0"
-                          style={{ color: "var(--copper)" }}
-                        >
+                        <span className="font-mono text-xs tracking-widest flex-shrink-0 text-copper">
                           {step.number}
                         </span>
                         <div>
-                          <p
-                            className="font-display font-semibold text-sm mb-1"
-                            style={{ color: "var(--ivory)" }}
-                          >
+                          <p className="font-display font-semibold text-sm mb-1 text-ivory">
                             {step.title}
                           </p>
-                          <p
-                            className="font-body text-xs leading-6"
-                            style={{ color: "var(--ivory-muted)" }}
-                          >
+                          <p className="font-body text-xs leading-6 text-ivory-muted">
                             {step.detail}
                           </p>
                         </div>
@@ -215,10 +224,7 @@ export function ContactPage() {
                   </div>
 
                   <div className="system-panel mt-10 rounded-[0.5rem] p-6">
-                    <p
-                      className="font-mono text-xs tracking-widest mb-3"
-                      style={{ color: "var(--copper)" }}
-                    >
+                    <p className="font-mono text-xs tracking-widest mb-3 text-copper">
                       CONDITIONS
                     </p>
                     <ul className="flex flex-col gap-2">
@@ -230,10 +236,9 @@ export function ContactPage() {
                       ].map((cond) => (
                         <li
                           key={cond}
-                          className="flex items-start gap-2 font-body text-xs"
-                          style={{ color: "var(--ivory-muted)" }}
+                          className="flex items-start gap-2 font-body text-xs text-ivory-muted"
                         >
-                          <span style={{ color: "var(--system-success)" }}>✓</span>
+                          <span className="text-system-success">&#10003;</span>
                           {cond}
                         </li>
                       ))}
@@ -241,16 +246,10 @@ export function ContactPage() {
                   </div>
 
                   <div className="system-panel mt-6 rounded-[0.5rem] p-6">
-                    <p
-                      className="font-mono text-xs tracking-widest mb-3"
-                      style={{ color: "var(--copper)" }}
-                    >
+                    <p className="font-mono text-xs tracking-widest mb-3 text-copper">
                       VALIDATION EXTERNE
                     </p>
-                    <p
-                      className="font-body text-xs leading-6 mb-4"
-                      style={{ color: "var(--ivory-muted)" }}
-                    >
+                    <p className="font-body text-xs leading-6 mb-4 text-ivory-muted">
                       Avant de demander un diagnostic, vous pouvez aussi consulter le site personnel et le
                       profil expert publics de Samuel.
                     </p>
@@ -259,8 +258,7 @@ export function ContactPage() {
                         href={PUBLIC_PROFILE.portfolioUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider transition-colors duration-200 hover:text-[var(--copper)]"
-                        style={{ color: "var(--ivory-muted)" }}
+                        className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider transition-colors duration-200 text-ivory-muted hover:text-copper"
                       >
                         <Globe className="size-3.5" />
                         Site personnel
@@ -270,8 +268,7 @@ export function ContactPage() {
                         href={PUBLIC_PROFILE.linkedinUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider transition-colors duration-200 hover:text-[var(--copper)]"
-                        style={{ color: "var(--ivory-muted)" }}
+                        className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider transition-colors duration-200 text-ivory-muted hover:text-copper"
                       >
                         LinkedIn
                         <ArrowUpRight className="size-3.5" />
@@ -285,221 +282,214 @@ export function ContactPage() {
             <div className="md:col-span-7 md:col-start-6">
               <ScrollReveal delay={80}>
                 {submitted ? (
-                  <div
-                    className="system-shell rounded-[0.5rem] p-12 text-center"
-                    style={{ borderColor: "var(--system-success)" }}
-                  >
-                    <div
-                      className="font-mono text-xs tracking-widest mb-4"
-                      style={{ color: "var(--system-success)" }}
-                    >
-                      DEMANDE REÇUE
+                  <div className="system-shell rounded-[0.5rem] p-12 text-center border border-system-success">
+                    <div className="flex justify-center mb-6">
+                      <div className="w-16 h-16 rounded-full bg-system-success/10 flex items-center justify-center">
+                        <CheckCircle className="size-8 text-system-success" />
+                      </div>
                     </div>
-                    <h2
-                      className="font-display font-bold text-2xl mb-4"
-                      style={{ color: "var(--ivory)" }}
-                    >
+                    <div className="font-mono text-xs tracking-widest mb-4 text-system-success">
+                      DEMANDE RECUE
+                    </div>
+                    <h2 className="font-display font-bold text-2xl mb-4 text-ivory">
                       Merci pour votre message.
                     </h2>
-                    <p
-                      className="font-body text-sm leading-7"
-                      style={{ color: "var(--ivory-muted)" }}
-                    >
-                      Je prends connaissance de votre situation et vous réponds dans les 24 heures ouvrées avec un premier regard structuré.
+                    <p className="font-body text-sm leading-7 text-ivory-muted max-w-md mx-auto">
+                      Nous prenons connaissance de votre situation et nous vous répondons dans les 24 heures ouvrées avec un premier regard structuré.
                     </p>
                   </div>
                 ) : (
                   <>
                     {!isSupabaseConfigured && (
-                      <div
-                        className="p-4 border mb-6"
-                        style={{
-                          borderColor: "var(--bronze)",
-                          backgroundColor: "rgba(196,133,60,0.06)",
-                        }}
-                      >
-                        <p
-                          className="font-body text-sm"
-                          style={{ color: "var(--ivory-muted)" }}
-                        >
-                          Le formulaire est affiché, mais l'envoi dépend encore de la configuration Supabase.
+                      <div className="p-4 border border-bronze bg-bronze/5 rounded-[0.5rem] mb-6">
+                        <p className="font-body text-sm text-ivory-muted">
+                          Le formulaire n'est pas encore actif. Contactez-nous directement par email.
                         </p>
                       </div>
                     )}
                     <form onSubmit={handleSubmit} noValidate>
                       <div className="system-shell rounded-[0.5rem] p-8 mb-6">
-                      <p
-                        className="font-mono text-xs tracking-widest mb-6"
-                        style={{ color: "var(--copper)" }}
-                      >
-                        VOS COORDONNÉES
-                      </p>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <div>
-                          <label htmlFor="name" style={labelStyle}>
-                            Nom / Prénom *
-                          </label>
-                          <input
-                            id="name"
-                            name="name"
-                            type="text"
-                            required
-                            value={form.name}
-                            onChange={handleChange}
-                            style={inputStyle}
-                            placeholder="Votre nom complet"
-                            onFocus={(e) => (e.target.style.borderColor = "var(--copper)")}
-                            onBlur={(e) => (e.target.style.borderColor = "var(--mineral-dark)")}
-                          />
-                        </div>
-                        <div>
-                          <label htmlFor="email" style={labelStyle}>
-                            Email *
-                          </label>
-                          <input
-                            id="email"
-                            name="email"
-                            type="email"
-                            required
-                            value={form.email}
-                            onChange={handleChange}
-                            style={inputStyle}
-                            placeholder="contact@exemple.com"
-                            onFocus={(e) => (e.target.style.borderColor = "var(--copper)")}
-                            onBlur={(e) => (e.target.style.borderColor = "var(--mineral-dark)")}
-                          />
-                        </div>
-                        <div className="md:col-span-2">
-                          <label htmlFor="company" style={labelStyle}>
-                            Entreprise / Projet
-                          </label>
-                          <input
-                            id="company"
-                            name="company"
-                            type="text"
-                            value={form.company}
-                            onChange={handleChange}
-                            style={inputStyle}
-                            placeholder="Nom de votre société ou projet"
-                            onFocus={(e) => (e.target.style.borderColor = "var(--copper)")}
-                            onBlur={(e) => (e.target.style.borderColor = "var(--mineral-dark)")}
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="system-shell rounded-[0.5rem] p-8 mb-6">
-                      <p
-                        className="font-mono text-xs tracking-widest mb-6"
-                        style={{ color: "var(--copper)" }}
-                      >
-                        VOTRE SITUATION
-                      </p>
-                      <div className="flex flex-col gap-5">
-                        {DIAGNOSTIC_QUESTIONS.map((q) => (
-                          <div key={q.id}>
-                            <label htmlFor={`${q.id}-trigger`} style={labelStyle}>
-                              {q.label}
+                        <p className="font-mono text-xs tracking-widest mb-6 text-copper">
+                          VOS COORDONNEES
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                          <div>
+                            <label htmlFor="name" className={labelClasses}>
+                              Nom / Prénom *
                             </label>
-                            <Select
-                              value={form[q.id as "context" | "friction"]}
-                              onValueChange={(value) =>
-                                handleSelectChange(q.id as "context" | "friction", value)
-                              }
-                            >
-                              <SelectTrigger
-                                id={`${q.id}-trigger`}
-                                className="w-full rounded-none border-[var(--mineral-dark)] bg-[var(--graphite-light)] px-4 py-6 text-left text-[14px] text-[var(--ivory)] data-[placeholder]:text-[var(--ivory-muted)]"
-                              >
-                                <SelectValue placeholder="Sélectionner…" />
-                              </SelectTrigger>
-                              <SelectContent className="border-[var(--mineral-dark)] bg-[var(--graphite-light)] text-[var(--ivory)]">
-                                <SelectGroup>
-                                  {q.options.map((opt) => (
-                                    <SelectItem
-                                      key={opt}
-                                      value={opt}
-                                      className="text-sm text-[var(--ivory-muted)] focus:bg-[var(--mineral-dark)] focus:text-[var(--ivory)]"
-                                    >
-                                      {opt}
-                                    </SelectItem>
-                                  ))}
-                                </SelectGroup>
-                              </SelectContent>
-                            </Select>
+                            <input
+                              id="name"
+                              name="name"
+                              type="text"
+                              required
+                              value={form.name}
+                              onChange={handleChange}
+                              className={inputClasses}
+                              placeholder="Votre nom complet"
+                              aria-describedby={errors.name ? "name-error" : undefined}
+                              aria-invalid={!!errors.name}
+                            />
+                            {errors.name && (
+                              <p id="name-error" className="mt-1.5 font-body text-xs text-system-error" role="alert">
+                                {errors.name}
+                              </p>
+                            )}
                           </div>
-                        ))}
-                        <div>
-                          <label htmlFor="message" style={labelStyle}>
-                            Décrivez votre situation *
-                          </label>
-                          <textarea
-                            id="message"
-                            name="message"
-                            required
-                            rows={5}
-                            value={form.message}
+                          <div>
+                            <label htmlFor="email" className={labelClasses}>
+                              Email *
+                            </label>
+                            <input
+                              id="email"
+                              name="email"
+                              type="email"
+                              required
+                              value={form.email}
+                              onChange={handleChange}
+                              className={inputClasses}
+                              placeholder="contact@exemple.com"
+                              aria-describedby={errors.email ? "email-error" : undefined}
+                              aria-invalid={!!errors.email}
+                            />
+                            {errors.email && (
+                              <p id="email-error" className="mt-1.5 font-body text-xs text-system-error" role="alert">
+                                {errors.email}
+                              </p>
+                            )}
+                          </div>
+                          <div className="md:col-span-2">
+                            <label htmlFor="company" className={labelClasses}>
+                              Entreprise / Projet
+                            </label>
+                            <input
+                              id="company"
+                              name="company"
+                              type="text"
+                              value={form.company}
+                              onChange={handleChange}
+                              className={inputClasses}
+                              placeholder="Nom de votre société ou projet"
+                            />
+                          </div>
+                        </div>
+                        {/* Honeypot anti-spam field */}
+                        <div
+                          aria-hidden="true"
+                          style={{
+                            position: "absolute",
+                            left: "-9999px",
+                            top: "-9999px",
+                            opacity: 0,
+                            pointerEvents: "none",
+                          }}
+                        >
+                          <label htmlFor="website">Ne pas remplir ce champ</label>
+                          <input
+                            id="website"
+                            name="website"
+                            type="text"
+                            value={form.website}
                             onChange={handleChange}
-                            style={{
-                              ...inputStyle,
-                              resize: "vertical",
-                              lineHeight: "1.6",
-                            }}
-                            placeholder="Quel est votre principal défi en ce moment ? Qu'est-ce qui ne fonctionne pas comme vous le souhaiteriez ?"
-                            onFocus={(e) => (e.target.style.borderColor = "var(--copper)")}
-                            onBlur={(e) => (e.target.style.borderColor = "var(--mineral-dark)")}
+                            tabIndex={-1}
+                            autoComplete="off"
                           />
                         </div>
                       </div>
+
+                      <div className="system-shell rounded-[0.5rem] p-8 mb-6">
+                        <p className="font-mono text-xs tracking-widest mb-6 text-copper">
+                          VOTRE SITUATION
+                        </p>
+                        <div className="flex flex-col gap-5">
+                          {DIAGNOSTIC_QUESTIONS.map((q) => (
+                            <div key={q.id}>
+                              <label htmlFor={`${q.id}-trigger`} className={labelClasses}>
+                                {q.label}
+                              </label>
+                              <Select
+                                value={form[q.id as "context" | "friction"]}
+                                onValueChange={(value) =>
+                                  handleSelectChange(q.id as "context" | "friction", value)
+                                }
+                              >
+                                <SelectTrigger
+                                  id={`${q.id}-trigger`}
+                                  className="w-full rounded-none border-mineral-dark bg-graphite-light px-4 py-6 text-left text-sm text-ivory data-[placeholder]:text-ivory-muted focus:border-copper focus:ring-1 focus:ring-copper"
+                                >
+                                  <SelectValue placeholder="Sélectionner..." />
+                                </SelectTrigger>
+                                <SelectContent className="border-mineral-dark bg-graphite-light text-ivory">
+                                  <SelectGroup>
+                                    {q.options.map((opt) => (
+                                      <SelectItem
+                                        key={opt}
+                                        value={opt}
+                                        className="text-sm text-ivory-muted focus:bg-mineral-dark focus:text-ivory"
+                                      >
+                                        {opt}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectGroup>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          ))}
+                          <div>
+                            <label htmlFor="message" className={labelClasses}>
+                              Décrivez votre situation *
+                            </label>
+                            <textarea
+                              id="message"
+                              name="message"
+                              required
+                              rows={5}
+                              value={form.message}
+                              onChange={handleChange}
+                              className={`${inputClasses} resize-y leading-relaxed`}
+                              placeholder="Quel est votre principal défi en ce moment ? Qu'est-ce qui ne fonctionne pas comme vous le souhaiteriez ?"
+                              aria-describedby={errors.message ? "message-error" : "message-hint"}
+                              aria-invalid={!!errors.message}
+                            />
+                            <p id="message-hint" className="mt-1.5 font-body text-xs text-ivory-muted/60">
+                              Décrivez librement votre situation en quelques phrases.
+                            </p>
+                            {errors.message && (
+                              <p id="message-error" className="mt-1 font-body text-xs text-system-error" role="alert">
+                                {errors.message}
+                              </p>
+                            )}
+                          </div>
+                        </div>
                       </div>
 
                       {error && (
-                        <p
-                          className="font-body text-sm mb-4 p-4 border"
-                          style={{
-                            color: "var(--system-error)",
-                            borderColor: "var(--system-error)",
-                            backgroundColor: "rgba(180,60,60,0.06)",
-                          }}
+                        <div
+                          className="font-body text-sm mb-4 p-4 border rounded-[0.5rem] border-system-error bg-system-error/5 text-system-error"
+                          role="alert"
                         >
                           {error}
-                        </p>
+                        </div>
                       )}
                       <button
                         type="submit"
-                        disabled={
-                          loading ||
-                          !form.name ||
-                          !form.email ||
-                          !form.message ||
-                          !supabase
-                        }
-                        className="system-button-text flex w-full items-center justify-center gap-3 rounded-[0.5rem] py-5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed btn-copper-glow"
-                        style={{
-                          backgroundColor: "var(--copper)",
-                          color: "var(--graphite-deep)",
-                        }}
+                        disabled={isSubmitting}
+                        className="system-button-text flex w-full items-center justify-center gap-3 rounded-[0.5rem] py-5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed btn-copper-glow bg-copper text-graphite-deep"
                       >
-                        {loading ? (
+                        {isSubmitting ? (
                           <>
                             <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                            Envoi en cours…
+                            Envoi en cours...
                           </>
-                        ) : !supabase ? (
-                          "Configuration requise"
                         ) : (
                           <>
-                            Envoyer ma demande de diagnostic
+                            Envoyer ma demande
                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                               <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                           </>
                         )}
                       </button>
-                      <p
-                        className="text-center font-mono text-xs mt-4"
-                        style={{ color: "var(--ivory-muted)" }}
-                      >
+                      <p className="text-center font-mono text-xs mt-4 text-ivory-muted">
                         Gratuit · Sans engagement · Réponse sous 24h ouvrées
                       </p>
                     </form>
@@ -513,3 +503,5 @@ export function ContactPage() {
     </>
   )
 }
+
+export default ContactPage

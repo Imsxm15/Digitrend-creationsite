@@ -25,21 +25,20 @@ export function CtaBanner({
           <div className="system-shell system-shell-warm rounded-[0.5rem] px-6 py-7 md:px-8 md:py-8">
             <div className="grid grid-cols-1 gap-8 md:grid-cols-12 md:items-center md:gap-10">
               <div className="md:col-span-6">
-                <p className="mb-4 font-mono text-[11px] tracking-[0.18em]" style={{ color: "var(--copper)" }}>
+                <p className="mb-4 font-mono text-xs tracking-[0.18em] text-copper">
                   PROCHAINE DÉCISION
                 </p>
                 <h2
-                  className="mb-4 font-display font-bold"
+                  className="mb-4 font-display font-bold text-ivory"
                   style={{
                     fontSize: "clamp(2rem, 4vw, 3.4rem)",
-                    color: "var(--ivory)",
                     lineHeight: 1.04,
                     letterSpacing: "-0.03em",
                   }}
                 >
                   {title}
                 </h2>
-                <p className="font-body text-sm leading-7" style={{ color: "var(--ivory-muted)" }}>
+                <p className="font-body text-sm leading-7 text-ivory-muted">
                   {subtitle}
                 </p>
               </div>
@@ -51,7 +50,7 @@ export function CtaBanner({
                     "3 priorités visibles",
                     "Sans engagement",
                   ].map((item) => (
-                    <div key={item} className="system-chip" style={{ color: "var(--ivory-muted)" }}>
+                    <div key={item} className="system-chip text-ivory-muted">
                       {item}
                     </div>
                   ))}
@@ -62,11 +61,7 @@ export function CtaBanner({
                 <div className="flex w-full flex-col gap-3 md:max-w-[15rem]">
                   <Link
                     to={primaryHref}
-                    className="system-button-text btn-copper-glow inline-flex items-center justify-center gap-2 rounded-[0.5rem] px-8 py-4 transition-all duration-300"
-                    style={{
-                      backgroundColor: "var(--copper)",
-                      color: "var(--graphite-deep)",
-                    }}
+                    className="system-button-text btn-copper-glow inline-flex items-center justify-center gap-2 rounded-[0.5rem] bg-copper px-8 py-4 text-graphite-deep transition-all duration-300"
                     data-cursor-hover
                   >
                     {primaryLabel}
@@ -76,11 +71,7 @@ export function CtaBanner({
                   </Link>
                   <Link
                     to={secondaryHref}
-                    className="system-button-text inline-flex items-center justify-center rounded-[0.5rem] border px-8 py-4 transition-all duration-300 hover:border-[var(--copper)] hover:text-[var(--copper)]"
-                    style={{
-                      borderColor: "var(--mineral-warm)",
-                      color: "var(--ivory-muted)",
-                    }}
+                    className="system-button-text inline-flex items-center justify-center rounded-[0.5rem] border border-mineral-warm px-8 py-4 text-ivory-muted transition-all duration-300 hover:border-copper hover:text-copper"
                   >
                     {secondaryLabel}
                   </Link>

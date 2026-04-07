@@ -41,7 +41,7 @@ export const OFFERS: Offer[] = [
     format: "Entretien de cadrage + analyse documentaire + restitution structurée",
     duration: "4–6 jours ouvrés",
     budgetSignal: "À partir de 1 800€",
-    cta: "Lancer mon diagnostic",
+    cta: "Lancer un diagnostic",
     ctaHref: "/diagnostic",
   },
   {
@@ -50,7 +50,7 @@ export const OFFERS: Offer[] = [
     tag: "SIGNATURE",
     title: "Architecture Revenue",
     subtitle: "Structurer le système qui convertit et génère",
-    description: "Refonte complète de votre système de conversion, d'acquisition et de rétention. Je conçois l'architecture qui aligne vos flux, vos données et vos outils autour d'un objectif business clair.",
+    description: "Refonte complète de votre système de conversion, d'acquisition et de rétention. Nous concevons l'architecture qui aligne vos flux, vos données et vos outils autour d'un objectif business clair.",
     problem: "Vous avez du trafic, des produits, des équipes — mais le système ne produit pas ce qu'il devrait. Les leads se perdent, les tunnels fuient, les opérations coûtent trop pour ce qu'elles rapportent.",
     symptoms: [
       "Tunnel de conversion non tracé ou mal optimisé",
@@ -128,7 +128,7 @@ export const OFFERS: Offer[] = [
     format: "Engagement mensuel renouvelable — 2 ou 4 jours/mois",
     duration: "Abonnement mensuel",
     budgetSignal: "À partir de 800€/mois",
-    cta: "Discuter de mon besoin",
+    cta: "Discuter de votre besoin",
     ctaHref: "/diagnostic",
   },
 ]

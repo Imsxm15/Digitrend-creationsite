@@ -10,5 +10,5 @@ export const PUBLIC_PROFILE = {
   linkedinUrl: "https://www.linkedin.com/in/samuel-huys",
   expertProfileUrl: "https://www.collective.work/profile/samuel-huys",
   legalNotice:
-    "Adresse postale, hébergeur de production et contact RGPD dédié à confirmer avant mise en ligne publique.",
+    "Hébergement : Netlify, Inc. — 44 Montgomery Street, Suite 300, San Francisco, CA 94104, USA. Contact RGPD : samuel@digitrend.fr",
 } as const
