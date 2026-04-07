@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <rect x="1" y="1" width="30" height="30" stroke="#C4853C" stroke-width="1.2" fill="#0F0F0F" rx="2"/>
+  <text x="4" y="23" font-family="'Syne', sans-serif" font-weight="700" font-size="16" fill="#F2EDE4">D</text>
+  <text x="17" y="23" font-family="'Syne', sans-serif" font-weight="700" font-size="16" fill="#C4853C">T</text>
+</svg>
