@@ -6,6 +6,6 @@ export const NAV_ITEMS = [
 ]
 
 export const NAV_CTA = {
-  label: "Diagnostic",
+  label: "Diagnostic gratuit",
   href: "/diagnostic",
 }

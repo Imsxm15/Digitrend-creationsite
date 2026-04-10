@@ -5,6 +5,8 @@ export interface Offer {
   title: string
   subtitle: string
   description: string
+  benefits: string[]
+  persona: string
   problem: string
   symptoms: string[]
   deliverables: string[]
@@ -23,6 +25,12 @@ export const OFFERS: Offer[] = [
     title: "Diagnostic Frictions",
     subtitle: "Voir où ça bloque — avant d'intervenir",
     description: "Un diagnostic structuré de vos flux digitaux et business pour identifier les blocages réels, les pertes silencieuses et les priorités d'action.",
+    benefits: [
+      "Identifier les blocages qui freinent vraiment le revenu",
+      "Prioriser les quick wins et les chantiers structurants",
+      "Repartir avec une feuille de route actionnable",
+    ],
+    persona: "Pour les equipes qui sentent que le probleme existe mais ne savent pas encore l'isoler.",
     problem: "Vous sentez que quelque chose ne tourne pas rond, mais vous ne savez pas exactement où. Temps perdu sur des tâches manuelles, conversions en berne, outils qui ne se parlent pas, données inutilisables.",
     symptoms: [
       "Des processus manuels répétitifs qui absorbent de l'énergie",
@@ -51,6 +59,12 @@ export const OFFERS: Offer[] = [
     title: "Architecture Revenue",
     subtitle: "Structurer le système qui convertit et génère",
     description: "Refonte complète de votre système de conversion, d'acquisition et de rétention. Nous concevons l'architecture qui aligne vos flux, vos données et vos outils autour d'un objectif business clair.",
+    benefits: [
+      "Reconnecter acquisition, conversion et CRM",
+      "Concevoir une architecture cible avant d'implementer",
+      "Piloter la croissance avec des signaux lisibles",
+    ],
+    persona: "Pour les equipes qui ont du trafic et des outils, mais pas un systeme de revenu cohérent.",
     problem: "Vous avez du trafic, des produits, des équipes — mais le système ne produit pas ce qu'il devrait. Les leads se perdent, les tunnels fuient, les opérations coûtent trop pour ce qu'elles rapportent.",
     symptoms: [
       "Tunnel de conversion non tracé ou mal optimisé",
@@ -81,6 +95,12 @@ export const OFFERS: Offer[] = [
     title: "AI Product Ops",
     subtitle: "Outils internes, agents métier, interfaces IA utiles",
     description: "Conception et déploiement d'outils internes, dashboards opérationnels et agents IA adaptés à vos flux métier. Pas de l'IA pour faire de l'IA — des outils qui résolvent des problèmes précis.",
+    benefits: [
+      "Cadrer les usages IA qui ont un vrai impact metier",
+      "Construire des outils internes vraiment exploitables",
+      "Documenter et securiser les workflows automatises",
+    ],
+    persona: "Pour les equipes qui veulent industrialiser l'IA sans finir avec une demo de plus.",
     problem: "Vos équipes utilisent des LLM en mode copier-coller sans process. Vous avez des données mais pas d'interface pour les exploiter. Certaines tâches pourraient être automatisées mais personne ne sait par où commencer.",
     symptoms: [
       "Usage IA anarchique et non structuré dans les équipes",
@@ -109,6 +129,12 @@ export const OFFERS: Offer[] = [
     title: "Pilotage Fractionnel",
     subtitle: "Un directeur opérationnel à temps partagé",
     description: "Présence régulière pour piloter la mise en ordre, prioriser les chantiers, superviser les implémentations et maintenir le cap opérationnel — sans le coût d'un profil senior à temps plein.",
+    benefits: [
+      "Garder un cap clair sur les priorites du trimestre",
+      "Superviser les chantiers sans perdre le fil business",
+      "Eviter l'empilement de dettes operationnelles",
+    ],
+    persona: "Pour les equipes qui ont besoin d'un cadre regulier plus que d'un one-shot.",
     problem: "Vous avancez mais sans fil conducteur. Les priorités changent, les outils s'accumulent, les équipes manquent de cadre. Vous avez besoin d'un regard structurant de façon régulière.",
     symptoms: [
       "Roadmap opérationnelle absente ou non tenue",

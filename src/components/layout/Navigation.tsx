@@ -54,14 +54,24 @@ export function Navigation() {
     <>
       <header
         className={cn(
-          "fixed left-0 right-0 top-0 z-50 border-b border-mineral-dark backdrop-blur-[10px] transition-colors duration-300",
-          scrolled ? "bg-[rgba(15,15,15,0.97)]" : "bg-[rgba(15,15,15,0.94)]",
+          "fixed left-0 right-0 top-0 z-50 border-b border-mineral-dark/80 backdrop-blur-[12px] transition-all duration-300",
+          scrolled
+            ? "bg-[rgba(15,15,15,0.98)] shadow-[0_12px_30px_rgba(0,0,0,0.24)]"
+            : "bg-[rgba(15,15,15,0.92)]",
         )}
       >
-        <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-6 px-4 py-4 md:px-6">
+        <div
+          className={cn(
+            "mx-auto flex w-full max-w-7xl items-center justify-between gap-5 px-4 md:px-6",
+            scrolled ? "py-3" : "py-4"
+          )}
+        >
           <div className="flex items-center gap-5 shrink-0">
             <Link to="/" className="flex items-center gap-3 leading-none" aria-label="Digitrend Creation — Accueil">
-              <span className="grid size-7 place-items-center border border-copper bg-transparent">
+              <span className={cn(
+                "grid place-items-center border border-copper bg-transparent transition-all duration-300",
+                scrolled ? "size-6" : "size-7"
+              )}>
                 <span className="flex items-center gap-px font-display text-[0.8rem] font-bold leading-none">
                   <span className="text-ivory">D</span>
                   <span className="text-copper">T</span>
@@ -116,7 +126,10 @@ export function Navigation() {
             <Button
               asChild
               size="sm"
-              className="system-button-nav h-9 rounded-[4px] border-0 bg-copper px-4 text-graphite-deep shadow-none hover:bg-copper-light"
+              className={cn(
+                "system-button-nav rounded-[4px] border-0 bg-copper text-graphite-deep shadow-none hover:bg-copper-light",
+                scrolled ? "h-9 px-4" : "h-10 px-5"
+              )}
             >
               <Link to={NAV_CTA.href}>{NAV_CTA.label}</Link>
             </Button>
@@ -152,7 +165,7 @@ export function Navigation() {
           >
             <div className="flex items-center justify-between gap-4">
               <p className="system-eyebrow text-copper">
-                SYSTEME OPERATIF . NAVIGATION
+                SYSTEME OPERATIF . ACCES RAPIDE
               </p>
               <button
                 type="button"
@@ -203,7 +216,7 @@ export function Navigation() {
 
             <div className="mt-auto pt-8">
               <p className="font-mono text-xs tracking-widest text-ivory-muted">
-                SYSTEMES . STRATEGIE . SIGNAL
+                30 MINUTES . SANS ENGAGEMENT
               </p>
             </div>
           </div>

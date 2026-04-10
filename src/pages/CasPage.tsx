@@ -1,4 +1,4 @@
-import { PageMeta } from "@/components/common/PageMeta"
+import { useState } from "react"
 import { Link } from "react-router-dom"
 import {
   ArrowRight,
@@ -6,170 +6,141 @@ import {
   Bot,
   ChartColumn,
   Route,
+  Workflow,
 } from "lucide-react"
+import { PageMeta } from "@/components/common/PageMeta"
 import { ScrollReveal } from "@/components/common/ScrollReveal"
 import { SectionLabel } from "@/components/common/SectionLabel"
+import { SocialProofSection } from "@/components/common/SocialProofSection"
 import { CtaBanner } from "@/components/sections/CtaBanner"
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion"
+import { pageCtas, pageHeroes } from "@/data/pageCopy"
+import { organizationSchema, pageMetaContent } from "@/data/pageMeta"
 import {
   Sheet,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
 
-const FEATURED_CASE = {
-  tag: "ARCHITECTURE",
+const workflowNodes = [
+  {
+    id: "form",
+    label: "Formulaire",
+    detail:
+      "Le point d'entree capture le contexte, la friction et le niveau d'urgence pour eviter les leads mal qualifies.",
+  },
+  {
+    id: "logic",
+    label: "Logique metier",
+    detail:
+      "Le scoring et le routing appliquent des regles simples, explicites et testables avant d'alimenter les outils aval.",
+  },
+  {
+    id: "crm",
+    label: "CRM",
+    detail:
+      "Chaque fiche est enrichie avec le bon owner, les bons tags et une priorite lisible sans saisie manuelle supplementaire.",
+  },
+  {
+    id: "slack",
+    label: "Slack",
+    detail:
+      "Les alertes ne partent que quand le contexte est suffisant et que la reaction humaine a une vraie valeur.",
+  },
+  {
+    id: "dashboard",
+    label: "Dashboard",
+    detail:
+      "Le pilotage montre les leads non traites, les delais de reponse et les points ou le flux se casse.",
+  },
+] as const
+
+const featuredCase = {
+  eyebrow: "CAS PHARE",
   title: "Architecture d'automatisation CRM",
-  subtitle: "Relier formulaire, scoring, CRM, Slack et pilotage sans multiplier les angles morts.",
-  description:
-    "Le besoin type : un flux de leads qui entre, mais une qualification commerciale encore trop manuelle. Ici, la démonstration porte sur un système où chaque étape laisse une trace exploitable et déclenche la bonne action au bon moment.",
-  outputs: [
-    "Scoring automatique selon source, urgence et valeur potentielle",
-    "Notification Slack contextualisée pour l'équipe commerciale",
-    "Création CRM enrichie avec tags, propriétaire et priorité",
-    "Vue de pilotage pour repérer les leads non traités en temps utile",
-  ],
-  beforeAfter: [
-    { label: "Qualification lead", before: "Inbox + copier-coller", after: "3 étapes automatisées" },
-    { label: "Temps de réaction", before: "Variable selon la charge", after: "< 15 minutes sur les leads chauds" },
-    { label: "Lecture du pipeline", before: "Outils dispersés", after: "1 flux traçable de bout en bout" },
-  ],
-  sheetSections: [
+  subtitle:
+    "Relier formulaire, scoring, CRM, Slack et pilotage sans perdre les leads a forte intention.",
+  problem:
+    "Des demandes entraient bien, mais la qualification et le suivi commercial restaient trop manuels. Les leads chauds se perdaient entre le formulaire, les messages internes et le CRM.",
+  action:
+    "Refonte du flux autour d'un scoring simple, de regles de routing visibles, d'une fiche CRM enrichie automatiquement et d'un tableau de pilotage pour verifier le traitement reel.",
+  result:
+    "Le systeme devient tracable de bout en bout. L'equipe commerciale voit plus vite quoi traiter, pourquoi, et avec quel niveau de priorite.",
+  metrics: [
     {
-      title: "Ce que le système doit résoudre",
-      text: "Éviter que les leads à forte intention se perdent entre le formulaire, le CRM et le suivi humain. Le système doit qualifier, enrichir, notifier et rendre visible ce qui demande encore une intervention.",
+      value: "+35%",
+      label: "conversion",
+      context: "cas Digitrend contextualise sur un flux e-commerce / lead qualification",
     },
     {
-      title: "Livrables visibles",
-      text: "Cartographie du flux, logique de scoring, règles de routing, structure du tableau de pilotage et protocole de test pour vérifier que le flux reste fiable après déploiement.",
+      value: "< 15 min",
+      label: "reaction sur les leads chauds",
+      context: "des qu'un signal commercial fort est detecte",
     },
     {
-      title: "Pourquoi c'est une preuve de méthode",
-      text: "On voit ici le raisonnement complet : point d'entrée, logique métier, déclencheurs, enrichissement, sortie CRM et boucle de suivi. Ce n'est pas une promesse abstraite, c'est un système lisible.",
+      value: "1 flux",
+      label: "de bout en bout",
+      context: "de l'entree jusqu'au suivi CRM et pilotage",
     },
   ],
 } as const
 
-const DEMO_CASES = [
+const secondaryCases = [
   {
-    id: "audit-friction",
-    icon: Route,
-    tag: "FRAMEWORK",
+    id: "audit-frictions",
+    tag: "DIAGNOSTIC",
     title: "Framework d'audit des frictions",
-    subtitle: "Cartographier un système business en cinq étapes avant de proposer quoi que ce soit.",
-    description:
-      "Une démonstration de cadrage pour identifier les pertes silencieuses, distinguer l'urgent du structurant et sortir avec un plan d'action défendable.",
-    accordion: [
-      {
-        title: "Ce qui devient visible",
-        content:
-          "Matrice impact x effort, flux principaux, dépendances cachées, points de blocage récurrents et priorités activables sans attendre une refonte complète.",
-      },
-      {
-        title: "Sortie type",
-        content:
-          "Une page de synthèse avec lecture des frictions, quick wins, chantiers structurants et zones à laisser volontairement hors périmètre.",
-      },
-    ],
-    sheetSections: [
-      {
-        title: "Question de départ",
-        text: "Pourquoi l'équipe a-t-elle la sensation de travailler beaucoup sans améliorer vraiment la conversion, la coordination ou la vitesse d'exécution ?",
-      },
-      {
-        title: "Approche",
-        text: "Nous partons des flux réels, pas des organigrammes. Où l'information entre, où elle est transformée, où elle se perd et où une décision manque.",
-      },
-      {
-        title: "Sortie attendue",
-        text: "Une carte lisible du système actuel, un niveau de priorité par friction et un ordre de traitement qui protège le temps du client.",
-      },
+    icon: Route,
+    problem:
+      "L'equipe sent qu'il y a un probleme, mais ne sait pas si le sujet releve du tunnel, du CRM, des process ou de l'organisation.",
+    action:
+      "Lecture du systeme reel, matrice impact / effort, cartographie des dependances et tri entre quick wins, chantier structurant et faux sujets.",
+    result:
+      "La discussion ne tourne plus autour d'impressions. Le client repart avec une carte, un ordre de traitement et des arbitrages defendables.",
+    metrics: [
+      "3 niveaux de priorite rendus visibles",
+      "1 synthese livrable pour aligner l'equipe",
     ],
   },
   {
-    id: "conversion-audit",
-    icon: ChartColumn,
-    tag: "ANALYSE",
+    id: "conversion-review",
+    tag: "CONVERSION",
     title: "Diagnostic de conversion",
-    subtitle: "Identifier les fuites concrètes d'un tunnel avant de relancer l'acquisition.",
-    description:
-      "Un cas de lecture de tunnel B2B où les points de friction, les hypothèses de test et les signaux de qualité sont rendus visibles en quelques écrans.",
-    accordion: [
-      {
-        title: "Ce qui est audité",
-        content:
-          "Promesse perçue, friction formulaire, séquence CRM, qualité de l'offre, cohérence du suivi commercial et signal envoyé au décideur dans les trois premières secondes.",
-      },
-      {
-        title: "Sortie type",
-        content:
-          "Liste priorisée des hypothèses, lecture avant/après du tunnel, piste d'A/B test et recommandation sur ce qui mérite un redesign versus une correction ciblée.",
-      },
-    ],
-    sheetSections: [
-      {
-        title: "Point d'attention",
-        text: "Le tunnel n'est pas évalué comme une page isolée mais comme une chaîne complète : acquisition, promesse, friction, relance et transformation réelle.",
-      },
-      {
-        title: "Ce que nous cherchons",
-        text: "Rendre explicites les endroits où l'intention se casse : charge cognitive, absence de preuve, offre mal calibrée ou boucle CRM incomplète.",
-      },
-      {
-        title: "Ce que le client récupère",
-        text: "Des hypothèses testables, un ordre de traitement et une lecture commerciale défendable auprès d'une équipe marketing ou produit.",
-      },
+    icon: ChartColumn,
+    problem:
+      "Du trafic existe deja, mais la promesse, la preuve et la suite CRM ne produisent pas assez de revenu.",
+    action:
+      "Lecture du tunnel comme une chaine complete: acquisition, hero, friction formulaire, suivi commercial et qualite du signal des les 3 premieres secondes.",
+    result:
+      "Les hypotheses de test deviennent concretes. On sait quoi corriger vite, quoi redesign et quoi laisser hors perimetre.",
+    metrics: [
+      "hypotheses d'A/B test priorisees",
+      "avant / apres du tunnel en lecture rapide",
     ],
   },
   {
-    id: "ai-tool",
-    icon: Bot,
+    id: "ai-tooling",
     tag: "OUTIL IA",
     title: "Outil interne de qualification",
-    subtitle: "Construire un agent métier utile, pas une démo IA de plus.",
-    description:
-      "Exemple d'outil interne pour pré-qualifier des demandes entrantes, aider à la réponse et structurer la suite dans le CRM sans sortir du contexte métier.",
-    accordion: [
-      {
-        title: "Ce qui est montré",
-        content:
-          "Prompt système, logique de garde-fous, validation humaine, format de sortie exploitable et point de reprise si l'agent hésite ou manque de signal.",
-      },
-      {
-        title: "Sortie type",
-        content:
-          "Schéma d'orchestration, critères de qualification, interface de revue et plan de supervision pour éviter les réponses automatiques opaques.",
-      },
-    ],
-    sheetSections: [
-      {
-        title: "Objectif",
-        text: "Aider une équipe à traiter plus vite sans déléguer aveuglément la décision à un modèle.",
-      },
-      {
-        title: "Rigueur attendue",
-        text: "Traçabilité des règles, sorties structurées, validation humaine et documentation minimale pour que l'outil reste exploitable après sa livraison.",
-      },
-      {
-        title: "Valeur métier",
-        text: "Moins d'allers-retours, meilleure homogénéité de qualification et un gain de temps réel sur les demandes entrantes répétitives.",
-      },
+    icon: Bot,
+    problem:
+      "L'usage IA existe deja, mais reste diffuse, fragile et peu fiable des qu'il faut l'inserer dans un vrai process metier.",
+    action:
+      "Cadrage du cas d'usage, sortie structuree, garde-fous, validation humaine et interface de reprise au bon endroit du flux.",
+    result:
+      "L'outil sert un besoin metier clair, fait gagner du temps et reste exploitable apres la livraison.",
+    metrics: [
+      "-70% de temps de traitement sur les taches repetitives",
+      "validation humaine la ou elle cree vraiment de la valeur",
     ],
   },
 ] as const
 
 function AutomationWorkflow() {
   return (
-    <svg viewBox="0 0 640 250" className="w-full" role="img" aria-label="Workflow CRM automatisé">
+    <svg viewBox="0 0 640 250" className="w-full" role="img" aria-label="Workflow CRM automatise">
       <defs>
         <marker
           id="arrow-head"
@@ -255,287 +226,379 @@ function AutomationWorkflow() {
   )
 }
 
+function WorkflowExplorer() {
+  return (
+    <div className="rounded-[0.5rem] border border-mineral-dark bg-graphite-light p-5">
+      <div className="flex items-center gap-3">
+        <span className="grid size-11 place-items-center rounded-[0.5rem] border border-copper/20 bg-copper/10 text-copper">
+          <Workflow className="size-5" aria-hidden="true" />
+        </span>
+        <div>
+          <p className="font-mono text-xs uppercase tracking-[0.18em] text-copper">
+            Workflow visible
+          </p>
+          <p className="mt-1 font-body text-sm text-ivory-muted">
+            Une lecture simple du systeme, puis des zones detaillees ouvrables sur mobile et desktop.
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-6 overflow-hidden rounded-[0.5rem] border border-mineral-dark bg-graphite-mid p-4">
+        <AutomationWorkflow />
+      </div>
+
+      <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+        {workflowNodes.map((node) => (
+          <Sheet key={node.id}>
+            <SheetTrigger asChild>
+              <button
+                type="button"
+                className="rounded-[0.5rem] border border-mineral-dark bg-graphite-mid px-4 py-4 text-left transition-colors duration-200 hover:border-copper/40"
+              >
+                <p className="font-display text-base font-semibold text-ivory">{node.label}</p>
+                <p className="mt-2 font-body text-sm leading-6 text-ivory-muted">
+                  Voir le detail
+                </p>
+              </button>
+            </SheetTrigger>
+            <SheetContent
+              side="right"
+              className="w-full overflow-y-auto border-mineral-dark bg-graphite-deep text-ivory sm:max-w-lg"
+            >
+              <SheetHeader className="border-b border-mineral-dark">
+                <SheetTitle className="font-display text-2xl font-bold text-ivory">
+                  {node.label}
+                </SheetTitle>
+                <SheetDescription className="font-body text-sm leading-7 text-ivory-muted">
+                  {node.detail}
+                </SheetDescription>
+              </SheetHeader>
+              <div className="px-4 py-6 md:px-6">
+                <Link
+                  to="/diagnostic"
+                  className="system-button-text inline-flex items-center justify-center gap-2 rounded-[0.5rem] bg-copper px-6 py-4 text-graphite-deep"
+                >
+                  Demander un diagnostic similaire
+                  <ArrowRight className="size-4" />
+                </Link>
+              </div>
+            </SheetContent>
+          </Sheet>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function CaseCard({
+  tag,
+  title,
+  icon: Icon,
+  problem,
+  action,
+  result,
+  metrics,
+}: {
+  tag: string
+  title: string
+  icon: typeof Route
+  problem: string
+  action: string
+  result: string
+  metrics: readonly string[]
+}) {
+  return (
+    <article className="flex h-full flex-col rounded-[0.5rem] border border-mineral-dark bg-graphite-light p-6">
+      <div className="flex items-start justify-between gap-4">
+        <span className="font-mono text-xs uppercase tracking-[0.18em] text-copper">{tag}</span>
+        <span className="grid size-10 place-items-center rounded-[0.5rem] border border-copper/20 bg-copper/10 text-copper">
+          <Icon className="size-4" aria-hidden="true" />
+        </span>
+      </div>
+
+      <h3 className="mt-4 font-display text-2xl font-bold tracking-[-0.02em] text-ivory">
+        {title}
+      </h3>
+
+      <div className="mt-6 space-y-5">
+        <div>
+          <p className="font-mono text-[0.72rem] uppercase tracking-[0.16em] text-steel-light">
+            Probleme
+          </p>
+          <p className="mt-2 font-body text-sm leading-7 text-ivory-muted">{problem}</p>
+        </div>
+        <div>
+          <p className="font-mono text-[0.72rem] uppercase tracking-[0.16em] text-steel-light">
+            Action
+          </p>
+          <p className="mt-2 font-body text-sm leading-7 text-ivory-muted">{action}</p>
+        </div>
+        <div>
+          <p className="font-mono text-[0.72rem] uppercase tracking-[0.16em] text-steel-light">
+            Resultat
+          </p>
+          <p className="mt-2 font-body text-sm leading-7 text-ivory-soft">{result}</p>
+        </div>
+      </div>
+
+      <div className="mt-6 space-y-2">
+        {metrics.map((metric) => (
+          <div key={metric} className="flex items-start gap-3">
+            <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-copper" aria-hidden="true" />
+            <span className="font-body text-sm text-ivory-muted">{metric}</span>
+          </div>
+        ))}
+      </div>
+
+      <Link
+        to="/diagnostic"
+        className="mt-auto inline-flex items-center gap-2 pt-6 font-mono text-xs uppercase tracking-[0.16em] text-copper"
+      >
+        Demander un diagnostic
+        <ArrowUpRight className="size-4" />
+      </Link>
+    </article>
+  )
+}
+
 export function CasPage() {
+  const hero = pageHeroes.cas
+  const meta = pageMetaContent.cas
+  const cta = pageCtas.cas
+  const [activeMetricIndex, setActiveMetricIndex] = useState(0)
+
   return (
     <>
       <PageMeta
-        title="Cas d'études"
-        description="Exemples concrets d'interventions : architecture CRM, diagnostic de conversion, outils IA internes."
+        title={meta.title}
+        description={meta.description}
+        canonical={meta.canonical}
+        schema={[organizationSchema, ...meta.schema]}
       />
-      <section className="pt-40 pb-20 bg-graphite-deep">
+
+      <section className="bg-graphite-deep pb-18 pt-36 md:pb-20">
         <div className="mx-auto max-w-7xl px-6">
-          <ScrollReveal>
-            <div className="system-shell rounded-[0.5rem] px-6 py-8 md:px-8 md:py-9">
-              <SectionLabel label="Cas & démonstrations" />
-              <h1
-                className="mb-6 font-display font-extrabold text-ivory tracking-[-0.03em] leading-[1.05]"
-                style={{ fontSize: "clamp(2.5rem, 6vw, 5.5rem)" }}
-              >
-                La pensée système,
-                <br />
-                <span className="text-copper">rendue visible.</span>
-              </h1>
-              <p className="max-w-3xl font-body text-lg text-ivory-muted leading-[1.8]">
-                Ici, nous montrons comment un problème business se transforme en architecture lisible,
-                en livrables concrets et en décisions actionnables. Pas des promesses de méthode :
-                des systèmes expliqués.
-              </p>
-            </div>
-          </ScrollReveal>
-        </div>
-      </section>
-
-      <section className="py-20 bg-graphite-mid">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="system-shell system-shell-warm mb-12 rounded-[0.5rem] p-6">
-            <p className="mb-2 font-mono text-xs tracking-widest text-copper">
-              NOTE DE TRANSPARENCE
-            </p>
-            <p className="font-body text-sm leading-7 text-ivory-muted">
-              Ces démonstrations reprennent des logiques réellement utilisées dans nos interventions,
-              sans exposer de données client. L&apos;objectif est simple : rendre visible la méthode,
-              les choix d&apos;architecture et le niveau de rigueur attendu.
-            </p>
-          </div>
-
-          <ScrollReveal>
-            <div className="system-shell system-shell-warm rounded-[0.5rem] p-8 md:p-10">
-              <div className="grid gap-8 md:grid-cols-12">
-                <div className="md:col-span-5">
-                  <span className="mb-5 inline-flex font-mono text-xs tracking-[0.2em] text-steel-light">
-                    {FEATURED_CASE.tag}
-                  </span>
-                  <h2 className="mb-3 font-display text-3xl font-bold text-ivory tracking-[-0.02em]">
-                    {FEATURED_CASE.title}
-                  </h2>
-                  <p className="system-interface mb-4 text-ivory-muted">
-                    {FEATURED_CASE.subtitle}
+          <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
+            <div className="lg:col-span-7">
+              <ScrollReveal>
+                <div className="system-shell rounded-[0.5rem] px-6 py-7 md:px-8 md:py-8">
+                  <SectionLabel label={hero.eyebrow} />
+                  <h1
+                    className="font-display font-extrabold tracking-[-0.03em] text-ivory leading-[1.04]"
+                    style={{ fontSize: "clamp(2.4rem, 5.8vw, 4.9rem)" }}
+                  >
+                    {hero.title}
+                  </h1>
+                  <p className="mt-5 max-w-3xl font-body text-base leading-8 text-ivory-muted md:text-lg">
+                    {hero.description}
                   </p>
-                  <p className="mb-6 font-body text-sm leading-7 text-ivory-muted">
-                    {FEATURED_CASE.description}
-                  </p>
-
-                  <p className="mb-3 font-mono text-xs tracking-widest text-copper">
-                    LIVRABLES VISIBLES
-                  </p>
-                  <ul className="mb-8 flex flex-col gap-3">
-                    {FEATURED_CASE.outputs.map((output) => (
-                      <li key={output} className="flex items-start gap-3">
-                        <span className="mt-1 font-mono text-xs text-system-success">
-                          &#10003;
-                        </span>
-                        <span className="font-body text-sm text-ivory-soft">
-                          {output}
-                        </span>
+                  <ul className="mt-6 max-w-3xl space-y-3">
+                    {hero.bullets?.map((bullet) => (
+                      <li key={bullet} className="flex items-start gap-3">
+                        <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-copper" aria-hidden="true" />
+                        <span className="font-body text-sm leading-7 text-ivory-soft">{bullet}</span>
                       </li>
                     ))}
                   </ul>
-
-                  <Sheet>
-                    <SheetTrigger asChild>
-                      <button
-                        type="button"
-                        className="system-button-text btn-copper-glow inline-flex items-center gap-2 rounded-[0.5rem] px-7 py-4 transition-all duration-300 bg-copper text-graphite-deep"
-                      >
-                        Explorer le cas
-                        <ArrowUpRight className="size-3.5" />
-                      </button>
-                    </SheetTrigger>
-                    <SheetContent
-                      side="right"
-                      className="w-full overflow-y-auto border-mineral-dark bg-graphite-deep text-ivory sm:max-w-2xl"
+                  <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+                    <Link
+                      to={hero.primaryHref}
+                      className="system-button-text inline-flex items-center justify-center rounded-[0.5rem] bg-copper px-7 py-4 text-graphite-deep transition-all duration-300 hover:bg-copper-light"
                     >
-                      <SheetHeader className="border-b border-mineral-dark">
-                        <SheetTitle className="font-display text-2xl font-bold text-ivory">
-                          {FEATURED_CASE.title}
-                        </SheetTitle>
-                        <SheetDescription className="font-body text-sm leading-7 text-ivory-muted">
-                          {FEATURED_CASE.subtitle}
-                        </SheetDescription>
-                      </SheetHeader>
-                      <div className="flex flex-col gap-6 px-4 py-6 md:px-6">
-                        {FEATURED_CASE.sheetSections.map((section) => (
-                          <div
-                            key={section.title}
-                            className="border border-mineral-dark bg-graphite-mid p-5"
-                          >
-                            <h3 className="mb-2 font-display text-lg font-semibold text-ivory">
-                              {section.title}
-                            </h3>
-                            <p className="font-body text-sm leading-7 text-ivory-muted">
-                              {section.text}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                      <SheetFooter className="border-t border-mineral-dark">
-                        <Link
-                          to="/diagnostic"
-                          className="system-button-text btn-copper-glow inline-flex items-center justify-center gap-2 rounded-[0.5rem] px-6 py-4 bg-copper text-graphite-deep"
-                        >
-                          Demander un diagnostic similaire
-                          <ArrowRight className="size-3.5" />
-                        </Link>
-                      </SheetFooter>
-                    </SheetContent>
-                  </Sheet>
-                </div>
-
-                <div className="md:col-span-7">
-                  <div className="system-panel mb-6 rounded-[0.5rem] p-5">
-                    <p className="mb-4 font-mono text-xs tracking-widest text-copper">
-                      WORKFLOW VISIBLE
-                    </p>
-                    <AutomationWorkflow />
+                      {hero.primaryLabel}
+                    </Link>
+                    <Link
+                      to={hero.secondaryHref}
+                      className="system-button-text inline-flex items-center justify-center rounded-[0.5rem] border border-mineral-warm px-7 py-4 text-ivory-muted transition-all duration-300 hover:border-copper hover:text-copper"
+                    >
+                      {hero.secondaryLabel}
+                    </Link>
                   </div>
+                </div>
+              </ScrollReveal>
+            </div>
 
-                  <div className="grid gap-4 md:grid-cols-3">
-                    {FEATURED_CASE.beforeAfter.map((metric) => (
-                      <div key={metric.label} className="system-panel rounded-[0.5rem] p-5">
-                        <p className="mb-3 font-mono text-xs tracking-[0.18em] text-ivory-muted">
-                          {metric.label.toUpperCase()}
+            <div className="lg:col-span-5">
+              <ScrollReveal delay={90}>
+                <div className="system-shell system-shell-warm rounded-[0.5rem] p-6">
+                  <p className="font-mono text-xs uppercase tracking-[0.18em] text-copper">
+                    Resultats globaux
+                  </p>
+                  <div className="mt-5 grid gap-4 md:grid-cols-3 lg:grid-cols-1">
+                    {featuredCase.metrics.map((metric, index) => (
+                      <button
+                        key={metric.label}
+                        type="button"
+                        onClick={() => setActiveMetricIndex(index)}
+                        className={`rounded-[0.5rem] border px-4 py-4 text-left transition-colors duration-200 ${
+                          activeMetricIndex === index
+                            ? "border-copper/40 bg-copper/8"
+                            : "border-mineral-dark bg-graphite-light"
+                        }`}
+                      >
+                        <p className="font-display text-3xl font-bold tracking-[-0.04em] text-copper">
+                          {metric.value}
                         </p>
-                        <p className="mb-2 font-body text-xs text-ivory-muted">
-                          Avant : {metric.before}
+                        <p className="mt-2 font-mono text-[0.72rem] uppercase tracking-[0.16em] text-steel-light">
+                          {metric.label}
                         </p>
-                        <p className="font-body text-sm text-ivory-soft">
-                          Après : {metric.after}
+                        <p className="mt-2 font-body text-xs leading-6 text-ivory-muted">
+                          {metric.context}
                         </p>
-                      </div>
+                      </button>
                     ))}
                   </div>
                 </div>
-              </div>
+              </ScrollReveal>
             </div>
-          </ScrollReveal>
-
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
-            {DEMO_CASES.map((cas, i) => {
-              const Icon = cas.icon
-
-              return (
-                <ScrollReveal key={cas.id} delay={i * 80}>
-                  <div className="system-panel flex h-full flex-col rounded-[0.5rem] p-8">
-                    <div className="mb-6 flex items-start justify-between gap-4">
-                      <span className="inline-flex font-mono text-xs tracking-[0.2em] text-steel-light">
-                        {cas.tag}
-                      </span>
-                      <Icon className="size-4 text-copper" />
-                    </div>
-
-                    <h2 className="mb-2 font-display text-xl font-bold text-ivory tracking-[-0.01em]">
-                      {cas.title}
-                    </h2>
-                    <p className="system-interface mb-4 text-ivory-muted">
-                      {cas.subtitle}
-                    </p>
-                    <p className="mb-6 font-body text-sm leading-7 text-ivory-muted">
-                      {cas.description}
-                    </p>
-
-                    <Accordion type="single" collapsible className="mb-6 w-full">
-                      {cas.accordion.map((item, index) => (
-                        <AccordionItem
-                          key={item.title}
-                          value={`${cas.id}-${index}`}
-                          className="border-mineral-dark"
-                        >
-                          <AccordionTrigger className="font-body text-sm text-ivory hover:no-underline">
-                            {item.title}
-                          </AccordionTrigger>
-                          <AccordionContent className="font-body text-sm leading-7 text-ivory-muted">
-                            {item.content}
-                          </AccordionContent>
-                        </AccordionItem>
-                      ))}
-                    </Accordion>
-
-                    <div className="mt-auto">
-                      <Sheet>
-                        <SheetTrigger asChild>
-                          <button
-                            type="button"
-                            className="system-interface inline-flex items-center gap-2 transition-colors duration-200 text-copper"
-                          >
-                            Explorer le cas
-                            <ArrowUpRight className="size-3.5" />
-                          </button>
-                        </SheetTrigger>
-                        <SheetContent
-                          side="right"
-                          className="w-full overflow-y-auto border-mineral-dark bg-graphite-deep text-ivory sm:max-w-xl"
-                        >
-                          <SheetHeader className="border-b border-mineral-dark">
-                            <SheetTitle className="font-display text-2xl font-bold text-ivory">
-                              {cas.title}
-                            </SheetTitle>
-                            <SheetDescription className="font-body text-sm leading-7 text-ivory-muted">
-                              {cas.subtitle}
-                            </SheetDescription>
-                          </SheetHeader>
-                          <div className="flex flex-col gap-5 px-4 py-6 md:px-6">
-                            {cas.sheetSections.map((section) => (
-                              <div
-                                key={section.title}
-                                className="border border-mineral-dark bg-graphite-mid p-5"
-                              >
-                                <h3 className="mb-2 font-display text-lg font-semibold text-ivory">
-                                  {section.title}
-                                </h3>
-                                <p className="font-body text-sm leading-7 text-ivory-muted">
-                                  {section.text}
-                                </p>
-                              </div>
-                            ))}
-                          </div>
-                          <SheetFooter className="border-t border-mineral-dark">
-                            <Link
-                              to="/diagnostic"
-                              className="system-button-text inline-flex items-center justify-center gap-2 rounded-[0.5rem] px-6 py-4 bg-copper text-graphite-deep"
-                            >
-                              Parler de votre cas
-                              <ArrowRight className="size-3.5" />
-                            </Link>
-                          </SheetFooter>
-                        </SheetContent>
-                      </Sheet>
-                    </div>
-                  </div>
-                </ScrollReveal>
-              )
-            })}
           </div>
         </div>
       </section>
 
-      <section className="py-20 bg-graphite-deep">
+      <SocialProofSection
+        route="cas"
+        variant="logos+metrics+testimonials"
+        title="Des preuves posees avant les cas."
+        intro="References, recommandations publiques et chiffres contextualises arrivent avant les demonstrations pour installer un cadre de confiance solide."
+      />
+
+      <section className="bg-graphite-mid py-10 md:py-12">
         <div className="mx-auto max-w-7xl px-6">
           <ScrollReveal>
-            <div className="max-w-3xl">
-              <p className="mb-4 font-mono text-xs tracking-widest text-copper">
-                SI VOTRE CAS RESSEMBLE A CA
+            <div className="rounded-[0.5rem] border border-mineral-dark bg-graphite-light px-5 py-5">
+              <p className="font-mono text-xs uppercase tracking-[0.18em] text-copper">
+                Note de transparence
               </p>
-              <h2 className="mb-4 font-display text-2xl font-bold text-ivory tracking-[-0.02em]">
-                Nous pouvons le rendre visible avec vous.
-              </h2>
-              <p className="font-body text-sm leading-7 text-ivory-muted">
-                Nous travaillons souvent à partir d&apos;un problème flou : trafic présent mais conversion
-                faible, équipes qui bricolent entre plusieurs outils, ou usage IA déjà lancé sans
-                système de contrôle. Le diagnostic sert à mettre ce flou en carte, en priorités et
-                en trajectoire de mise en ordre.
+              <p className="mt-3 max-w-4xl font-body text-sm leading-7 text-ivory-muted">
+                Les noms clients, donnees sensibles et volumes exacts ne sont pas exposes ici. Les
+                cas montrent une logique d'intervention reelle, les types de livrables attendus et
+                des resultats contextualises quand ils sont suffisamment defendables.
               </p>
             </div>
           </ScrollReveal>
+        </div>
+      </section>
+
+      <section className="bg-graphite-mid py-12 md:py-14">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="grid gap-8 lg:grid-cols-12">
+            <div className="lg:col-span-5">
+              <ScrollReveal>
+                <div className="rounded-[0.5rem] border border-copper/20 bg-gradient-to-br from-copper/6 to-graphite-light px-6 py-6">
+                  <p className="font-mono text-xs uppercase tracking-[0.18em] text-copper">
+                    {featuredCase.eyebrow}
+                  </p>
+                  <h2 className="mt-4 font-display text-3xl font-bold tracking-[-0.03em] text-ivory">
+                    {featuredCase.title}
+                  </h2>
+                  <p className="mt-3 font-body text-sm leading-7 text-ivory-soft">
+                    {featuredCase.subtitle}
+                  </p>
+
+                  <div className="mt-6 space-y-5">
+                    <div>
+                      <p className="font-mono text-[0.72rem] uppercase tracking-[0.16em] text-steel-light">
+                        Probleme
+                      </p>
+                      <p className="mt-2 font-body text-sm leading-7 text-ivory-muted">
+                        {featuredCase.problem}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="font-mono text-[0.72rem] uppercase tracking-[0.16em] text-steel-light">
+                        Action
+                      </p>
+                      <p className="mt-2 font-body text-sm leading-7 text-ivory-muted">
+                        {featuredCase.action}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="font-mono text-[0.72rem] uppercase tracking-[0.16em] text-steel-light">
+                        Resultat
+                      </p>
+                      <p className="mt-2 font-body text-sm leading-7 text-ivory-soft">
+                        {featuredCase.result}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+                    {featuredCase.metrics.map((metric) => (
+                      <div key={metric.label} className="rounded-[0.5rem] border border-mineral-dark bg-graphite-mid px-4 py-4">
+                        <p className="font-display text-2xl font-bold tracking-[-0.03em] text-copper">
+                          {metric.value}
+                        </p>
+                        <p className="mt-2 font-mono text-[0.72rem] uppercase tracking-[0.16em] text-steel-light">
+                          {metric.label}
+                        </p>
+                        <p className="mt-2 font-body text-xs leading-6 text-ivory-muted">
+                          {metric.context}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  <Link
+                    to="/diagnostic"
+                    className="system-button-text mt-7 inline-flex items-center justify-center gap-2 rounded-[0.5rem] bg-copper px-7 py-4 text-graphite-deep transition-all duration-300 hover:bg-copper-light"
+                  >
+                    Demander un diagnostic similaire
+                    <ArrowRight className="size-4" />
+                  </Link>
+                </div>
+              </ScrollReveal>
+            </div>
+
+            <div className="lg:col-span-7">
+              <ScrollReveal delay={90}>
+                <WorkflowExplorer />
+              </ScrollReveal>
+            </div>
+          </div>
         </div>
       </section>
 
       <CtaBanner
-        title="Votre cas mérite une lecture exploitable."
-        subtitle="Un diagnostic de 30 minutes permet de distinguer ce qui relève d'une correction ciblée, d'une architecture à revoir ou d'un vrai chantier produit."
-        primaryLabel="Recevoir un diagnostic"
+        title="Vous voyez le type de lecture. Voyons maintenant votre cas."
+        subtitle="Le diagnostic gratuit sert a qualifier la bonne profondeur: correction rapide, architecture plus large ou chantier produit plus ambitieux."
+        primaryLabel="Obtenir mon diagnostic gratuit"
         primaryHref="/diagnostic"
+        primarySubtext="30 minutes, sans engagement"
         secondaryLabel="Voir les services"
         secondaryHref="/services"
+      />
+
+      <section className="bg-graphite-deep py-18 md:py-20">
+        <div className="mx-auto max-w-7xl px-6">
+          <ScrollReveal>
+            <div className="max-w-3xl">
+              <p className="mb-4 font-mono text-xs uppercase tracking-[0.18em] text-copper">
+                Autres cas types
+              </p>
+              <h2 className="font-display text-3xl font-bold tracking-[-0.03em] text-ivory">
+                Meme structure, autres contextes, meme exigence de clarte.
+              </h2>
+            </div>
+          </ScrollReveal>
+
+          <div className="mt-8 grid gap-4 xl:grid-cols-3">
+            {secondaryCases.map((item, index) => (
+              <ScrollReveal key={item.id} delay={index * 60}>
+                <CaseCard {...item} />
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <CtaBanner
+        title={cta.title}
+        subtitle={cta.subtitle}
+        primaryLabel={cta.primaryLabel}
+        primaryHref={cta.primaryHref}
+        primarySubtext={cta.primarySubtext}
+        secondaryLabel={cta.secondaryLabel}
+        secondaryHref={cta.secondaryHref}
       />
     </>
   )

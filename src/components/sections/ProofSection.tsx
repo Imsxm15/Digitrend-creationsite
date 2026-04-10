@@ -1,59 +1,50 @@
 import { ScrollReveal } from "@/components/common/ScrollReveal"
 import { SectionLabel } from "@/components/common/SectionLabel"
 
-const EVIDENCE_BLOCKS = [
+const beforeAfter = [
   {
-    eyebrow: "Diagnostic",
-    value: "4–6j",
-    title: "pour rendre les frictions visibles",
-    detail:
-      "Cartographie des blocages, lecture des flux existants et priorisation entre quick wins, chantiers et dette silencieuse.",
-    toneClass: "text-copper",
+    label: "Lecture du probleme",
+    before: "Des symptomes disperses et beaucoup d'intuition.",
+    after: "Une carte claire des frictions et de leur impact.",
   },
   {
-    eyebrow: "Architecture Revenue",
-    value: "10–14j",
-    title: "pour réaligner acquisition, conversion et CRM",
-    detail:
-      "Audit, architecture cible, points de friction prioritaires et plan de déploiement par sprint plutôt qu'une promesse vague de refonte.",
-    toneClass: "text-steel-light",
+    label: "Priorisation",
+    before: "Tout semble urgent, donc rien ne l'est vraiment.",
+    after: "3 priorites visibles, ordonnees et defendables.",
   },
   {
-    eyebrow: "Pilotage",
-    value: "1 synthèse",
-    title: "pour repartir avec une suite claire",
-    detail:
-      "Un document court, exploitable et partageable pour que la prochaine décision soit plus simple à prendre.",
-    toneClass: "text-system-success",
+    label: "Execution",
+    before: "Des outils et des idees sans sequence commune.",
+    after: "Un systeme cible, des quick wins et un plan realiste.",
   },
 ] as const
 
-const BEFORE_AFTER = [
+const deliveryOutputs = [
   {
-    before: "Des problèmes décrits à l'oral, sans ordre ni niveau d'impact",
-    after: "Un système lu par flux, avec priorités nommées et séquence d'action",
+    title: "Cartographie des frictions",
+    detail: "Outil, flux, point de rupture et manque de signal sur le meme plan.",
   },
   {
-    before: "Des outils présents mais pas de lecture commune de ce qu'ils produisent",
-    after: "Une architecture cible, des responsables identifiés et des signaux suivis",
+    title: "Priorites et quick wins",
+    detail: "Ce qui peut etre corrige vite, ce qui merite une architecture et ce qu'il faut laisser hors perimetre.",
   },
   {
-    before: "Des idées d'IA ou d'automatisation sans garde-fous ni rôle clair",
-    after: "Des usages cadrés, documentés et reliés à un problème métier réel",
+    title: "Architecture cible",
+    detail: "Tunnel, CRM, automatisation et pilotage reconnectes autour d'une logique commune.",
   },
   {
-    before: "Une impression de complexité diffuse qui fatigue les équipes",
-    after: "Un problème cadré, un ordre de traitement et des arbitrages assumés",
+    title: "Suite exploitable",
+    detail: "Un document court qui aide a arbitrer, deployer et mesurer la prochaine etape.",
   },
 ] as const
 
 export function ProofSection() {
   return (
     <section className="py-24 md:py-28">
-      <div className="mx-auto max-w-5xl px-4 md:px-6">
+      <div className="mx-auto max-w-6xl px-4 md:px-6">
         <ScrollReveal>
           <div className="mx-auto mb-12 max-w-3xl text-center">
-            <SectionLabel number="04" label="Preuves directes" />
+            <SectionLabel number="04" label="Avant / apres" />
             <h2
               className="mb-5 font-display font-bold text-ivory"
               style={{
@@ -62,75 +53,59 @@ export function ProofSection() {
                 letterSpacing: "-0.03em",
               }}
             >
-              La preuve tient dans le niveau de sortie.
+              Une lecture qui se comprend vite et s'execute mieux.
             </h2>
             <p className="font-body text-sm leading-7 text-ivory-muted">
-              Pas de score magique ni de promesse abstraite. Ce qui compte ici, c'est la qualité
-              du cadrage, la clarté des livrables et la facilité avec laquelle une équipe peut
-              décider quoi faire ensuite.
+              Le vrai gain n'est pas un mot plus ambitieux. C'est la capacite a passer d'un
+              systeme flou a des priorites, une architecture et une prochaine etape claires.
             </p>
           </div>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-          {EVIDENCE_BLOCKS.map((block, index) => (
-            <ScrollReveal key={block.title} delay={index * 70}>
-              <article className="system-panel rounded-[0.5rem] px-6 py-6">
-                <p className="mb-5 font-mono text-xs tracking-[0.18em] text-steel-light">
-                  {block.eyebrow.toUpperCase()}
-                </p>
-                <div
-                  className={`mb-3 font-display text-[clamp(2.4rem,4vw,3.3rem)] font-bold leading-none tracking-[-0.04em] ${block.toneClass}`}
-                >
-                  {block.value}
+        <ScrollReveal delay={120}>
+          <div className="overflow-x-auto rounded-[0.5rem] border border-mineral-dark">
+            <div className="grid grid-cols-[1.1fr_1fr_1fr] bg-graphite-mid">
+              <div className="border-b border-r border-mineral-dark px-4 py-4 font-mono text-[0.72rem] uppercase tracking-[0.18em] text-ivory-muted">
+                Sujet
+              </div>
+              <div className="border-b border-r border-mineral-dark px-4 py-4 font-mono text-[0.72rem] uppercase tracking-[0.18em] text-system-error">
+                Avant
+              </div>
+              <div className="border-b border-mineral-dark px-4 py-4 font-mono text-[0.72rem] uppercase tracking-[0.18em] text-system-success">
+                Apres
+              </div>
+
+              {beforeAfter.map((item) => (
+                <div key={item.label} className="contents">
+                  <div className="border-r border-t border-mineral-dark bg-graphite-light px-4 py-4 font-display text-base font-semibold text-ivory">
+                    {item.label}
+                  </div>
+                  <div className="border-r border-t border-mineral-dark bg-graphite-light px-4 py-4 font-body text-sm leading-7 text-ivory-muted">
+                    {item.before}
+                  </div>
+                  <div className="border-t border-mineral-dark bg-graphite-light px-4 py-4 font-body text-sm leading-7 text-ivory-soft">
+                    {item.after}
+                  </div>
                 </div>
-                <p className="mb-3 font-display text-lg font-semibold tracking-[-0.02em] text-ivory">
-                  {block.title}
+              ))}
+            </div>
+          </div>
+        </ScrollReveal>
+
+        <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {deliveryOutputs.map((output, index) => (
+            <ScrollReveal key={output.title} delay={200 + index * 60}>
+              <article className="system-panel rounded-[0.5rem] px-5 py-5">
+                <p className="font-display text-lg font-semibold tracking-[-0.02em] text-ivory">
+                  {output.title}
                 </p>
-                <p className="font-body text-sm leading-7 text-ivory-muted">{block.detail}</p>
+                <p className="mt-3 font-body text-sm leading-7 text-ivory-muted">
+                  {output.detail}
+                </p>
               </article>
             </ScrollReveal>
           ))}
         </div>
-
-        <ScrollReveal delay={160}>
-          <div className="system-shell mt-8 rounded-[0.5rem] px-6 py-6 md:px-7">
-            <p className="mb-6 font-mono text-xs tracking-[0.18em] text-copper">AVANT → APRÈS</p>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div className="system-panel rounded-[0.5rem] px-5 py-5">
-                <p className="mb-5 font-mono text-xs tracking-[0.18em] text-system-error">
-                  AVANT L'INTERVENTION
-                </p>
-                <ul className="space-y-4">
-                  {BEFORE_AFTER.map((item) => (
-                    <li key={item.before} className="flex items-start gap-3">
-                      <span className="mt-1 font-mono text-xs text-system-error">&#10007;</span>
-                      <span className="font-body text-sm leading-7 text-ivory-muted">
-                        {item.before}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="system-panel rounded-[0.5rem] px-5 py-5">
-                <p className="mb-5 font-mono text-xs tracking-[0.18em] text-system-success">
-                  APRÈS LE CADRAGE
-                </p>
-                <ul className="space-y-4">
-                  {BEFORE_AFTER.map((item) => (
-                    <li key={item.after} className="flex items-start gap-3">
-                      <span className="mt-1 font-mono text-xs text-system-success">&#10003;</span>
-                      <span className="font-body text-sm leading-7 text-ivory-soft">
-                        {item.after}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </ScrollReveal>
       </div>
     </section>
   )

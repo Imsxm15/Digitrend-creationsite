@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom"
-import { ArrowUpRight, Globe } from "lucide-react"
 import { NAV_ITEMS } from "@/data/navigation"
 import { PUBLIC_PROFILE } from "@/data/profile"
 
@@ -40,28 +39,9 @@ export function Footer() {
                 <span className="system-chip text-ivory-muted">
                   SIREN {PUBLIC_PROFILE.siren}
                 </span>
-              </div>
-
-              <div className="mt-6 flex flex-wrap gap-3">
-                <a
-                  href={PUBLIC_PROFILE.portfolioUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-[0.5rem] border border-mineral-dark px-3 py-2 system-interface text-ivory-muted transition-colors duration-200 hover:text-copper"
-                >
-                  <Globe className="size-3.5" />
-                  Site personnel
-                  <ArrowUpRight className="size-3.5" />
-                </a>
-                <a
-                  href={PUBLIC_PROFILE.linkedinUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-[0.5rem] border border-mineral-dark px-3 py-2 system-interface text-ivory-muted transition-colors duration-200 hover:text-copper"
-                >
-                  LinkedIn
-                  <ArrowUpRight className="size-3.5" />
-                </a>
+                <span className="system-chip text-copper">
+                  Réponse sous 24h
+                </span>
               </div>
             </div>
 
@@ -94,7 +74,7 @@ export function Footer() {
               </p>
               <ul className="space-y-3">
                 {[
-                  { label: "Diagnostic Frictions", href: "/services/diagnostic" },
+                  { label: "Diagnostic Frictions", href: "/diagnostic" },
                   { label: "Architecture Revenue", href: "/services/architecture-revenue" },
                   { label: "AI Product Ops", href: "/services/ai-product-ops" },
                   { label: "Pilotage Fractionnel", href: "/services/fractional" },
@@ -119,6 +99,12 @@ export function Footer() {
               © {year} Digitrend Creation · Samuel Huys · France · SIREN {PUBLIC_PROFILE.siren}
             </p>
             <div className="flex items-center gap-6">
+              <a
+                href="mailto:samuel@digitrend.fr"
+                className="font-body text-sm text-copper transition-colors duration-200 hover:text-copper-light"
+              >
+                samuel@digitrend.fr
+              </a>
               <Link to="/mentions-legales" className="font-body text-sm text-ivory-muted transition-colors duration-200 hover:text-foreground">
                 Mentions légales
               </Link>

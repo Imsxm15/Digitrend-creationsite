@@ -1,12 +1,36 @@
 import { Link } from "react-router-dom"
+import {
+  Bot,
+  ChartNoAxesCombined,
+  Search,
+  Workflow,
+} from "lucide-react"
 import { OFFERS } from "@/data/offers"
 import { ScrollReveal } from "@/components/common/ScrollReveal"
 import { SectionLabel } from "@/components/common/SectionLabel"
-import { Badge } from "@/components/ui/badge"
 
-const OVERVIEW_OFFERS = [...OFFERS].sort((a, b) => Number(b.featured) - Number(a.featured))
+const overviewOffers = [...OFFERS].sort((a, b) => Number(b.featured) - Number(a.featured))
 
-export function OffersOverview() {
+const iconMap = {
+  diagnostic: Search,
+  "architecture-revenue": Workflow,
+  "ai-ops": Bot,
+  fractional: ChartNoAxesCombined,
+} as const
+
+interface OffersOverviewProps {
+  label?: string
+  title?: string
+  intro?: string
+  showViewAllButton?: boolean
+}
+
+export function OffersOverview({
+  label = "Modules d'intervention",
+  title = "Quatre formats. Un choix lisible, vite.",
+  intro = "Chaque service correspond a un niveau de profondeur precis pour cadrer, architecturer, automatiser ou piloter.",
+  showViewAllButton = true,
+}: OffersOverviewProps) {
   return (
     <section className="py-24 md:py-28">
       <div className="mx-auto max-w-[92rem] px-4 md:px-6">
@@ -14,115 +38,101 @@ export function OffersOverview() {
           <div className="md:col-span-4">
             <ScrollReveal>
               <div className="system-shell rounded-[0.5rem] px-6 py-7 md:px-7">
-                <SectionLabel number="02" label="Modules d'intervention" />
+                <SectionLabel number="02" label={label} />
                 <h2
                   className="mb-5 font-display font-bold text-ivory leading-[1.06] tracking-[-0.03em]"
                   style={{ fontSize: "clamp(1.9rem, 3.3vw, 2.8rem)" }}
                 >
-                  Quatre formats.
-                  <br />
-                  <span className="text-copper">Un syst&egrave;me de d&eacute;cision simple.</span>
+                  {title}
                 </h2>
-                <p className="font-body text-sm leading-7 text-ivory-muted">
-                  Chaque offre joue un r&ocirc;le pr&eacute;cis dans la mise en ordre : cadrer, architecturer,
-                  automatiser ou piloter. Pas de prestation fourre-tout, pas de flou sur le format.
-                </p>
+                <p className="font-body text-sm leading-7 text-ivory-muted">{intro}</p>
               </div>
             </ScrollReveal>
           </div>
 
           <div className="md:col-span-8">
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-              {OVERVIEW_OFFERS.map((offer, index) => (
-                <ScrollReveal key={offer.id} delay={index * 70}>
-                  <Link
-                    to={`/services/${offer.id === "diagnostic" ? "diagnostic" : offer.id}`}
-                    className={offer.featured ? "group block md:col-span-2" : "group block"}
-                    data-cursor-hover
-                  >
-                    <article
-                      className={`system-panel system-panel-hover h-full rounded-[0.5rem] px-6 py-6 ${offer.featured ? "system-shell-warm md:px-8 md:py-7" : ""}`}
-                    >
-                      <div className="mb-5 flex items-start justify-between gap-4">
-                        <span className="system-chip text-copper">
-                          {offer.number}
-                        </span>
-                        <div className="flex flex-wrap items-center justify-end gap-2">
-                          {offer.featured && (
-                            <Badge className="border-none bg-copper/15 font-mono text-xs tracking-[0.2em] text-copper">
-                              OFFRE SIGNATURE
-                            </Badge>
-                          )}
-                          {offer.tag && (
-                            <Badge className="border-none bg-steel/15 font-mono text-xs tracking-[0.18em] text-steel-light">
-                              {offer.tag}
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
+            <div className="-mx-4 overflow-x-auto px-4 pb-2 md:mx-0 md:px-0 md:pb-0">
+              <div className="grid auto-cols-[88%] grid-flow-col gap-5 md:grid-flow-row md:grid-cols-2 md:auto-cols-auto">
+                {overviewOffers.map((offer, index) => {
+                  const Icon = iconMap[offer.id as keyof typeof iconMap]
 
-                      <div className={offer.featured ? "grid gap-6 md:grid-cols-12" : ""}>
-                        <div className={offer.featured ? "md:col-span-8" : ""}>
-                          <h3
-                            className={`font-display font-bold text-ivory tracking-[-0.02em] ${offer.featured ? "mb-3 text-3xl" : "mb-2 text-xl"}`}
-                          >
-                            {offer.title}
-                          </h3>
-                          <p className="mb-4 font-body text-sm text-ivory-soft">
-                            {offer.subtitle}
-                          </p>
-                          <p className="font-body text-sm leading-7 text-ivory-muted">
-                            {offer.description}
-                          </p>
-                        </div>
-
-                        <div className={offer.featured ? "md:col-span-4 md:flex md:flex-col md:justify-between" : ""}>
-                          {offer.featured && (
-                            <div className="mb-5 rounded-[0.5rem] border border-copper/20 px-4 py-4 md:mb-0">
-                              <p className="mb-2 font-mono text-xs tracking-[0.18em] text-steel-light">
-                                QUAND L&apos;ACTIVER
+                  return (
+                    <ScrollReveal key={offer.id} delay={index * 70}>
+                      <article
+                        className={`flex h-full snap-start flex-col rounded-[0.5rem] border px-6 py-6 ${
+                          offer.featured
+                            ? "border-copper/30 bg-gradient-to-br from-copper/6 to-graphite-light"
+                            : "border-mineral-dark bg-graphite-light"
+                        }`}
+                      >
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex items-center gap-3">
+                            <span className="grid size-11 place-items-center rounded-[0.5rem] border border-copper/20 bg-copper/10 text-copper">
+                              <Icon className="size-5" aria-hidden="true" />
+                            </span>
+                            <div>
+                              <p className="font-mono text-xs uppercase tracking-[0.16em] text-copper">
+                                {offer.number}
+                                {offer.tag ? ` · ${offer.tag}` : ""}
                               </p>
-                              <p className="font-body text-sm leading-7 text-ivory-soft">
-                                D&egrave;s que le revenu, les outils et les &eacute;quipes doivent enfin fonctionner comme un flux unique.
-                              </p>
+                              <h3 className="mt-2 font-display text-2xl font-bold tracking-[-0.02em] text-ivory">
+                                {offer.title}
+                              </h3>
                             </div>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="my-5 system-divider-soft" />
-
-                      <div className="flex flex-wrap items-center justify-between gap-4">
-                        <div className="flex flex-wrap items-center gap-3">
-                          <span className="system-chip text-steel-light">
+                          </div>
+                          <span className="rounded-[0.5rem] border border-mineral-dark px-3 py-2 font-mono text-[0.72rem] uppercase tracking-[0.16em] text-steel-light">
                             {offer.duration}
                           </span>
-                          <Badge className="border-none bg-steel/15 font-mono text-xs tracking-[0.16em] text-steel-light">
-                            {offer.budgetSignal}
-                          </Badge>
                         </div>
-                        <span className="system-interface text-copper transition-transform duration-200 group-hover:translate-x-1">
-                          {offer.cta} &rarr;
-                        </span>
-                      </div>
-                    </article>
-                  </Link>
-                </ScrollReveal>
-              ))}
+
+                        <p className="mt-4 font-body text-sm leading-7 text-ivory-soft">
+                          {offer.subtitle}
+                        </p>
+                        <p className="mt-4 font-body text-sm leading-7 text-ivory-muted">
+                          {offer.persona}
+                        </p>
+
+                        <ul className="mt-5 space-y-2">
+                          {offer.benefits.map((benefit) => (
+                            <li key={benefit} className="flex items-start gap-3">
+                              <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-copper" aria-hidden="true" />
+                              <span className="font-body text-sm text-ivory-muted">{benefit}</span>
+                            </li>
+                          ))}
+                        </ul>
+
+                        <div className="mt-auto pt-6">
+                          <div className="mb-4 flex flex-wrap items-center gap-3">
+                            <span className="system-chip text-steel-light">{offer.budgetSignal}</span>
+                          </div>
+                          <Link
+                            to={offer.ctaHref}
+                            className="system-button-text inline-flex items-center justify-center rounded-[0.5rem] bg-copper px-6 py-3 text-graphite-deep transition-all duration-300 hover:bg-copper-light"
+                          >
+                            {offer.cta}
+                          </Link>
+                        </div>
+                      </article>
+                    </ScrollReveal>
+                  )
+                })}
+              </div>
             </div>
           </div>
         </div>
 
-        <ScrollReveal delay={180}>
-          <div className="mt-10 flex justify-center">
-            <Link
-              to="/services"
-              className="system-button-text inline-flex items-center rounded-[0.5rem] border border-mineral-warm px-8 py-4 text-ivory-muted transition-all duration-300 hover:border-copper hover:text-copper"
-            >
-              Voir tous les services
-            </Link>
-          </div>
-        </ScrollReveal>
+        {showViewAllButton && (
+          <ScrollReveal delay={180}>
+            <div className="mt-10 flex justify-center">
+              <Link
+                to="/services"
+                className="system-button-text inline-flex items-center rounded-[0.5rem] border border-mineral-warm px-8 py-4 text-ivory-muted transition-all duration-300 hover:border-copper hover:text-copper"
+              >
+                Voir tous les services
+              </Link>
+            </div>
+          </ScrollReveal>
+        )}
       </div>
     </section>
   )

@@ -4,32 +4,51 @@ import { FrictionsSection } from "@/components/sections/FrictionsSection"
 import { OffersOverview } from "@/components/sections/OffersOverview"
 import { MethodSection } from "@/components/sections/MethodSection"
 import { ProofSection } from "@/components/sections/ProofSection"
-import { PositioningSection } from "@/components/sections/PositioningSection"
 import { CtaBanner } from "@/components/sections/CtaBanner"
+import { SocialProofSection } from "@/components/common/SocialProofSection"
+import { organizationSchema, pageMetaContent } from "@/data/pageMeta"
+import { pageCtas } from "@/data/pageCopy"
 
 export function HomePage() {
+  const meta = pageMetaContent.home
+  const cta = pageCtas.home
+
   return (
     <>
       <PageMeta
-        title="Accueil"
-        description="Digitrend Creation structure, automatise et optimise les systèmes digitaux pour des résultats mesurables."
+        title={meta.title}
+        description={meta.description}
+        canonical={meta.canonical}
+        twitterTitle={meta.twitterTitle}
+        twitterDescription={meta.twitterDescription}
+        schema={[organizationSchema, ...meta.schema]}
       />
-      {/* --- Hero + Problem --- */}
       <HeroSection />
+
+      <SocialProofSection
+        route="home"
+        variant="logos+metrics+testimonials"
+        title="Des signaux concrets avant de vous demander de nous croire."
+        intro="Logos, recommandations publiques et metriques contextualisees: ce chantier vise la clarte commerciale, pas l'effet vitrine."
+        showFounder
+      />
+
       <FrictionsSection />
-
-      <div className="section-divider" />
-
-      {/* --- Solution + Method --- */}
       <OffersOverview />
-      <MethodSection />
 
       <div className="section-divider" />
 
-      {/* --- Trust + Positioning + CTA --- */}
+      <MethodSection />
       <ProofSection />
-      <PositioningSection />
-      <CtaBanner />
+      <CtaBanner
+        title={cta.title}
+        subtitle={cta.subtitle}
+        primaryLabel={cta.primaryLabel}
+        primaryHref={cta.primaryHref}
+        primarySubtext={cta.primarySubtext}
+        secondaryLabel={cta.secondaryLabel}
+        secondaryHref={cta.secondaryHref}
+      />
     </>
   )
 }

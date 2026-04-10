@@ -448,6 +448,13 @@ html { scroll-behavior: smooth; }
   background: var(--graphite-light);
 }
 
+@media (max-width: 767px) {
+  .scroll-to-top {
+    bottom: 5.9rem;
+    right: 1rem;
+  }
+}
+
 /* Loading skeleton */
 .skeleton-page {
   display: flex;
