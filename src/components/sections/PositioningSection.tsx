@@ -31,7 +31,7 @@ export function PositioningSection() {
               <span className="text-copper">Designer de systèmes business.</span>
             </h2>
             <p className="mb-6 font-body text-sm leading-7 text-ivory-muted">
-              Notre valeur n&apos;est pas une addition de compétences. Elle est dans la capacité à relier
+              Ma valeur n&apos;est pas une addition de compétences. Elle est dans la capacité à relier
               stratégie, conversion, IA appliquée, automatisation, données et exécution jusqu&apos;à un
               système mesurable.
             </p>
@@ -40,7 +40,7 @@ export function PositioningSection() {
                 PRINCIPE DE LECTURE
               </p>
               <p className="font-body text-sm leading-7 text-ivory-soft">
-                Nous ne construisons pas des pages isolées. Nous construisons des systèmes qui produisent,
+                Je ne construis pas des pages isolées. Je construis des systèmes qui produisent,
                 se pilotent et restent utilisables après livraison.
               </p>
             </div>

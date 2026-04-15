@@ -5,14 +5,15 @@ import { NAV_ITEMS, NAV_CTA } from "@/data/navigation"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { preloadDiagnosticRoute, preloadRouteFromPath } from "@/lib/routePreload"
+import { useLayoutUi } from "./LayoutContext"
 
 export function Navigation() {
   const [scrolled, setScrolled] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
   const location = useLocation()
   const menuId = useId()
   const menuButtonRef = useRef<HTMLButtonElement>(null)
   const firstMenuLinkRef = useRef<HTMLAnchorElement>(null)
+  const { isMobileMenuOpen: menuOpen, closeMobileMenu, setMobileMenuOpen } = useLayoutUi()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30)
@@ -26,28 +27,32 @@ export function Navigation() {
   }, [menuOpen])
 
   useEffect(() => {
+    setMobileMenuOpen(false)
+  }, [location.pathname, setMobileMenuOpen])
+
+  useEffect(() => {
     if (!menuOpen) return
 
     firstMenuLinkRef.current?.focus()
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setMenuOpen(false)
+        closeMobileMenu()
         menuButtonRef.current?.focus()
       }
     }
 
     window.addEventListener("keydown", handleKeyDown)
     return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [menuOpen])
+  }, [closeMobileMenu, menuOpen])
 
   const closeMenu = () => {
-    setMenuOpen(false)
+    closeMobileMenu()
     menuButtonRef.current?.focus()
   }
 
   const handleMenuNavigation = () => {
-    setMenuOpen(false)
+    closeMobileMenu()
   }
 
   return (
@@ -138,7 +143,7 @@ export function Navigation() {
           <button
             ref={menuButtonRef}
             className="grid size-10 place-items-center text-ivory md:hidden"
-            onClick={() => setMenuOpen(!menuOpen)}
+            onClick={() => setMobileMenuOpen(!menuOpen)}
             aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
             aria-expanded={menuOpen}
             aria-controls={menuOpen ? menuId : undefined}

@@ -11,7 +11,7 @@ export const organizationSchema: WithContext = {
   founder: "Samuel Huys",
   image: defaultOgImage,
   description:
-    "Digitrend Creation structure, automatise et optimise des systemes digitaux pour des resultats mesurables.",
+    "Digitrend Creation structure, automatise et optimise des systèmes digitaux pour des résultats mesurables.",
   sameAs: [
     "https://www.linkedin.com/in/samuel-huys",
     "https://samuel-huys.com",
@@ -22,11 +22,11 @@ export const pageMetaContent = {
   home: {
     title: "Accueil",
     description:
-      "Digitrend Creation structure vos flux digitaux pour generer plus de revenu, moins de friction et une meilleure lecture business.",
+      "Digitrend Creation clarifie les flux qui bloquent revenu, CRM et opérations pour les équipes e-commerce, SaaS et services.",
     canonical: `${siteUrl}/`,
-    twitterTitle: "Digitrend Creation - Systeme digital clair",
+    twitterTitle: "Digitrend Creation - Système digital clair",
     twitterDescription:
-      "Diagnostic, architecture revenue et IA appliquee pour rendre vos operations enfin lisibles.",
+      "Diagnostic, architecture revenue et IA appliquée pour rendre vos opérations enfin lisibles.",
     schema: [
       {
         "@context": "https://schema.org",
@@ -34,14 +34,14 @@ export const pageMetaContent = {
         name: "Accueil Digitrend Creation",
         url: `${siteUrl}/`,
         description:
-          "Page d'accueil presentant les services, la methode et les preuves de Digitrend Creation.",
+          "Page d'accueil présentant les services, la méthode et les preuves de Digitrend Creation.",
       },
     ] satisfies WithContext[],
   },
   methode: {
-    title: "Methode",
+    title: "Méthode",
     description:
-      "Notre methode en 5 phases pour transformer des frictions diffuses en priorites, architecture et systeme pilotable.",
+      "Une méthode en 4 étapes pour transformer des frictions diffuses en priorités, architecture et système pilotable.",
     canonical: `${siteUrl}/methode`,
     schema: [
       {
@@ -49,15 +49,15 @@ export const pageMetaContent = {
         "@type": "BreadcrumbList",
         itemListElement: [
           { "@type": "ListItem", position: 1, name: "Accueil", item: `${siteUrl}/` },
-          { "@type": "ListItem", position: 2, name: "Methode", item: `${siteUrl}/methode` },
+          { "@type": "ListItem", position: 2, name: "Méthode", item: `${siteUrl}/methode` },
         ],
       },
     ] satisfies WithContext[],
   },
   cas: {
-    title: "Cas d'etudes",
+    title: "Cas d'études",
     description:
-      "Des cas clients pour rendre visibles les gains de conversion, de vitesse d'execution et de clarte business obtenus par Digitrend Creation.",
+      "Des cas clients pour rendre visibles les gains de conversion, de vitesse d'exécution et de clarté business obtenus par Digitrend Creation.",
     canonical: `${siteUrl}/cas`,
     schema: [
       {
@@ -66,14 +66,14 @@ export const pageMetaContent = {
         name: "Cas clients Digitrend Creation",
         url: `${siteUrl}/cas`,
         description:
-          "Cas d'etudes, schemas et resultats anonymises relies a des interventions reelles.",
+          "Cas d'études, schémas et résultats anonymisés reliés à des interventions réelles.",
       },
     ] satisfies WithContext[],
   },
   services: {
     title: "Services",
     description:
-      "Quatre formats d'intervention pour cadrer, architecturer, automatiser et piloter vos operations digitales.",
+      "Quatre formats d'intervention pour cadrer, architecturer, automatiser et piloter vos opérations digitales.",
     canonical: `${siteUrl}/services`,
     schema: [
       {
@@ -86,7 +86,7 @@ export const pageMetaContent = {
             itemOffered: {
               "@type": "Service",
               name: "Diagnostic Frictions",
-              description: "Diagnostic structure pour identifier les blocages et priorites.",
+              description: "Diagnostic structuré pour identifier les blocages et priorités.",
             },
             url: `${siteUrl}/diagnostic`,
           },
@@ -104,7 +104,7 @@ export const pageMetaContent = {
             itemOffered: {
               "@type": "Service",
               name: "AI Product Ops",
-              description: "Outils IA, interfaces et automatisations utiles aux equipes.",
+              description: "Outils IA, interfaces et automatisations utiles aux équipes.",
             },
             url: `${siteUrl}/services/ai-product-ops`,
           },
@@ -113,7 +113,7 @@ export const pageMetaContent = {
             itemOffered: {
               "@type": "Service",
               name: "Pilotage Fractionnel",
-              description: "Pilotage regulier pour tenir le cap sur les operations digitales.",
+              description: "Pilotage régulier pour tenir le cap sur les opérations digitales.",
             },
             url: `${siteUrl}/services/fractional`,
           },
@@ -124,7 +124,7 @@ export const pageMetaContent = {
   diagnostic: {
     title: "Diagnostic",
     description:
-      "Diagnostic gratuit de 30 minutes pour identifier vos frictions, vos priorites et la prochaine decision utile.",
+      "Diagnostic gratuit de 30 minutes pour identifier vos frictions, vos priorités et la prochaine décision utile.",
     canonical: `${siteUrl}/diagnostic`,
     schema: [
       {
@@ -136,12 +136,12 @@ export const pageMetaContent = {
             name: "Que comprend le diagnostic gratuit ?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Un premier echange pour clarifier le contexte, qualifier les frictions et proposer une prochaine etape lisible.",
+              text: "Un premier échange pour clarifier le contexte, qualifier les frictions et proposer une prochaine étape lisible.",
             },
           },
           {
             "@type": "Question",
-            name: "Combien de temps dure l'echange ?",
+            name: "Combien de temps dure l'échange ?",
             acceptedAnswer: {
               "@type": "Answer",
               text: "Le format de base est un appel de 30 minutes, sans engagement.",
@@ -149,10 +149,10 @@ export const pageMetaContent = {
           },
           {
             "@type": "Question",
-            name: "Quand recevez-vous une reponse ?",
+            name: "Quand recevez-vous une réponse ?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Digitrend Creation repond sous 24 heures ouvrees avec un premier retour structure.",
+              text: "Digitrend Creation répond sous 24 heures ouvrées avec un premier retour structuré.",
             },
           },
         ],

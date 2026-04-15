@@ -58,25 +58,25 @@ export const proofLogos: ProofLogo[] = [
 
 export const proofMetrics: ProofMetric[] = [
   {
-    label: "conversion e-commerce",
-    value: "+35%",
-    context: "chatbot sur-mesure branche sur OpenAI pour un site client Digitrend",
-    source: "Case Digitrend anonymise mentionne dans la documentation de reference",
-    routeVisibility: allRoutes,
-  },
-  {
-    label: "temps de traitement",
-    value: "-70%",
-    context: "workflows IA et automatisations concus pour reduire les taches repetitives",
-    source: "Experience Digitrend Creation - achievements internes CV en ligne",
-    routeVisibility: ["home", "methode", "services", "diagnostic"],
-  },
-  {
-    label: "satisfaction client",
-    value: "+40%",
-    context: "assistants IA et experiences conversationnelles mieux cadrees",
-    source: "Experience Digitrend Creation - achievements internes CV en ligne",
+    label: "d'expérience croisée",
+    value: "7 ans",
+    context: "e-commerce, CRO, automatisation et IA appliquée sur des systèmes business réels",
+    source: "Parcours public Samuel Huys — portfolio et LinkedIn",
     routeVisibility: ["home", "cas", "services"],
+  },
+  {
+    label: "de terrains couverts",
+    value: "3 contextes",
+    context: "e-commerce, outils internes et structuration opérationnelle",
+    source: "Références visibles et cas publics du studio",
+    routeVisibility: ["home", "cas", "services"],
+  },
+  {
+    label: "pour un premier retour",
+    value: "< 24h",
+    context: "sur les demandes de diagnostic qualifiées envoyées via le site",
+    source: "Engagement de service affiché par Digitrend Creation",
+    routeVisibility: ["home", "services"],
   },
 ]
 
@@ -117,12 +117,12 @@ export const founderSpotlight: FounderSpotlight = {
   name: "Samuel Huys",
   role: "Architecte operationnel & AI Product Builder",
   summary:
-    "7 ans entre e-commerce, CRO, automatisation et IA appliquee pour remettre de l'ordre dans des systemes business qui doivent produire vite et proprement.",
+    "7 ans entre e-commerce, CRO, automatisation et IA appliquée pour remettre de l'ordre dans des systèmes business qui doivent produire vite et proprement.",
   image: profilePhoto,
   highlights: [
     "Diagnostic business et priorisation actionnable",
-    "Conversion, CRM et automatisation relies dans un meme systeme",
-    "Outils IA utiles, cadres et documentes",
+    "Conversion, CRM et automatisation reliés dans un même système",
+    "Outils IA utiles, cadrés et documentés",
   ],
 }
 

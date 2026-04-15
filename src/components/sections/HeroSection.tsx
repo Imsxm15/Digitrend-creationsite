@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom"
 import { ArrowUpRight, ChartNoAxesCombined, Route, Sparkles } from "lucide-react"
+import { PageHeroTitle } from "@/components/common/PageHeroTitle"
 import { Button } from "@/components/ui/button"
 import { ScrollReveal } from "@/components/common/ScrollReveal"
 import { FEATURED_OFFER } from "@/data/offers"
@@ -37,12 +38,9 @@ export function HeroSection() {
             </ScrollReveal>
 
             <ScrollReveal delay={100}>
-              <h1
-                className="system-title-hero text-ivory md:max-w-4xl"
-                style={{ fontSize: "clamp(2.8rem, 9vw, 5.1rem)" }}
-              >
+              <PageHeroTitle className="md:max-w-4xl">
                 {hero.title}
-              </h1>
+              </PageHeroTitle>
             </ScrollReveal>
 
             <ScrollReveal delay={180}>

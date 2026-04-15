@@ -16,7 +16,7 @@ Site vitrine et plateforme de lead capture pour Digitrend Creation — architect
 git clone <repo-url>
 cd project
 cp .env.example .env.local
-# Remplir VITE_SUPABASE_URL et VITE_SUPABASE_ANON_KEY
+# Remplir SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY et SUPABASE_RATE_LIMIT_SALT
 npm install
 npm run dev
 ```

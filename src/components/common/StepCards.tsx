@@ -13,7 +13,7 @@ export type StepCardItem = {
 }
 
 interface StepCardsProps {
-  items: StepCardItem[]
+  items: ReadonlyArray<StepCardItem>
   desktopColumnsClassName?: string
   cardWidthClassName?: string
 }

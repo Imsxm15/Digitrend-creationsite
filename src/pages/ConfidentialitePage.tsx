@@ -21,11 +21,15 @@ const sections = [
   },
   {
     heading: "Destinataires et sous-traitants",
-    body: `Les données sont destinées à ${PUBLIC_PROFILE.ownerName}. L'hébergement applicatif est assuré par Netlify, Inc. (San Francisco, USA). Les données du formulaire de diagnostic sont stockées dans une base de données hébergée par Supabase, Inc. (San Francisco, USA). Aucun autre sous-traitant n'a accès aux données transmises via le formulaire.`,
+    body: `Les données sont destinées à ${PUBLIC_PROFILE.ownerName}. L'hébergement applicatif est assuré par Netlify, Inc. (San Francisco, USA). Les données du formulaire de diagnostic sont stockées dans une base de données hébergée par Supabase, Inc. (San Francisco, USA). La mesure d'audience du site repose sur Plausible Analytics, chargé uniquement sur le domaine canonique de production.`,
+  },
+  {
+    heading: "Mesure d'audience",
+    body: "Le site utilise Plausible Analytics pour mesurer l'audience et les conversions du site sans charger de cookies marketing. Les données consultées sont agrégées pour comprendre les pages visitées, les sources de trafic et les événements clés du site, dont l'envoi du formulaire de diagnostic.",
   },
   {
     heading: "Vos droits",
-    body: "Vous pouvez demander l'accès, la rectification, l'effacement, la limitation ou l'opposition au traitement de vos données en écrivant à samuel@digitrend.fr. Si vous estimez, après nous avoir contactés, que vos droits ne sont pas respectés, vous pouvez saisir la CNIL.",
+    body: "Vous pouvez demander l'accès, la rectification, l'effacement, la limitation ou l'opposition au traitement de vos données en écrivant à samuel@digitrend.fr. Si vous estimez, après m'avoir contacté, que vos droits ne sont pas respectés, vous pouvez saisir la CNIL.",
   },
 ]
 

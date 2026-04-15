@@ -21,7 +21,7 @@ export const mobileCtaConfig: MobileCtaConfig[] = [
     label: "Commencer le diagnostic",
     href: "/diagnostic",
     mode: "route",
-    subtext: "Reponse sous 24h",
+    subtext: "Réponse sous 24h",
   },
   {
     route: "cas",

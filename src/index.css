@@ -202,6 +202,10 @@
   text-wrap: balance;
 }
 
+.system-page-hero-title {
+  font-size: clamp(2.8rem, 9vw, 5.1rem);
+}
+
 .system-title-section {
   font-family: 'Syne', sans-serif;
   font-weight: 700;

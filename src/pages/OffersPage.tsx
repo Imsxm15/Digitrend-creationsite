@@ -1,5 +1,6 @@
 import { Link, useParams } from "react-router-dom"
 import { PageMeta } from "@/components/common/PageMeta"
+import { PageHeroTitle } from "@/components/common/PageHeroTitle"
 import { ScrollReveal } from "@/components/common/ScrollReveal"
 import { SectionLabel } from "@/components/common/SectionLabel"
 import { CtaBanner } from "@/components/sections/CtaBanner"
@@ -59,12 +60,9 @@ function OfferDetailView({ offer }: { offer: Offer }) {
         <div className="mx-auto max-w-5xl">
           <ScrollReveal>
             <SectionLabel number={offer.number} label={offer.tag || "SERVICE"} />
-            <h1
-              className="system-title-hero mt-4 text-ivory"
-              style={{ fontSize: "clamp(2.2rem, 5vw, 3.8rem)" }}
-            >
+            <PageHeroTitle className="mt-4">
               {offer.title}
-            </h1>
+            </PageHeroTitle>
             <p className="system-copy mt-4 max-w-3xl text-ivory-muted">{offer.subtitle}</p>
             <p className="mt-6 max-w-3xl font-body text-sm leading-7 text-ivory-soft">{offer.persona}</p>
           </ScrollReveal>
@@ -195,12 +193,9 @@ export function OffersPage() {
               <ScrollReveal>
                 <div className="system-shell rounded-[0.5rem] px-6 py-7 md:px-8 md:py-8">
                   <SectionLabel label={hero.eyebrow} />
-                  <h1
-                    className="mb-5 font-display font-extrabold text-ivory tracking-[-0.03em] leading-[1.04]"
-                    style={{ fontSize: "clamp(2.4rem, 5.8vw, 4.9rem)" }}
-                  >
+                  <PageHeroTitle className="mb-5">
                     {hero.title}
-                  </h1>
+                  </PageHeroTitle>
                   <p className="max-w-3xl font-body text-base leading-8 text-ivory-muted md:text-lg">
                     {hero.description}
                   </p>
@@ -270,8 +265,8 @@ export function OffersPage() {
       <SocialProofSection
         route="services"
         variant="logos+metrics+testimonials"
-        title="Des preuves liees a des missions, pas a des slogans."
-        intro="Cette page doit rassurer vite: references, gains contextualises et recommandations publiques avant de vous demander de choisir un format."
+        title="Des preuves liées à des missions, pas à des slogans."
+        intro="Cette page doit rassurer vite: références visibles, signaux contextualisés et recommandations publiques avant de vous demander de choisir un format."
         showFounder
       />
 

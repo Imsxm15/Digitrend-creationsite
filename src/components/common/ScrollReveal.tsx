@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from "react"
+import { useEffect, useRef, type ReactNode } from "react"
 import { cn } from "@/lib/utils"
 
 interface ScrollRevealProps {
@@ -15,68 +15,55 @@ export function ScrollReveal({
   direction = "up",
 }: ScrollRevealProps) {
   const ref = useRef<HTMLDivElement>(null)
-  const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    let revealTimer: number | null = null
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      revealTimer = window.setTimeout(() => {
-        setIsVisible(true)
-      }, 0)
-      return () => {
-        if (revealTimer) {
-          window.clearTimeout(revealTimer)
-        }
-      }
+      return
     }
 
-    if (el.getBoundingClientRect().top < window.innerHeight * 0.92) {
-      revealTimer = window.setTimeout(() => {
-        setIsVisible(true)
-      }, delay)
-      return () => {
-        if (revealTimer) {
-          window.clearTimeout(revealTimer)
-        }
-      }
+    if (el.getBoundingClientRect().top >= window.innerHeight * 0.92 || typeof el.animate !== "function") {
+      return
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            revealTimer = window.setTimeout(() => {
-              setIsVisible(true)
-            }, delay)
-            observer.unobserve(el)
-          }
-        })
-      },
-      { threshold: 0.1, rootMargin: "0px 0px -40px 0px" }
-    )
+    const animation =
+      direction === "in"
+        ? el.animate(
+            [
+              { transform: "scale(0.985)" },
+              { transform: "scale(1)" },
+            ],
+            {
+              duration: 700,
+              delay,
+              easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+              fill: "backwards",
+            }
+          )
+        : el.animate(
+            [
+              { transform: "translateY(28px)" },
+              { transform: "translateY(0)" },
+            ],
+            {
+              duration: 700,
+              delay,
+              easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+              fill: "backwards",
+            }
+          )
 
-    observer.observe(el)
     return () => {
-      observer.disconnect()
-      if (revealTimer) {
-        window.clearTimeout(revealTimer)
-      }
+      animation.cancel()
     }
   }, [delay, direction])
 
   return (
     <div
       ref={ref}
-      className={cn(
-        "transition-all duration-700 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)]",
-        isVisible ? "translate-y-0 opacity-100" : "opacity-0",
-        direction === "up" && !isVisible && "translate-y-7",
-        className
-      )}
-      style={delay > 0 ? { transitionDelay: `${delay}ms` } : undefined}
+      className={cn("opacity-100", className)}
     >
       {children}
     </div>

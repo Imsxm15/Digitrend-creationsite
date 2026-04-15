@@ -3,38 +3,38 @@ import { SectionLabel } from "@/components/common/SectionLabel"
 
 const beforeAfter = [
   {
-    label: "Lecture du probleme",
-    before: "Des symptomes disperses et beaucoup d'intuition.",
+    label: "Lecture du problème",
+    before: "Des symptômes dispersés et beaucoup d'intuition.",
     after: "Une carte claire des frictions et de leur impact.",
   },
   {
     label: "Priorisation",
     before: "Tout semble urgent, donc rien ne l'est vraiment.",
-    after: "3 priorites visibles, ordonnees et defendables.",
+    after: "3 priorités visibles, ordonnées et défendables.",
   },
   {
-    label: "Execution",
-    before: "Des outils et des idees sans sequence commune.",
-    after: "Un systeme cible, des quick wins et un plan realiste.",
+    label: "Exécution",
+    before: "Des outils et des idées sans séquence commune.",
+    after: "Un système cible, des quick wins et un plan réaliste.",
   },
 ] as const
 
 const deliveryOutputs = [
   {
     title: "Cartographie des frictions",
-    detail: "Outil, flux, point de rupture et manque de signal sur le meme plan.",
+    detail: "Outil, flux, point de rupture et manque de signal sur le même plan.",
   },
   {
-    title: "Priorites et quick wins",
-    detail: "Ce qui peut etre corrige vite, ce qui merite une architecture et ce qu'il faut laisser hors perimetre.",
+    title: "Priorités et quick wins",
+    detail: "Ce qui peut être corrigé vite, ce qui mérite une architecture et ce qu'il faut laisser hors périmètre.",
   },
   {
     title: "Architecture cible",
-    detail: "Tunnel, CRM, automatisation et pilotage reconnectes autour d'une logique commune.",
+    detail: "Tunnel, CRM, automatisation et pilotage reconnectés autour d'une logique commune.",
   },
   {
     title: "Suite exploitable",
-    detail: "Un document court qui aide a arbitrer, deployer et mesurer la prochaine etape.",
+    detail: "Un document court qui aide à arbitrer, déployer et mesurer la prochaine étape.",
   },
 ] as const
 
@@ -44,7 +44,7 @@ export function ProofSection() {
       <div className="mx-auto max-w-6xl px-4 md:px-6">
         <ScrollReveal>
           <div className="mx-auto mb-12 max-w-3xl text-center">
-            <SectionLabel number="04" label="Avant / apres" />
+            <SectionLabel number="04" label="Avant / après" />
             <h2
               className="mb-5 font-display font-bold text-ivory"
               style={{
@@ -53,11 +53,11 @@ export function ProofSection() {
                 letterSpacing: "-0.03em",
               }}
             >
-              Une lecture qui se comprend vite et s'execute mieux.
+              Une lecture qui se comprend vite et s'exécute mieux.
             </h2>
             <p className="font-body text-sm leading-7 text-ivory-muted">
-              Le vrai gain n'est pas un mot plus ambitieux. C'est la capacite a passer d'un
-              systeme flou a des priorites, une architecture et une prochaine etape claires.
+              Le vrai gain n'est pas un mot plus ambitieux. C'est la capacité à passer d'un
+              système flou à des priorités, une architecture et une prochaine étape claires.
             </p>
           </div>
         </ScrollReveal>
@@ -72,7 +72,7 @@ export function ProofSection() {
                 Avant
               </div>
               <div className="border-b border-mineral-dark px-4 py-4 font-mono text-[0.72rem] uppercase tracking-[0.18em] text-system-success">
-                Apres
+                Après
               </div>
 
               {beforeAfter.map((item) => (

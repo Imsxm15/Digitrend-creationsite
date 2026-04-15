@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom"
 import { mobileCtaConfig } from "@/data/mobileCtaConfig"
 import type { CoreRouteKey } from "@/types/site"
+import { useLayoutUi } from "@/components/layout/LayoutContext"
 
 function getRouteKey(pathname: string): CoreRouteKey | null {
   if (pathname === "/") return "home"
@@ -13,25 +14,13 @@ function getRouteKey(pathname: string): CoreRouteKey | null {
 
 export function StickyMobileCta() {
   const { pathname } = useLocation()
+  const { isMobileMenuOpen } = useLayoutUi()
   const routeKey = getRouteKey(pathname)
-  const hasDiagnosticForm = Boolean(
-    import.meta.env.VITE_SUPABASE_URL?.trim() &&
-    import.meta.env.VITE_SUPABASE_ANON_KEY?.trim()
-  )
 
   if (!routeKey) return null
+  if (isMobileMenuOpen) return null
 
-  const baseConfig = mobileCtaConfig.find((entry) => entry.route === routeKey)
-  const config =
-    routeKey === "diagnostic" && !hasDiagnosticForm
-      ? {
-          route: "diagnostic" as const,
-          label: "Contacter par email",
-          href: "mailto:samuel@digitrend.fr",
-          mode: "mailto" as const,
-          subtext: "Reponse sous 24h",
-        }
-      : baseConfig
+  const config = mobileCtaConfig.find((entry) => entry.route === routeKey)
 
   if (!config) return null
 

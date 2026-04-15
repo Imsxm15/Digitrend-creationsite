@@ -28,8 +28,8 @@ export function HomePage() {
       <SocialProofSection
         route="home"
         variant="logos+metrics+testimonials"
-        title="Des signaux concrets avant de vous demander de nous croire."
-        intro="Logos, recommandations publiques et metriques contextualisees: ce chantier vise la clarte commerciale, pas l'effet vitrine."
+        title="Des signaux concrets avant de vous demander d’y croire."
+        intro="Logos, recommandations publiques et signaux contextualisés: ce chantier vise la clarté commerciale, pas l’effet vitrine."
         showFounder
       />
 

@@ -29,7 +29,7 @@ export function Footer() {
               </Link>
               <p className="max-w-md font-body text-sm leading-7 text-ivory-muted">
                 Architecture opérationnelle, IA appliquée, systèmes de conversion.
-                Nous remettons de l&apos;ordre dans ce qui devrait déjà fonctionner.
+                Je remets de l&apos;ordre dans ce qui devrait déjà fonctionner.
               </p>
 
               <div className="mt-6 flex flex-wrap gap-3">

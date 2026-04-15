@@ -9,6 +9,7 @@ import {
   Workflow,
 } from "lucide-react"
 import { PageMeta } from "@/components/common/PageMeta"
+import { PageHeroTitle } from "@/components/common/PageHeroTitle"
 import { ScrollReveal } from "@/components/common/ScrollReveal"
 import { SectionLabel } from "@/components/common/SectionLabel"
 import { SocialProofSection } from "@/components/common/SocialProofSection"
@@ -29,31 +30,31 @@ const workflowNodes = [
     id: "form",
     label: "Formulaire",
     detail:
-      "Le point d'entree capture le contexte, la friction et le niveau d'urgence pour eviter les leads mal qualifies.",
+      "Le point d'entrée capture le contexte, la friction et le niveau d'urgence pour éviter les leads mal qualifiés.",
   },
   {
     id: "logic",
-    label: "Logique metier",
+    label: "Logique métier",
     detail:
-      "Le scoring et le routing appliquent des regles simples, explicites et testables avant d'alimenter les outils aval.",
+      "Le scoring et le routing appliquent des règles simples, explicites et testables avant d'alimenter les outils aval.",
   },
   {
     id: "crm",
     label: "CRM",
     detail:
-      "Chaque fiche est enrichie avec le bon owner, les bons tags et une priorite lisible sans saisie manuelle supplementaire.",
+      "Chaque fiche est enrichie avec le bon owner, les bons tags et une priorité lisible sans saisie manuelle supplémentaire.",
   },
   {
     id: "slack",
     label: "Slack",
     detail:
-      "Les alertes ne partent que quand le contexte est suffisant et que la reaction humaine a une vraie valeur.",
+      "Les alertes ne partent que quand le contexte est suffisant et que la réaction humaine a une vraie valeur.",
   },
   {
     id: "dashboard",
     label: "Dashboard",
     detail:
-      "Le pilotage montre les leads non traites, les delais de reponse et les points ou le flux se casse.",
+      "Le pilotage montre les leads non traités, les délais de réponse et les points où le flux se casse.",
   },
 ] as const
 
@@ -61,13 +62,13 @@ const featuredCase = {
   eyebrow: "CAS PHARE",
   title: "Architecture d'automatisation CRM",
   subtitle:
-    "Relier formulaire, scoring, CRM, Slack et pilotage sans perdre les leads a forte intention.",
+    "Relier formulaire, scoring, CRM, Slack et pilotage sans perdre les leads à forte intention.",
   problem:
     "Des demandes entraient bien, mais la qualification et le suivi commercial restaient trop manuels. Les leads chauds se perdaient entre le formulaire, les messages internes et le CRM.",
   action:
-    "Refonte du flux autour d'un scoring simple, de regles de routing visibles, d'une fiche CRM enrichie automatiquement et d'un tableau de pilotage pour verifier le traitement reel.",
+    "Refonte du flux autour d'un scoring simple, de règles de routing visibles, d'une fiche CRM enrichie automatiquement et d'un tableau de pilotage pour vérifier le traitement réel.",
   result:
-    "Le systeme devient tracable de bout en bout. L'equipe commerciale voit plus vite quoi traiter, pourquoi, et avec quel niveau de priorite.",
+    "Le système devient traçable de bout en bout. L'équipe commerciale voit plus vite quoi traiter, pourquoi, et avec quel niveau de priorité.",
   metrics: [
     {
       value: "+35%",
@@ -76,13 +77,13 @@ const featuredCase = {
     },
     {
       value: "< 15 min",
-      label: "reaction sur les leads chauds",
-      context: "des qu'un signal commercial fort est detecte",
+      label: "réaction sur les leads chauds",
+      context: "dès qu'un signal commercial fort est détecté",
     },
     {
       value: "1 flux",
       label: "de bout en bout",
-      context: "de l'entree jusqu'au suivi CRM et pilotage",
+      context: "de l'entrée jusqu'au suivi CRM et pilotage",
     },
   ],
 } as const
@@ -94,14 +95,14 @@ const secondaryCases = [
     title: "Framework d'audit des frictions",
     icon: Route,
     problem:
-      "L'equipe sent qu'il y a un probleme, mais ne sait pas si le sujet releve du tunnel, du CRM, des process ou de l'organisation.",
+      "L'équipe sent qu'il y a un problème, mais ne sait pas si le sujet relève du tunnel, du CRM, des process ou de l'organisation.",
     action:
-      "Lecture du systeme reel, matrice impact / effort, cartographie des dependances et tri entre quick wins, chantier structurant et faux sujets.",
+      "Lecture du système réel, matrice impact / effort, cartographie des dépendances et tri entre quick wins, chantier structurant et faux sujets.",
     result:
-      "La discussion ne tourne plus autour d'impressions. Le client repart avec une carte, un ordre de traitement et des arbitrages defendables.",
+      "La discussion ne tourne plus autour d'impressions. Le client repart avec une carte, un ordre de traitement et des arbitrages défendables.",
     metrics: [
-      "3 niveaux de priorite rendus visibles",
-      "1 synthese livrable pour aligner l'equipe",
+      "3 niveaux de priorité rendus visibles",
+      "1 synthèse livrable pour aligner l'équipe",
     ],
   },
   {
@@ -110,14 +111,14 @@ const secondaryCases = [
     title: "Diagnostic de conversion",
     icon: ChartColumn,
     problem:
-      "Du trafic existe deja, mais la promesse, la preuve et la suite CRM ne produisent pas assez de revenu.",
+      "Du trafic existe déjà, mais la promesse, la preuve et la suite CRM ne produisent pas assez de revenu.",
     action:
-      "Lecture du tunnel comme une chaine complete: acquisition, hero, friction formulaire, suivi commercial et qualite du signal des les 3 premieres secondes.",
+      "Lecture du tunnel comme une chaîne complète: acquisition, hero, friction formulaire, suivi commercial et qualité du signal dès les 3 premières secondes.",
     result:
-      "Les hypotheses de test deviennent concretes. On sait quoi corriger vite, quoi redesign et quoi laisser hors perimetre.",
+      "Les hypothèses de test deviennent concrètes. On sait quoi corriger vite, quoi redesign et quoi laisser hors périmètre.",
     metrics: [
-      "hypotheses d'A/B test priorisees",
-      "avant / apres du tunnel en lecture rapide",
+      "hypothèses d'A/B test priorisées",
+      "avant / après du tunnel en lecture rapide",
     ],
   },
   {
@@ -126,14 +127,14 @@ const secondaryCases = [
     title: "Outil interne de qualification",
     icon: Bot,
     problem:
-      "L'usage IA existe deja, mais reste diffuse, fragile et peu fiable des qu'il faut l'inserer dans un vrai process metier.",
+      "L'usage IA existe déjà, mais reste diffus, fragile et peu fiable dès qu'il faut l'insérer dans un vrai process métier.",
     action:
-      "Cadrage du cas d'usage, sortie structuree, garde-fous, validation humaine et interface de reprise au bon endroit du flux.",
+      "Cadrage du cas d'usage, sortie structurée, garde-fous, validation humaine et interface de reprise au bon endroit du flux.",
     result:
-      "L'outil sert un besoin metier clair, fait gagner du temps et reste exploitable apres la livraison.",
+      "L'outil sert un besoin métier clair, fait gagner du temps et reste exploitable après la livraison.",
     metrics: [
-      "-70% de temps de traitement sur les taches repetitives",
-      "validation humaine la ou elle cree vraiment de la valeur",
+      "-70% de temps de traitement sur les tâches répétitives",
+      "validation humaine là où elle crée vraiment de la valeur",
     ],
   },
 ] as const
@@ -238,7 +239,7 @@ function WorkflowExplorer() {
             Workflow visible
           </p>
           <p className="mt-1 font-body text-sm text-ivory-muted">
-            Une lecture simple du systeme, puis des zones detaillees ouvrables sur mobile et desktop.
+            Une lecture simple du système, puis des zones détaillées ouvrables sur mobile et desktop.
           </p>
         </div>
       </div>
@@ -383,12 +384,9 @@ export function CasPage() {
               <ScrollReveal>
                 <div className="system-shell rounded-[0.5rem] px-6 py-7 md:px-8 md:py-8">
                   <SectionLabel label={hero.eyebrow} />
-                  <h1
-                    className="font-display font-extrabold tracking-[-0.03em] text-ivory leading-[1.04]"
-                    style={{ fontSize: "clamp(2.4rem, 5.8vw, 4.9rem)" }}
-                  >
+                  <PageHeroTitle>
                     {hero.title}
-                  </h1>
+                  </PageHeroTitle>
                   <p className="mt-5 max-w-3xl font-body text-base leading-8 text-ivory-muted md:text-lg">
                     {hero.description}
                   </p>
@@ -458,8 +456,8 @@ export function CasPage() {
       <SocialProofSection
         route="cas"
         variant="logos+metrics+testimonials"
-        title="Des preuves posees avant les cas."
-        intro="References, recommandations publiques et chiffres contextualises arrivent avant les demonstrations pour installer un cadre de confiance solide."
+        title="Des preuves posées avant les cas."
+        intro="Références, recommandations publiques et signaux contextualisés arrivent avant les démonstrations pour installer un cadre de confiance solide."
       />
 
       <section className="bg-graphite-mid py-10 md:py-12">
@@ -470,9 +468,9 @@ export function CasPage() {
                 Note de transparence
               </p>
               <p className="mt-3 max-w-4xl font-body text-sm leading-7 text-ivory-muted">
-                Les noms clients, donnees sensibles et volumes exacts ne sont pas exposes ici. Les
-                cas montrent une logique d'intervention reelle, les types de livrables attendus et
-                des resultats contextualises quand ils sont suffisamment defendables.
+                Les noms clients, données sensibles et volumes exacts ne sont pas exposés ici. Les
+                cas montrent une logique d'intervention réelle, les types de livrables attendus et
+                des résultats contextualisés quand ils sont suffisamment défendables.
               </p>
             </div>
           </ScrollReveal>
@@ -560,7 +558,7 @@ export function CasPage() {
 
       <CtaBanner
         title="Vous voyez le type de lecture. Voyons maintenant votre cas."
-        subtitle="Le diagnostic gratuit sert a qualifier la bonne profondeur: correction rapide, architecture plus large ou chantier produit plus ambitieux."
+        subtitle="Le diagnostic gratuit sert à qualifier la bonne profondeur: correction rapide, architecture plus large ou chantier produit plus ambitieux."
         primaryLabel="Obtenir mon diagnostic gratuit"
         primaryHref="/diagnostic"
         primarySubtext="30 minutes, sans engagement"
@@ -576,7 +574,7 @@ export function CasPage() {
                 Autres cas types
               </p>
               <h2 className="font-display text-3xl font-bold tracking-[-0.03em] text-ivory">
-                Meme structure, autres contextes, meme exigence de clarte.
+                Même structure, autres contextes, même exigence de clarté.
               </h2>
             </div>
           </ScrollReveal>

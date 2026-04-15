@@ -2,75 +2,18 @@ import {
   Bot,
   ChartNoAxesCombined,
   FileText,
-  MessagesSquare,
-  Search,
-  Settings2,
   Workflow,
 } from "lucide-react"
 import { Link } from "react-router-dom"
 import { PageMeta } from "@/components/common/PageMeta"
+import { PageHeroTitle } from "@/components/common/PageHeroTitle"
 import { ScrollReveal } from "@/components/common/ScrollReveal"
 import { SectionLabel } from "@/components/common/SectionLabel"
 import { CtaBanner } from "@/components/sections/CtaBanner"
-import { StepCards, type StepCardItem } from "@/components/common/StepCards"
-import { SocialProofSection } from "@/components/common/SocialProofSection"
+import { StepCards } from "@/components/common/StepCards"
 import { pageHeroes, pageCtas } from "@/data/pageCopy"
+import { METHOD_STEPS } from "@/data/method"
 import { organizationSchema, pageMetaContent } from "@/data/pageMeta"
-
-const methodSteps: StepCardItem[] = [
-  {
-    id: "cadrage",
-    eyebrow: "01",
-    title: "Cadrage",
-    description: "Clarifier le contexte, les objectifs et le niveau d'urgence avant de parler de solution.",
-    bullets: [
-      "Ce qui bloque aujourd'hui",
-      "Ce qui coute deja du temps ou du revenu",
-      "Ce qui ne doit pas etre traite tout de suite",
-    ],
-    meta: "Appel + lecture des signaux existants",
-    icon: MessagesSquare,
-  },
-  {
-    id: "diagnostic",
-    eyebrow: "02",
-    title: "Diagnostic",
-    description: "Lire les flux, les donnees, les outils et les points de rupture pour isoler le vrai probleme.",
-    bullets: [
-      "Tunnel et CRM lus comme un seul systeme",
-      "Angles morts et pertes silencieuses identifies",
-      "Priorites classees par impact",
-    ],
-    meta: "Cartographie + matrice d'impact",
-    icon: Search,
-  },
-  {
-    id: "architecture",
-    eyebrow: "03",
-    title: "Architecture",
-    description: "Concevoir l'ordre de traitement, les connexions utiles et la cible avant de deployer.",
-    bullets: [
-      "Flux cibles par etape",
-      "Choix outillage et arbitrages",
-      "Vision claire de la prochaine version utile",
-    ],
-    meta: "Schema cible + decisions",
-    icon: Workflow,
-  },
-  {
-    id: "deployment",
-    eyebrow: "04",
-    title: "Execution",
-    description: "Implementer proprement, tester les parcours et laisser une base exploitable derriere nous.",
-    bullets: [
-      "Connexions et automatisations vraiment utiles",
-      "Verification du parcours reel",
-      "Documentation et prise en main",
-    ],
-    meta: "Implementation + QA + transmission",
-    icon: Settings2,
-  },
-]
 
 const toolTiles = [
   { label: "OpenAI", detail: "assistants, copilotes, sorties structurees", icon: Bot },
@@ -116,12 +59,9 @@ export function MethodPage() {
           <ScrollReveal>
             <div className="system-shell rounded-[0.5rem] px-6 py-8 md:px-8 md:py-9">
               <SectionLabel label={hero.eyebrow} />
-              <h1
-                className="font-display font-extrabold text-ivory tracking-[-0.03em] leading-[1.05]"
-                style={{ fontSize: "clamp(2.5rem, 6vw, 5.2rem)" }}
-              >
+              <PageHeroTitle>
                 {hero.title}
-              </h1>
+              </PageHeroTitle>
               <p className="mt-6 max-w-3xl font-body text-lg leading-[1.8] text-ivory-muted">
                 {hero.description}
               </p>
@@ -159,21 +99,21 @@ export function MethodPage() {
               <ScrollReveal>
                 <div className="system-shell rounded-[0.5rem] px-6 py-7">
                   <p className="mb-4 font-mono text-xs tracking-[0.18em] text-copper">
-                    LES 4 ETAPES QUI FONT GAGNER DU TEMPS
+                    LES 4 ÉTAPES QUI FONT GAGNER DU TEMPS
                   </p>
                   <h2 className="font-display text-3xl font-bold tracking-[-0.03em] text-ivory">
-                    Une methode courte, orientee decisions.
+                    Une méthode courte, orientée décisions.
                   </h2>
                   <p className="mt-4 font-body text-sm leading-7 text-ivory-muted">
-                    Chaque etape sert un objectif simple: clarifier, prioriser, concevoir, puis
-                    deployer ce qui a le meilleur ratio impact / effort.
+                    Chaque étape sert un objectif simple: clarifier, prioriser, concevoir, puis
+                    déployer ce qui a le meilleur ratio impact / effort.
                   </p>
                 </div>
               </ScrollReveal>
             </div>
             <div className="lg:col-span-8">
               <StepCards
-                items={methodSteps}
+                items={METHOD_STEPS}
                 desktopColumnsClassName="md:grid-cols-2 xl:grid-cols-2"
                 cardWidthClassName="auto-cols-[88%] sm:auto-cols-[62%]"
               />
@@ -187,14 +127,14 @@ export function MethodPage() {
           <ScrollReveal>
             <div className="max-w-3xl">
               <p className="mb-4 font-mono text-xs tracking-[0.18em] text-copper">
-                OUTILLAGE DE REFERENCE
+                OUTILLAGE DE RÉFÉRENCE
               </p>
               <h2 className="font-display text-3xl font-bold tracking-[-0.03em] text-ivory">
-                Des outils choisis pour ce qu'ils debloquent, pas pour leur prestige.
+                Des outils choisis pour ce qu&apos;ils débloquent, pas pour leur prestige.
               </h2>
               <p className="mt-4 font-body text-sm leading-7 text-ivory-muted">
-                Nous choisissons un outillage proportionne au probleme: lecture, orchestration,
-                experimentation et sorties utiles aux equipes.
+                Je choisis un outillage proportionné au problème: lecture, orchestration,
+                expérimentation et sorties utiles aux équipes.
               </p>
             </div>
           </ScrollReveal>
@@ -219,22 +159,15 @@ export function MethodPage() {
         </div>
       </section>
 
-      <SocialProofSection
-        route="methode"
-        variant="logos+metrics+testimonials"
-        title="Des preuves visibles avant le CTA final."
-        intro="Des metriques contextualisees, des recommandations publiques et des references de travail qui rendent la methode plus concrete."
-      />
-
       <section className="bg-graphite-deep py-18 md:py-20">
         <div className="mx-auto max-w-7xl px-6">
           <ScrollReveal>
             <div className="max-w-3xl">
               <p className="mb-4 font-mono text-xs tracking-[0.18em] text-copper">
-                MINI AVANT / APRES
+                MINI AVANT / APRÈS
               </p>
               <h2 className="font-display text-3xl font-bold tracking-[-0.03em] text-ivory">
-                Ce que la methode change concretement.
+                Ce que la méthode change concrètement.
               </h2>
             </div>
           </ScrollReveal>
@@ -248,7 +181,7 @@ export function MethodPage() {
                     Avant: {item.before}
                   </p>
                   <p className="mt-3 font-body text-sm leading-7 text-ivory-soft">
-                    Apres: {item.after}
+                    Après: {item.after}
                   </p>
                 </article>
               </ScrollReveal>

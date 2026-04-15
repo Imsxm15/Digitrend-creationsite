@@ -8,11 +8,11 @@ const frictionItems: StepCardItem[] = [
     id: "manual",
     eyebrow: "F01",
     title: "Processus manuels",
-    description: "Des taches repetitives absorbent les equipes alors que le systeme pourrait deja en faire une partie.",
+    description: "Des tâches répétitives absorbent les équipes alors que le système pourrait déjà en faire une partie.",
     bullets: [
       "Temps perdu sur du copier-coller",
-      "Dependance forte a une ou deux personnes",
-      "Peu de visibilite sur ce qui bloque vraiment",
+      "Dépendance forte à une ou deux personnes",
+      "Peu de visibilité sur ce qui bloque vraiment",
     ],
     meta: "Temps perdu chaque semaine",
     icon: Workflow,
@@ -21,13 +21,13 @@ const frictionItems: StepCardItem[] = [
     id: "tools",
     eyebrow: "F02",
     title: "Outils qui s'accumulent",
-    description: "CRM, analytics, support et marketing existent mais sans lecture commune ni priorite partagée.",
+    description: "CRM, analytics, support et marketing existent mais sans lecture commune ni priorité partagée.",
     bullets: [
-      "Donnees presentes mais peu exploitables",
-      "Aucune vue systeme fiable",
-      "Decisions prises avec trop d'intuition",
+      "Données présentes mais peu exploitables",
+      "Aucune vue système fiable",
+      "Décisions prises avec trop d'intuition",
     ],
-    meta: "Vision fragmentee",
+    meta: "Vision fragmentée",
     icon: Route,
   },
   {
@@ -46,14 +46,14 @@ const frictionItems: StepCardItem[] = [
   {
     id: "ai",
     eyebrow: "F04",
-    title: "IA utilisee a l'envers",
+    title: "IA utilisée à l'envers",
     description: "Des prompts, beaucoup d'essais, peu de cadre et encore moins de sortie vraiment exploitable.",
     bullets: [
-      "Pas de gouvernance ni de role clair",
-      "Des usages disperses sans process",
-      "Beaucoup d'energie, peu d'effet reel",
+      "Pas de gouvernance ni de rôle clair",
+      "Des usages dispersés sans process",
+      "Beaucoup d'énergie, peu d'effet réel",
     ],
-    meta: "Usage non pilote",
+    meta: "Usage non piloté",
     icon: Bot,
   },
 ]
@@ -74,10 +74,10 @@ export function FrictionsSection() {
                   Le frein principal n'est presque jamais l'outil.
                 </h2>
                 <p className="mb-6 font-body text-base leading-8 text-ivory-soft">
-                  C'est le systeme qui n'est plus lisible.
+                  C'est le système qui n'est plus lisible.
                 </p>
                 <p className="font-body text-sm leading-7 text-ivory-muted">
-                  Quand acquisition, operations, CRM et automatisation ne se parlent plus, la
+                  Quand acquisition, opérations, CRM et automatisation ne se parlent plus, la
                   performance devient une somme d'efforts locaux. Le diagnostic commence ici.
                 </p>
               </div>

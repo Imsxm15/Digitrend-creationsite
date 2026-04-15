@@ -1,4 +1,5 @@
 import { PageMeta } from "@/components/common/PageMeta"
+import { PageHeroTitle } from "@/components/common/PageHeroTitle"
 import { ScrollReveal } from "@/components/common/ScrollReveal"
 import { SectionLabel } from "@/components/common/SectionLabel"
 import { CtaBanner } from "@/components/sections/CtaBanner"
@@ -7,22 +8,22 @@ const EXPERTISE_AREAS = [
   {
     label: "Architecture opérationnelle",
     description:
-      "Quand une équipe sent que tout avance mais que rien ne tient vraiment, nous revenons au système. Quels flux se contredisent, où les décisions se perdent, et comment redonner une logique commune aux outils, aux rôles et aux priorités.",
+      "Quand une équipe sent que tout avance mais que rien ne tient vraiment, je reviens au système. Quels flux se contredisent, où les décisions se perdent, et comment redonner une logique commune aux outils, aux rôles et aux priorités.",
   },
   {
     label: "IA appliquée & automation",
     description:
-      "Nous ne cherchons pas à ajouter de l'IA partout. Nous cherchons où elle remplace une friction concrète : qualification, synthèse, structuration, aide à la décision ou automatisation répétitive réellement utile aux équipes.",
+      "Je ne cherche pas à ajouter de l'IA partout. Je cherche où elle remplace une friction concrète : qualification, synthèse, structuration, aide à la décision ou automatisation répétitive réellement utile aux équipes.",
   },
   {
     label: "Architecture de conversion",
     description:
-      "Le sujet n'est pas seulement la page ou le tunnel. C'est l'enchaînement complet entre acquisition, proposition, CRM, suivi et lecture des signaux. Nous intervenons là où le revenu fuit faute d'architecture claire.",
+      "Le sujet n'est pas seulement la page ou le tunnel. C'est l'enchaînement complet entre acquisition, proposition, CRM, suivi et lecture des signaux. J'interviens là où le revenu fuit faute d'architecture claire.",
   },
   {
     label: "Gouvernance IA pragmatique",
     description:
-      "Dès qu'une équipe utilise plusieurs outils IA sans cadre, les risques montent vite : données, qualité, cohérence. Notre approche consiste à poser des règles simples, documentées et suffisamment légères pour rester utilisables.",
+      "Dès qu'une équipe utilise plusieurs outils IA sans cadre, les risques montent vite : données, qualité, cohérence. Mon approche consiste à poser des règles simples, documentées et suffisamment légères pour rester utilisables.",
   },
 ]
 
@@ -56,14 +57,11 @@ export function AboutPage() {
           <ScrollReveal>
             <div className="system-shell rounded-[0.5rem] px-6 py-8 md:px-8 md:py-9">
               <SectionLabel label="À propos" />
-              <h1
-                className="font-display font-extrabold mb-6 text-ivory tracking-[-0.03em] leading-[1.05]"
-                style={{ fontSize: "clamp(2.5rem, 6vw, 5.5rem)" }}
-              >
+              <PageHeroTitle className="mb-6">
                 Samuel Huys.
                 <br />
                 <span className="text-copper">Digitrend Creation.</span>
-              </h1>
+              </PageHeroTitle>
               <p className="font-body text-lg max-w-3xl text-ivory-muted leading-[1.8]">
                 Architecte opérationnel, designer de systèmes business, constructeur d&apos;outils.
                 Le fil conducteur : relier stratégie, système et exécution jusqu&apos;au résultat concret.
@@ -79,7 +77,7 @@ export function AboutPage() {
             <div className="md:col-span-6">
               <ScrollReveal>
                 <h2 className="font-display font-bold text-2xl mb-6 text-ivory tracking-[-0.02em]">
-                  Ce que nous faisons. Et comment nous le pensons.
+                  Ce que je fais. Et comment je le pense.
                 </h2>
                 <div className="flex flex-col gap-5">
                   <p className="font-body text-sm leading-7 text-ivory-muted">
@@ -89,7 +87,7 @@ export function AboutPage() {
                     Des systèmes mal conçus. Des outils mal connectés. Des processus qui se contredisent. Des décisions prises à l'aveugle faute de données utilisables. Tout cela génère des frictions invisibles qui coûtent cher, en temps, en conversions et en énergie.
                   </p>
                   <p className="font-body text-sm leading-7 text-ivory-muted">
-                    Notre travail, c'est de remettre de l'ordre dans ces systèmes. Identifier les blocages réels, concevoir des architectures cohérentes, déployer des outils qui servent vraiment et mesurer que cela fonctionne.
+                    Mon travail, c'est de remettre de l'ordre dans ces systèmes. Identifier les blocages réels, concevoir des architectures cohérentes, déployer des outils qui servent vraiment et mesurer que cela fonctionne.
                   </p>
                 </div>
               </ScrollReveal>
